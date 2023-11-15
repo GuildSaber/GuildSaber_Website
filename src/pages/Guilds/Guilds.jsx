@@ -63,7 +63,7 @@ export default function Guilds() {
     }, [filter.guildType]);
 
     if (isLoading) {
-        return <Loader className="page" />;
+        return <Loader className="page" style={{ marginTop: "40px" }} />;
     }
 
     if (isError) {
@@ -71,7 +71,7 @@ export default function Guilds() {
     }
 
     return (
-        <Main>
+        <Main className="guilds">
             <List
                 totalCount={guilds.totalCount}
                 pageSize={PAGE_SIZE}
@@ -84,7 +84,6 @@ export default function Guilds() {
                     <Collapse
                         defaultvalue={FILTER_SORT_BY_VALUES[0].label}
                         options={FILTER_SORT_BY_VALUES}
-                        style={{ width: "180px" }}
                         selectedOptions={filter["sort-By"]}
                         setSelectedOptions={(value) =>
                             setFilter({ ...filter, "sort-By": value })
@@ -94,7 +93,6 @@ export default function Guilds() {
                         label="Guild Type"
                         multiple
                         options={FILTER_GUILD_TYPES}
-                        style={{ width: "180px" }}
                         selectedOptions={filter.guildTypes}
                         setSelectedOptions={(value) =>
                             setFilter({ ...filter, guildTypes: value })
@@ -104,7 +102,7 @@ export default function Guilds() {
                     <input
                         type="text"
                         placeholder="Search"
-                        style={{ marginLeft: "auto", width: "180px" }}
+                        className="search"
                     />
                 </Filters>
 

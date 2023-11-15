@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import useScreenSize from "../../hooks/useScreenSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useRef, useState } from "react";
+import useClickAway from "../../hooks/useClickAway";
 import clsx from "clsx";
 
 export default function Header() {
@@ -13,6 +14,7 @@ export default function Header() {
     const { session } = useAuthContext();
     const [extended, setExtended] = useState(false);
     const screenSize = useScreenSize();
+    const clickRef = useRef();
 
     window.addEventListener("scroll", () => {
         if (window.scrollY > 10) {
@@ -22,12 +24,17 @@ export default function Header() {
         }
     });
 
+    useClickAway(clickRef, () => {
+        setExtended(false);
+    });
+
     return (
         <header
             className={clsx({
                 Header: true,
                 scrolled: isScrolled,
             })}
+            ref={clickRef}
         >
             <div className={clsx({ content: true, extended: extended })}>
                 <Link className="logo" to="/">
@@ -38,14 +45,10 @@ export default function Header() {
                     <FontAwesomeIcon
                         className="burger"
                         size="lg"
-                        icon={faBars}
+                        icon={extended ? faXmark : faBars}
                         onClick={() => setExtended(!extended)}
                     />
-                    {!session ? (
-                        <Link to="/guilds" className="common-text link">
-                            Guilds
-                        </Link>
-                    ) : (
+                    {session && (
                         <>
                             {session.selectedGuild &&
                                 screenSize.width > 700 && (
@@ -80,24 +83,35 @@ export default function Header() {
                         </>
                     )}
                     {!session && (
-                        <Link
-                            to="/signin"
-                            className="common-text common-button"
-                        >
-                            Login
-                        </Link>
+                        <div style={{ display: "flex", gap: "10px" }}>
+                            <Link to="/guilds" className="common-text link">
+                                Guilds
+                            </Link>
+                            <Link
+                                to="/signin"
+                                className="common-text common-button"
+                            >
+                                Login
+                            </Link>
+                        </div>
                     )}
                 </nav>
-                {extended && screenSize.width < 700 && (
-                    <>
-                        <Link to="/leaderboards" className="common-text link">
-                            Leaderboards
-                        </Link>
-                        <Link to="/maps" className="common-text link">
-                            Maps
-                        </Link>
-                    </>
-                )}
+                {extended &&
+                    session &&
+                    session.selectedGuild &&
+                    screenSize.width < 700 && (
+                        <>
+                            <Link
+                                to="/leaderboards"
+                                className="common-text link"
+                            >
+                                Leaderboards
+                            </Link>
+                            <Link to="/maps" className="common-text link">
+                                Maps
+                            </Link>
+                        </>
+                    )}
             </div>
         </header>
     );

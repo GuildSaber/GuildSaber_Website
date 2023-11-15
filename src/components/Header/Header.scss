@@ -19,8 +19,8 @@
 
         .burger {
             display: none;
-            height: 28px;
-            width: 28px;
+            aspect-ratio: 1/1;
+            height: 35px;
             cursor: pointer;
         }
 
@@ -42,6 +42,10 @@
                 font-weight: 600;
                 letter-spacing: 1px;
             }
+        }
+
+        .common-button {
+            height: 40px;
         }
 
         nav {
@@ -75,15 +79,6 @@
     }
 }
 
-/*
-@media screen and (max-width: 700px) {
-    .Header {
-        .logo {
-            display: ;
-        }
-    }
-}
-*/
 @media screen and (max-width: 700px) {
     .Header {
         .content {

@@ -1,8 +1,11 @@
-import "./Main.css";
+import "./Main.scss";
 
-export default function Main({ children, ...otherProps }) {
+export default function Main({ children, className, ...otherProps }) {
     return (
-        <main className="Main" {...otherProps}>
+        <main
+            className={`main${className ? " " + className : ""}`}
+            {...otherProps}
+        >
             {children}
         </main>
     );

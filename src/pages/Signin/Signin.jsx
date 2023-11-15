@@ -31,8 +31,8 @@ export default function Signin() {
     }, [searchParams, setSearchParams, signin]);
 
     return (
-        <Main style={{ maxWidth: "400px" }}>
-            <div className="signin">
+        <div className="signin">
+            <Main>
                 <h1>Login</h1>
 
                 <div className="providers">
@@ -44,7 +44,7 @@ export default function Signin() {
                     />
                 </div>
                 <p>{error}</p>
-            </div>
-        </Main>
+            </Main>
+        </div>
     );
 }

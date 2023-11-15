@@ -24,6 +24,15 @@ export default function GuildMenu({ guilds }) {
         setIsOpen(!isOpen);
     };
 
+    const handleGuildClick = (guildID) => () => {
+        console.log(guildID);
+        dispatch({
+            type: "GUILD_SELECTED",
+            payload: parseInt(guildID),
+        });
+        setIsOpen(false);
+    };
+
     useClickAway(clickRef, () => {
         setIsOpen(false);
     });
@@ -39,20 +48,17 @@ export default function GuildMenu({ guilds }) {
                 />
                 <div className="separator"></div>
                 {guilds &&
-                    guilds.slice(0, 3).map((guild, key) => (
-                        <img
-                            key={key}
-                            src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
-                            className="guildIcon"
-                            alt="logo"
-                            onClick={() =>
-                                dispatch({
-                                    type: "GUILD_SELECTED",
-                                    payload: parseInt(guild.id),
-                                })
-                            }
-                        />
-                    ))}
+                    guilds
+                        .slice(0, 3)
+                        .map((guild, key) => (
+                            <img
+                                key={key}
+                                src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
+                                className="guildIcon"
+                                alt="logo"
+                                onClick={handleGuildClick(guild.id)}
+                            />
+                        ))}
 
                 <img src={arrow} className="arrow" onClick={handleToggle} />
             </div>
@@ -64,12 +70,7 @@ export default function GuildMenu({ guilds }) {
                             <div
                                 key={key}
                                 className="guild"
-                                onClick={() =>
-                                    dispatch({
-                                        type: "GUILD_SELECTED",
-                                        payload: parseInt(guild.id),
-                                    })
-                                }
+                                onClick={handleGuildClick(guild.id)}
                             >
                                 <img
                                     src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}

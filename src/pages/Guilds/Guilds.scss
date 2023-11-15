@@ -8,4 +8,22 @@
         gap: 13px;
         justify-content: space-between;
     }
+
+    .search {
+        margin-left: auto;
+        width: 180px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .guilds {
+        .filters {
+            flex-direction: column;
+            .collapse,
+            .search {
+                margin: 0;
+                width: 100%;
+            }
+        }
+    }
 }
