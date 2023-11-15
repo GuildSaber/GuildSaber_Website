@@ -1,0 +1,55 @@
+.collapse {
+    position: relative;
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        padding: 6px;
+        border-radius: 5px;
+        border: none;
+        background-color: var(--main-color);
+
+        .arrow {
+            transform: rotate(180deg);
+            transition: 0.3s;
+
+            &.open {
+                transform: rotate(0deg);
+            }
+        }
+
+        &:focus {
+            outline: 2px solid var(--primary-color);
+        }
+    }
+
+    .menu {
+        position: absolute;
+        margin-top: 4px;
+        width: 100%;
+        max-height: 300px;
+        overflow: auto;
+        border-radius: 5px;
+        z-index: 10;
+        background-color: var(--main-color);
+
+        .option {
+            padding: 6px;
+            cursor: pointer;
+            user-select: none;
+
+            &:not(:last-child) {
+                border-bottom: 2px solid var(--background-color);
+            }
+
+            &.active {
+                background-color: var(--primary-color);
+                font-weight: 500;
+            }
+        }
+    }
+}

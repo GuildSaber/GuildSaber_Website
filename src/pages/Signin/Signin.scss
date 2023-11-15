@@ -1,0 +1,16 @@
+.signin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1 {
+        display: block;
+        font-size: 30px;
+    }
+
+    .providers {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+}

@@ -1,0 +1,22 @@
+.card {
+    padding: 20px;
+    background-color: var(--main-color);
+    border-radius: 10px;
+
+    .title {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            background-color: var(--guild-color);
+            height: 40px;
+            width: 5px;
+            margin-right: 10px;
+        }
+    }
+
+}

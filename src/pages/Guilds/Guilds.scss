@@ -1,0 +1,11 @@
+.guilds {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+
+    .filterContainer {
+        display: flex;
+        gap: 13px;
+        justify-content: space-between;
+    }
+}

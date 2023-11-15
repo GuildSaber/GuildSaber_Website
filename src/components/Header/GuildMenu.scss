@@ -1,0 +1,105 @@
+.guildMenu {
+    position: relative;
+    width: 188px;
+
+    &.open {
+        .arrow {
+            transform: rotate(0deg);
+        }
+
+        .head {
+            border-radius: 5px 5px 0 0;
+        }
+    }
+
+    .guildIcon {
+        min-width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        opacity: 0.5;
+        cursor: pointer;
+
+        &.active {
+            opacity: 1;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .arrow {
+        aspect-ratio: 1/1;
+        padding: 0 10px;
+        margin-left: auto;
+        transform: rotate(180deg);
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .head {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        background: var(--main-color);
+        border-radius: 5px;
+        gap: 4px;
+        padding: 0 4px;
+        height: 40px;
+
+        .separator {
+            align-self: stretch;
+            border-left: 2px solid var(--separator-color);
+            margin-left: 1px;
+            margin: 6px 4px;
+        }
+    }
+
+    .body {
+        position: absolute;
+        padding: 8px 0;
+        width: 100%;
+        padding: 0 4px;
+        background: var(--main-color);
+        border-radius: 0 0 5px 5px;
+        z-index: 10;
+
+        .guild {
+            padding: 6px 0;
+            display: flex;
+            gap: 13px;
+            opacity: 0.5;
+            text-decoration: none;
+            cursor: pointer;
+
+            &.active {
+                opacity: 1;
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:not(:last-child) {
+                border-bottom: 2px solid var(--background-color);
+            }
+
+            .icon {
+                min-width: 28px;
+                height: 28px;
+                border-radius: 50%;
+            }
+
+            p {
+                font-size: 15px;
+                /*color: var(--common-para);*/
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            svg path {
+                color: var(--primary-color);
+            }
+        }
+    }
+}

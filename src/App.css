@@ -1,0 +1,44 @@
+:root {
+    --background-color: #161b22;
+    --main-color: #0d1117;
+    --primary-color: #157efb;
+    --common-text: white;
+    --common-para: #868686;
+    --separator-color: #373737;
+    --scrolled-header-color: #12161c;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    color: white;
+}
+
+body {
+    background: var(--background-color);
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.common-text {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 300;
+    color: var(--common-text);
+    text-align: left;
+    margin: 0 0;
+}
+
+.common-button {
+    padding: 6px 17px;
+    border: none;
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}

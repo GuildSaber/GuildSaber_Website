@@ -1,0 +1,120 @@
+.Header {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    transition: background-color 0.05s linear;
+
+    &.scrolled {
+        background-color: var(--scrolled-header-color);
+    }
+
+    .content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1140px;
+        margin: 0 auto 10px auto;
+        padding: 15px 20px;
+        transition: all 0.25s ease;
+
+        .burger {
+            display: none;
+            height: 28px;
+            width: 28px;
+            cursor: pointer;
+        }
+
+        .logo {
+            display: flex;
+            text-decoration: none;
+            align-items: center;
+            gap: 10px;
+
+            img {
+                height: 35px;
+                width: 35px;
+            }
+
+            p {
+                margin: 0;
+                font-family: "Poppins", sans-serif;
+                font-size: 24px;
+                font-weight: 600;
+                letter-spacing: 1px;
+            }
+        }
+
+        nav {
+            display: flex;
+            /*align-items: center;*/
+            gap: 10px;
+
+            flex-direction: inherit;
+            align-items: inherit;
+
+            .account {
+                display: contents;
+            }
+
+            .avatar {
+                aspect-ratio: 1/1;
+                height: 35px;
+                border-radius: 50%;
+            }
+        }
+
+        a.link {
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+
+            &:hover {
+                background-color: rgba($color: #727272, $alpha: 0.5);
+            }
+        }
+    }
+}
+
+/*
+@media screen and (max-width: 700px) {
+    .Header {
+        .logo {
+            display: ;
+        }
+    }
+}
+*/
+@media screen and (max-width: 700px) {
+    .Header {
+        .content {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 10px;
+
+            .logo {
+                display: none;
+            }
+
+            nav {
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                flex-direction: row;
+            }
+
+            .burger {
+                display: block;
+            }
+        }
+    }
+}
+
+@keyframes delayOverflow {
+    from {
+        overflow: hidden;
+    }
+
+    to {
+        overflow: visible;
+    }
+}
