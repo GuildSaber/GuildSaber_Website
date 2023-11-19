@@ -1,86 +1,28 @@
-.guild {
+@import "/src/variables";
+
+.guildPage {
     margin: 0 auto;
     max-width: 1140px;
 
-    .header {
-        background-color: var(--main-color);
-        margin-bottom: 30px;
-        padding: 10px;
-        border-radius: 10px;
-
-        .banner {
-            width: 100%;
-            height: 120px;
-            margin-bottom: 20px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .details {
-            display: flex;
-            gap: 20px;
-
-            .logo {
-                height: 150px;
-                width: 150px;
-                border-radius: 10px;
-            }
-
-            h1 {
-                font-size: 32px;
-                line-height: 36px;
-                font-weight: 500;
-                margin: 0;
-
-                &.smallName {
-                    font-weight: 600;
-                }
-            }
-
-            .description {
-                margin-top: 20px;
-            }
-        }
-    }
-
     .main {
         display: flex;
+        flex-direction: column;
         gap: 20px;
         align-items: flex-start;
+        background-color: transparent;
 
-        .maps {
-            display: flex;
-            flex-basis: 100%;
-            flex: 1;
-            gap: 20px;
-            flex-wrap: wrap;
-
-            .map {
-                /*flex-grow: 2;*/
-                flex: calc(50% - 40px);
-            }
-        }
-
-        .side {
-            flex-basis: 100%;
-            flex: 2;
+        h3 {
+            font-size: 1.8rem;
         }
     }
 }
 
 @media screen and (max-width: 700px) {
-    .guild {
-        .header .details {
-            flex-direction: column;
-            align-items: center;
-            .common-text {
-                text-align: center;
-            }
-        }
+    .guildPage {
         .main {
             flex-direction: column;
 
-            .card {
+            .guildCard {
                 width: 100%;
             }
         }
@@ -88,10 +30,10 @@
 }
 
 @media screen and (max-width: 940px) {
-    .guild {
+    .guildPage {
         .main {
             .maps {
-                .map {
+                .guildMap {
                     flex: 100%;
                 }
             }
@@ -99,8 +41,10 @@
     }
 }
 
+/*
 @media screen and (max-width: 1140px) {
     .guild {
         margin: 0 10px;
     }
 }
+*/

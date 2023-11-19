@@ -1,3 +1,5 @@
+@import "/src/variables";
+
 .pagination-container {
     display: flex;
     list-style-type: none;
@@ -18,7 +20,7 @@
         min-width: 32px;
 
         &.common-button {
-            background-color: var(--background-color);
+            background-color: $c-default;
         }
 
         &.dots:hover {
@@ -32,7 +34,7 @@
         }
 
         &.selected {
-            background-color: var(--primary-color);
+            background-color: $c-primary;
         }
 
         .arrow {
@@ -59,7 +61,7 @@
 
         &.disabled {
             pointer-events: none;
-            background-color: var(--main-color) !important;
+            background-color: $c-default !important;
 
             .arrow::before {
                 border-right: 0.12em solid rgb(148, 148, 148);

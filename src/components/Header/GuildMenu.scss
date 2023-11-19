@@ -1,6 +1,8 @@
+@import "/src/variables";
+
 .guildMenu {
     position: relative;
-    width: 188px;
+    /*width: 188px;*/
 
     &.open {
         .arrow {
@@ -12,12 +14,12 @@
         }
     }
 
-    .guildIcon {
-        min-width: 28px;
+    .icon {
+        aspect-ratio: 1/1;
         height: 28px;
-        border-radius: 50%;
-        opacity: 0.5;
+        border-radius: 8px;
         cursor: pointer;
+        opacity: 0.8;
 
         &.active {
             opacity: 1;
@@ -30,8 +32,7 @@
 
     .arrow {
         aspect-ratio: 1/1;
-        padding: 0 10px;
-        margin-left: auto;
+        margin-left: 10px;
         transform: rotate(180deg);
         transition: 0.3s;
         cursor: pointer;
@@ -40,16 +41,15 @@
     .head {
         display: flex;
         align-items: center;
-        align-content: center;
-        background: var(--main-color);
+        background: $c-default;
         border-radius: 5px;
         gap: 4px;
-        padding: 0 4px;
-        height: 40px;
+        padding: 0 12px;
+        height: 100%;
 
         .separator {
             align-self: stretch;
-            border-left: 2px solid var(--separator-color);
+            border-left: 1px solid rgba($color: #999999, $alpha: 0.5);
             margin-left: 1px;
             margin: 6px 4px;
         }
@@ -57,48 +57,55 @@
 
     .body {
         position: absolute;
-        padding: 8px 0;
         width: 100%;
-        padding: 0 4px;
-        background: var(--main-color);
+        background: $c-default;
         border-radius: 0 0 5px 5px;
         z-index: 10;
+        display: flex;
+        padding: 12px;
+        flex-direction: column;
+        gap: 16px;
 
-        .guild {
-            padding: 6px 0;
+        .item {
             display: flex;
             gap: 13px;
-            opacity: 0.5;
+            align-items: center;
             text-decoration: none;
+        }
+
+        .guild {
             cursor: pointer;
 
-            &.active {
-                opacity: 1;
-            }
-
-            &:hover {
-                opacity: 1;
-            }
-
-            &:not(:last-child) {
-                border-bottom: 2px solid var(--background-color);
-            }
-
             .icon {
-                min-width: 28px;
-                height: 28px;
-                border-radius: 50%;
+                opacity: 1;
             }
 
             p {
-                font-size: 15px;
-                /*color: var(--common-para);*/
+                font-size: 1rem;
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
+        }
 
-            svg path {
-                color: var(--primary-color);
+        .nav {
+            align-items: center;
+
+            p {
+                color: $c-text-secondary;
+                user-select: none;
+            }
+
+            .icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                aspect-ratio: 1/1;
+                height: 28px;
+                cursor: auto;
+
+                svg path {
+                    color: $c-text-secondary;
+                }
             }
         }
     }

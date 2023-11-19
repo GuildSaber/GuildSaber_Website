@@ -1,3 +1,5 @@
+@import "/src/variables";
+
 .collapse {
     position: relative;
     width: 180px;
@@ -9,10 +11,11 @@
         width: 100%;
         display: flex;
         gap: 10px;
-        padding: 6px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
         border-radius: 5px;
         border: none;
-        background-color: var(--main-color);
+        background-color: $c-default;
 
         .arrow {
             transform: rotate(180deg);
@@ -24,7 +27,7 @@
         }
 
         &:focus {
-            outline: 2px solid var(--primary-color);
+            outline: 2px solid $c-primary;
         }
     }
 
@@ -36,7 +39,7 @@
         overflow: auto;
         border-radius: 5px;
         z-index: 10;
-        background-color: var(--main-color);
+        background-color: $c-default;
 
         .option {
             padding: 6px;
@@ -44,11 +47,11 @@
             user-select: none;
 
             &:not(:last-child) {
-                border-bottom: 2px solid var(--background-color);
+                border-bottom: 2px solid $c-default;
             }
 
             &.active {
-                background-color: var(--primary-color);
+                background-color: $c-primary;
                 font-weight: 500;
             }
         }

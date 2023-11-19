@@ -26,7 +26,7 @@ export function AuthContextProvider({ children }) {
         const token = localStorage.getItem("token");
 
         if (token) {
-            fetch(`${import.meta.env.VITE_API_BASE_URL}/player/me`, {
+            fetch(`${import.meta.env.VITE_API_BASE_URL}/player/@me`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -43,12 +43,7 @@ export function AuthContextProvider({ children }) {
                     let selectedGuild = localStorage.getItem("selectedGuild");
 
                     if (!selectedGuild) {
-                        localStorage.setItem(
-                            "selectedGuild",
-                            data.memberList[0]
-                                ? data.memberList[0].guildID
-                                : null
-                        );
+                        localStorage.setItem("selectedGuild", null);
                     }
 
                     selectedGuild = localStorage.getItem("selectedGuild");

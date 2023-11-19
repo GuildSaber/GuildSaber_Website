@@ -31,14 +31,14 @@ export default function Header() {
     return (
         <header
             className={clsx({
-                Header: true,
+                header: true,
                 scrolled: isScrolled,
             })}
             ref={clickRef}
         >
             <div className={clsx({ content: true, extended: extended })}>
                 <Link className="logo" to="/">
-                    <img src="gsLogo.svg" alt="logo" />
+                    <img src="/gsLogo.svg" alt="logo" />
                     <p>GuildSaber</p>
                 </Link>
                 <nav>
@@ -67,14 +67,13 @@ export default function Header() {
                                         </Link>
                                     </>
                                 )}
-                            {session.selectedGuild && (
-                                <GuildMenu
-                                    guilds={session.memberList
-                                        .sort((a, b) => a.priority - b.priority)
-                                        .map((memberList) => memberList.guild)
-                                        .flat()}
-                                />
-                            )}
+
+                            <GuildMenu
+                                guilds={session.memberList
+                                    .sort((a, b) => a.priority - b.priority)
+                                    .map((memberList) => memberList.guild)
+                                    .flat()}
+                            />
                             <img
                                 alt="avatar"
                                 className="avatar"
@@ -101,13 +100,10 @@ export default function Header() {
                     session.selectedGuild &&
                     screenSize.width < 700 && (
                         <>
-                            <Link
-                                to="/leaderboards"
-                                className="common-text link"
-                            >
+                            <Link to="/leaderboards" className="link">
                                 Leaderboards
                             </Link>
-                            <Link to="/maps" className="common-text link">
+                            <Link to="/maps" className="link">
                                 Maps
                             </Link>
                         </>

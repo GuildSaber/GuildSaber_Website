@@ -11,6 +11,7 @@ export default function Collapse({
     multiple,
     selectedOptions,
     setSelectedOptions,
+    className,
     ...otherProps
 }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +44,11 @@ export default function Collapse({
     };
 
     return (
-        <div ref={clickRef} className="collapse" {...otherProps}>
+        <div
+            ref={clickRef}
+            className={clsx(["collapse", className])}
+            {...otherProps}
+        >
             <button onClick={handleToggle} className="common-text">
                 {multiple ? label : displayLabel}
                 <img

@@ -1,12 +1,12 @@
 import "./Guilds.scss";
 import Main from "../../components/Main/Main";
-import Card from "../../components/Guilds/Card";
+import Card from "../../components/Guilds/GuildsCard";
 import { useEffect, useState } from "react";
 import List from "../../components/List/List";
-import Filters from "../../components/List/Filters";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 import Collapse from "../../components/Common/Collapse/Collapse";
+import SearchBar from "../../components/Common/Search/SearchBar";
 
 const PAGE_SIZE = 2;
 
@@ -71,7 +71,7 @@ export default function Guilds() {
     }
 
     return (
-        <Main className="guilds">
+        <Main className="guildsPage">
             <List
                 totalCount={guilds.totalCount}
                 pageSize={PAGE_SIZE}
@@ -80,7 +80,7 @@ export default function Guilds() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
             >
-                <Filters>
+                <div className="filters">
                     <Collapse
                         defaultvalue={FILTER_SORT_BY_VALUES[0].label}
                         options={FILTER_SORT_BY_VALUES}
@@ -99,12 +99,8 @@ export default function Guilds() {
                         }
                     />
 
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="search"
-                    />
-                </Filters>
+                    <SearchBar />
+                </div>
 
                 {guilds?.data.map((guild, key) => (
                     <Card key={key} guildData={guild} />

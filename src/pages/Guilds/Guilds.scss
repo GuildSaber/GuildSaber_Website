@@ -1,7 +1,8 @@
-.guilds {
+.guildsPage {
     display: flex;
     gap: 10px;
     flex-direction: column;
+    background-color: transparent !important;
 
     .filterContainer {
         display: flex;
@@ -11,12 +12,11 @@
 
     .search {
         margin-left: auto;
-        width: 180px;
     }
 }
 
 @media screen and (max-width: 600px) {
-    .guilds {
+    .guildsPage {
         .filters {
             flex-direction: column;
             .collapse,

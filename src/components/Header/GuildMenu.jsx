@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import clsx from "clsx";
 import "./GuildMenu.scss";
 import arrow from "../../assets/arrow.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useClickAway from "../../hooks/useClickAway";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
@@ -25,11 +25,14 @@ export default function GuildMenu({ guilds }) {
     };
 
     const handleGuildClick = (guildID) => () => {
-        console.log(guildID);
         dispatch({
             type: "GUILD_SELECTED",
-            payload: parseInt(guildID),
+            payload: guildID ? parseInt(guildID) : null,
         });
+        localStorage.setItem(
+            "selectedGuild",
+            guildID ? parseInt(guildID) : null
+        );
         setIsOpen(false);
     };
 
@@ -37,16 +40,30 @@ export default function GuildMenu({ guilds }) {
         setIsOpen(false);
     });
 
+    // session.selectedGuild
+    const { session } = useAuthContext();
+
     return (
         <div ref={clickRef} className={clsx({ guildMenu: true, open: isOpen })}>
             <div className="head">
-                <img
-                    src={`https://cdn.guildsaber.com/Guild/${selectedGuild}/Logo.png`}
-                    className="guildIcon active"
-                    alt="logo"
-                    onClick={() => navigate(`/guild/${selectedGuild}`)}
-                />
-                <div className="separator"></div>
+                {session && session.selectedGuild && (
+                    <>
+                        <img
+                            src={`https://cdn.guildsaber.com/Guild/${selectedGuild}/Logo.png`}
+                            className="icon active"
+                            alt="logo"
+                            onError={() => {
+                                dispatch({
+                                    type: "GUILD_SELECTED",
+                                    payload: null,
+                                });
+                                localStorage.setItem("selectedGuild", null);
+                            }}
+                            onClick={() => navigate(`/guild/${selectedGuild}`)}
+                        />
+                        <div className="separator"></div>
+                    </>
+                )}
                 {guilds &&
                     guilds
                         .slice(0, 3)
@@ -54,7 +71,7 @@ export default function GuildMenu({ guilds }) {
                             <img
                                 key={key}
                                 src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
-                                className="guildIcon"
+                                className="icon"
                                 alt="logo"
                                 onClick={handleGuildClick(guild.id)}
                             />
@@ -69,7 +86,7 @@ export default function GuildMenu({ guilds }) {
                         guilds.slice(3, 5).map((guild, key) => (
                             <div
                                 key={key}
-                                className="guild"
+                                className="item guild"
                                 onClick={handleGuildClick(guild.id)}
                             >
                                 <img
@@ -77,7 +94,7 @@ export default function GuildMenu({ guilds }) {
                                     className="icon"
                                     alt="logo"
                                 />
-                                <p className="common-text">
+                                <p>
                                     {guild.name.length <= MAX_GUILD_NAME_LENGTH
                                         ? guild.name
                                         : guild.smallName}
@@ -85,20 +102,23 @@ export default function GuildMenu({ guilds }) {
                             </div>
                         ))}
 
-                    <div className="guild active">
-                        <div
-                            className="icon"
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                backgroundColor: "rgba(255, 255, 255, 0.05)",
-                            }}
-                        >
+                    <div className="item nav">
+                        <div className="icon">
                             <FontAwesomeIcon icon={faPlus} />
                         </div>
-                        <p className="common-text">Create your own</p>
+                        <p>Create guild</p>
                     </div>
+
+                    <Link
+                        to="/guilds"
+                        className="item nav"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <div className="icon">
+                            <FontAwesomeIcon icon={faBars} />
+                        </div>
+                        <p>Discover Guilds</p>
+                    </Link>
                 </div>
             )}
         </div>

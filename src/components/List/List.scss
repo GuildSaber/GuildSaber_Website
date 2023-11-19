@@ -2,4 +2,9 @@
     display: flex;
     gap: 10px;
     flex-direction: column;
+
+    .filters {
+        display: flex;
+        gap: 10px;
+    }
 }

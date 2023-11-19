@@ -1,9 +1,8 @@
 import { useParams } from "react-router-dom";
 import "./Guild.scss";
-import Header from "../../components/Guild/Header";
+import Header from "../../components/Guild/GuildHeader";
 //import { useEffect, useState } from "react";
-import Card from "../../components/Guild/Card";
-import Map from "../../components/Guild/Map";
+import GuildMapCard from "../../components/Guild/GuildMapCard";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 
@@ -36,29 +35,13 @@ export default function Guild() {
     }
 
     return (
-        <div className="guild">
+        <div className="guildPage">
             <>
                 <Header guildData={guild} />
 
                 <div className="main">
-                    <Card
-                        contentClass="maps"
-                        title="Recent Ranked Map change"
-                        color={guild.color}
-                        style={{ flex: "4 1" }}
-                    >
-                        <Map />
-                        <Map />
-                        <Map />
-                        <Map />
-                    </Card>
-
-                    <Card
-                        contentClass="side"
-                        title="Stats"
-                        color={guild.color}
-                        style={{ flex: "1 1" }}
-                    />
+                    <h3>New Ranked Maps</h3>
+                    <GuildMapCard />
                 </div>
             </>
         </div>

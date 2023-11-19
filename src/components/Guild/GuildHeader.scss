@@ -1,0 +1,128 @@
+@import "/src/variables";
+
+.guildHeader {
+    position: relative;
+    background-color: $c-default;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    padding: 25px;
+    overflow: hidden;
+
+    .banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 135px;
+        margin-bottom: 20px;
+        object-fit: cover;
+    }
+
+    .discordButton {
+        margin-left: auto;
+        background-color: $c-discord;
+    }
+
+    .details {
+        display: flex;
+        align-items: flex-end;
+        flex-direction: inherit;
+        position: relative;
+        display: flex;
+        padding-top: 50px;
+        margin-bottom: 15px;
+        gap: 20px;
+        z-index: 1;
+
+        .logo {
+            height: 132px;
+            width: 132px;
+            border-radius: 10px;
+            border: $c-default 6px solid;
+            /*transform: translateY(-70%);*/
+        }
+
+        .info {
+            display: flex;
+            align-items: center;
+            flex-direction: inherit;
+            gap: 8px;
+            width: 100%;
+
+            .stats {
+                display: contents;
+            }
+
+            h1 {
+                font-size: 32px;
+                line-height: 36px;
+                font-weight: 700;
+                margin: 0;
+
+                &.smallName {
+                    font-weight: 600;
+                }
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px;
+                font-size: 0.9rem;
+                line-height: 100%;
+                border-radius: 8px;
+                border: 1px solid #707883;
+
+                .icon {
+                    aspect-ratio: 1/1;
+                    height: 1rem;
+                }
+            }
+        }
+
+        .description {
+            margin-top: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .guildHeader {
+        flex-direction: column;
+
+        .details {
+            align-items: center;
+        }
+
+        .info {
+            display: contents;
+            .stats {
+                position: absolute;
+                top: 120px;
+                width: 100%;
+                display: flex !important;
+                justify-content: space-between;
+
+                .stat {
+                    border: none;
+                }
+
+                .discordButton {
+                    margin: 0 !important;
+                }
+            }
+        }
+
+        .description {
+            text-align: center;
+        }
+    }
+}
+
+@media screen and (max-width: 1140px) {
+    .guildHeader {
+        margin: 0 10px;
+        margin-bottom: 30px;
+    }
+}

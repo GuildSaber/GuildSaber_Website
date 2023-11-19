@@ -1,3 +1,5 @@
+@import "/src/variables";
+
 .provider {
     width: 100%;
     text-align: center;
@@ -16,10 +18,9 @@
         align-items: center;
         gap: 10px;
         padding: 5px 10px;
-        background-color: var(--background-color);
+        background-color: $c-default;
 
         img {
-            background-color: var(--background-color);
             height: 20px;
             width: 20px;
         }

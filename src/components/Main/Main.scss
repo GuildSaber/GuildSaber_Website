@@ -1,8 +1,10 @@
+@import "/src/variables";
+
 .main {
     margin: 0 auto;
-    padding: 20px 15px;
+    /*padding: 20px 15px;*/
     max-width: 1140px;
-    background: var(--main-color);
+    background: $c-default;
     border-radius: 10px;
 }
 
