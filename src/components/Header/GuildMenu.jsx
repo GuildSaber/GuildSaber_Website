@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import clsx from "clsx";
 import "./GuildMenu.scss";
-import arrow from "../../assets/arrow.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link, useNavigate } from "react-router-dom";
 import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useClickAway from "../../hooks/useClickAway";
 import { useAuthContext } from "../../hooks/useAuthContext";
@@ -76,8 +76,12 @@ export default function GuildMenu({ guilds }) {
                                 onClick={handleGuildClick(guild.id)}
                             />
                         ))}
-
-                <img src={arrow} className="arrow" onClick={handleToggle} />
+                <FontAwesomeIcon
+                    onClick={handleToggle}
+                    icon={isOpen ? faChevronUp : faChevronDown}
+                    size="sm"
+                    style={{ marginLeft: "0.25rem" }}
+                />
             </div>
 
             {isOpen && (

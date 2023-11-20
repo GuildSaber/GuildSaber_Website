@@ -1,6 +1,11 @@
 import React from "react";
 import clsx from "clsx";
 import { usePagination, DOTS } from "../../hooks/usePagination";
+import {
+    faChevronLeft,
+    faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Pagination.scss";
 const Pagination = (props) => {
     const {
@@ -40,7 +45,7 @@ const Pagination = (props) => {
                 })}
                 onClick={onPrevious}
             >
-                <div className="arrow left" />
+                <FontAwesomeIcon icon={faChevronLeft} size="sm" />
             </li>
             {paginationRange.map((pageNumber, key) => {
                 if (pageNumber === DOTS) {
@@ -69,7 +74,7 @@ const Pagination = (props) => {
                 })}
                 onClick={onNext}
             >
-                <div className="arrow right" />
+                <FontAwesomeIcon icon={faChevronRight} size="sm" />
             </li>
         </ul>
     );

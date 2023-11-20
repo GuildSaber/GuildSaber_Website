@@ -25,7 +25,11 @@ body {
     border: none;
     color: white;
     background-color: $c-primary;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
+}
+
+.App {
+    padding: 0 0.5rem;
 }

@@ -16,7 +16,7 @@ export default function GuildMapCard() {
     const screenSize = useScreenSize();
     // Temp Data
     const description =
-        "Omagawd hey guuyyss. This is my first map pls enjoy.\nDon’t dislike it. Oke bye uwu";
+        "Omagawd hey guuyyss. This is my first map pls enjoy.\nDon't dislike it. Oke bye uwu";
     const id = 1;
 
     return (
@@ -24,7 +24,7 @@ export default function GuildMapCard() {
             <div className="container">
                 <div className="cover">
                     <img
-                        src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
+                        src={`https://eu.cdn.beatsaver.com/191cafd1d0d6ab46545a8bfcb904c5b6dab4b1f1.jpg`}
                     />
                 </div>
 

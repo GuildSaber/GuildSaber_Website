@@ -45,22 +45,21 @@
             flex-direction: column;
             align-items: flex-end;
             justify-content: center;
-            gap: 10px;
+            gap: 0.5rem;
             text-align: right;
 
             .stat {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                padding: 8px;
-                font-size: 0.9rem;
+                gap: 0.5rem;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
                 line-height: 100%;
-                border-radius: 8px;
+                border-radius: 0.5rem;
 
                 &:not(button, .buttons) {
                     border: 1px solid $c-gold;
                     color: $c-gold;
-                    padding: 8px;
                 }
 
                 .icon {
@@ -86,7 +85,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 0.5rem;
             width: 100%;
         }
     }

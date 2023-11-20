@@ -26,10 +26,16 @@ export default function GuildHeader({ guildData }) {
 
     return (
         <div className="guildHeader">
-            <img
+            <object
                 className="banner"
-                src={`https://cdn.guildsaber.com/Guild/${id}/Banner.png`}
-            />
+                data={`https://cdn.guildsaber.com/Guild/${id}/Banner.png`}
+                type="image/png"
+            >
+                <img
+                    src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
+                    style={{ width: "100%" }}
+                />
+            </object>
 
             <div className="details">
                 <img
@@ -37,7 +43,7 @@ export default function GuildHeader({ guildData }) {
                     src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
                 />
                 <div className="info">
-                    <h1 className="">{name}</h1>
+                    <h1 style={{ flex: 1 }}>{name}</h1>
 
                     {screenSize.width > 700 && inviteCode && (
                         <Button

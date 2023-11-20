@@ -4,7 +4,7 @@
     position: relative;
     background-color: $c-default;
     margin-bottom: 30px;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 25px;
     overflow: hidden;
 
@@ -37,7 +37,7 @@
         .logo {
             height: 132px;
             width: 132px;
-            border-radius: 10px;
+            border-radius: 8px;
             border: $c-default 6px solid;
             /*transform: translateY(-70%);*/
         }
@@ -54,7 +54,7 @@
             }
 
             h1 {
-                font-size: 32px;
+                font-size: 2rem;
                 line-height: 36px;
                 font-weight: 700;
                 margin: 0;
@@ -68,7 +68,7 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
-                padding: 8px;
+                padding: 0.5rem 0.75rem;
                 font-size: 0.9rem;
                 line-height: 100%;
                 border-radius: 8px;
@@ -122,7 +122,6 @@
 
 @media screen and (max-width: 1140px) {
     .guildHeader {
-        margin: 0 10px;
         margin-bottom: 30px;
     }
 }

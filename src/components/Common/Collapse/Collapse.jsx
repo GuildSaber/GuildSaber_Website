@@ -1,8 +1,9 @@
 import "./Collapse.scss";
-import arrow from "../../../assets/arrow.svg";
 import { useRef, useState } from "react";
 import clsx from "clsx";
 import useClickAway from "../../../hooks/useClickAway";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Collapse({
     label,
@@ -51,10 +52,9 @@ export default function Collapse({
         >
             <button onClick={handleToggle} className="common-text">
                 {multiple ? label : displayLabel}
-                <img
-                    src={arrow}
-                    onClick={handleToggle}
-                    className={clsx({ arrow: true, open: isOpen })}
+                <FontAwesomeIcon
+                    icon={isOpen ? faChevronUp : faChevronDown}
+                    size="sm"
                 />
             </button>
 
