@@ -65,6 +65,12 @@ export default function Header() {
                                         >
                                             Maps
                                         </Link>
+                                        <Link
+                                            to="/guilds"
+                                            className="common-text link"
+                                        >
+                                            Guilds
+                                        </Link>
                                     </>
                                 )}
 
