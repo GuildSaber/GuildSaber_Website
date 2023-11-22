@@ -29,7 +29,7 @@
     "[html]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "editor.renderWhitespace": "boundary",
+    "editor.renderWhitespace": "selection",
     "files.exclude": {
       "USE_GITIGNORE": true
     },
