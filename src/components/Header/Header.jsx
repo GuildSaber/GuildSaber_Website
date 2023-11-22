@@ -1,120 +1,88 @@
-import "./Header.scss";
 import GuildMenu from "./GuildMenu";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import useScreenSize from "../../hooks/useScreenSize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useState } from "react";
-import useClickAway from "../../hooks/useClickAway";
+import { useState } from "react";
 import clsx from "clsx";
 
 export default function Header() {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const { session } = useAuthContext();
-    const [extended, setExtended] = useState(false);
-    const screenSize = useScreenSize();
-    const clickRef = useRef();
+  const { session } = useAuthContext();
+  const [extended, setExtended] = useState(false);
 
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 10) {
-            setIsScrolled(true);
-        } else {
-            setIsScrolled(false);
-        }
-    });
+  return (
+    <header className="container sticky top-0 left-0 right-0 z-10">
+      <div className="flex justify-between items-stretch mx-auto py-8 transition-all">
+        <nav className="flex items-center justify-between gap-4 w-full">
+          <Link className="hidden sm:flex flex-1 items-center gap-4" to="/">
+            <img src="/gsLogo.svg" alt="logo" width={32} height={32} />
+            <span className="text-h5 font-bold hidden md:inline">
+              GuildSaber
+            </span>
+          </Link>
+          <FontAwesomeIcon
+            className="sm:hidden p-4 cursor-pointer"
+            size="lg"
+            icon={extended ? faXmark : faBars}
+            onClick={() => setExtended(!extended)}
+          />
+          {session && (
+            <>
+              {session.selectedGuild && (
+                <div className="gap-4 hidden sm:flex">
+                  <Link to="/leaderboards">Leaderboards</Link>
+                  <Link to="/maps">Maps</Link>
+                  {session.memberList.length === 0 && (
+                    <Link to="/guilds">Guilds</Link>
+                  )}
+                </div>
+              )}
 
-    useClickAway(clickRef, () => {
-        setExtended(false);
-    });
-
-    return (
-        <header
-            className={clsx({
-                header: true,
-                scrolled: isScrolled,
-            })}
-            ref={clickRef}
-        >
-            <div className={clsx({ content: true, extended: extended })}>
-                <Link className="logo" to="/">
-                    <img src="/gsLogo.svg" alt="logo" />
-                    <p>GuildSaber</p>
-                </Link>
-                <nav>
-                    <FontAwesomeIcon
-                        className="burger"
-                        size="lg"
-                        icon={extended ? faXmark : faBars}
-                        onClick={() => setExtended(!extended)}
-                    />
-                    {session && (
-                        <>
-                            {session.selectedGuild &&
-                                screenSize.width > 700 && (
-                                    <>
-                                        <Link
-                                            to="/leaderboards"
-                                            className="common-text link"
-                                        >
-                                            Leaderboards
-                                        </Link>
-                                        <Link
-                                            to="/maps"
-                                            className="common-text link"
-                                        >
-                                            Maps
-                                        </Link>
-                                        <Link
-                                            to="/guilds"
-                                            className="common-text link"
-                                        >
-                                            Guilds
-                                        </Link>
-                                    </>
-                                )}
-
-                            <GuildMenu
-                                guilds={session.memberList
-                                    .sort((a, b) => a.priority - b.priority)
-                                    .map((memberList) => memberList.guild)
-                                    .flat()}
-                            />
-                            <img
-                                alt="avatar"
-                                className="avatar"
-                                src={session.player.user_AvatarUrl}
-                            />
-                        </>
-                    )}
-                    {!session && (
-                        <div style={{ display: "flex", gap: "10px" }}>
-                            <Link to="/guilds" className="common-text link">
-                                Guilds
-                            </Link>
-                            <Link
-                                to="/signin"
-                                className="common-text common-button"
-                            >
-                                Login
-                            </Link>
-                        </div>
-                    )}
-                </nav>
-                {extended &&
-                    session &&
-                    session.selectedGuild &&
-                    screenSize.width < 700 && (
-                        <>
-                            <Link to="/leaderboards" className="link">
-                                Leaderboards
-                            </Link>
-                            <Link to="/maps" className="link">
-                                Maps
-                            </Link>
-                        </>
-                    )}
+              <GuildMenu
+                guilds={session.memberList
+                  .sort((a, b) => a.priority - b.priority)
+                  .map((memberList) => memberList.guild)
+                  .flat()}
+              />
+              <img
+                alt="avatar"
+                className="rounded-full"
+                src={session.player.user_AvatarUrl}
+                width={40}
+                height={40}
+              />
+            </>
+          )}
+          {!session && (
+            <div className="flex gap-4">
+              <Link to="/guilds">Guilds</Link>
+              <Link to="/signin">Login</Link>
             </div>
-        </header>
-    );
+          )}
+        </nav>
+        <div
+          className={clsx("fixed inset-0 min-h-screen bg-gray-900", {
+            hidden: !extended,
+          })}
+        >
+          {extended && session && session.selectedGuild && (
+            <div>
+              <FontAwesomeIcon
+                className="cursor-pointer py-12 px-6"
+                size="lg"
+                icon={faXmark}
+                onClick={() => setExtended(false)}
+              />
+              <div className="sm:hidden flex-center flex-col text-h5 gap-8">
+                <Link to="/me">My Profile</Link>
+                <Link to="/leaderboards">Leaderboards</Link>
+                <Link to="/maps">Maps</Link>
+                <Link to="/guilds">Guilds</Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
 }

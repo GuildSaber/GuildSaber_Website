@@ -1,49 +1,62 @@
 import { useParams } from "react-router-dom";
-import "./Guild.scss";
-import Header from "../../components/Guild/GuildHeader";
-//import { useEffect, useState } from "react";
+import GuildHeader from "../../components/Guild/GuildHeader";
 import GuildMapCard from "../../components/Guild/GuildMapCard";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 
 export default function Guild() {
-    let { guildID } = useParams();
+  let { guildID } = useParams();
 
-    const {
-        data: guild,
-        isLoading,
-        isError,
-    } = useQuery({
-        queryKey: ["guilds", guildID],
-        queryFn: () => getGuild(guildID),
-        staleTime: 60_000,
-        placeholderData: keepPreviousData,
-    });
+  const {
+    data: guild,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["guilds", guildID],
+    queryFn: () => getGuild(guildID),
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+  });
 
-    const getGuild = (guildID) => {
-        return fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`
-        ).then((res) => res.json());
-    };
+  console.log(guild);
 
-    if (isLoading) {
-        return <Loader className="page" />;
-    }
+  const getGuild = (guildID) => {
+    return fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`,
+    ).then((res) => res.json());
+  };
 
-    if (isError) {
-        return <p>Error</p>;
-    }
+  if (isLoading) {
+    return <Loader />;
+  }
 
-    return (
-        <div className="guildPage">
-            <>
-                <Header guildData={guild} />
+  if (isError) {
+    return <p>Error</p>;
+  }
 
-                <div className="main">
-                    <h3>New Ranked Maps</h3>
-                    <GuildMapCard />
-                </div>
-            </>
+  return (
+    <div className="max-w-screen-lg mx-auto">
+      <>
+        <GuildHeader guildData={guild} />
+
+        <div className="flow-content-2 md:flow-content-4">
+          <h3 className="text-h4 font-bold text-center md:text-left">
+            New Ranked Maps
+          </h3>
+          <GuildMapCard
+            description={
+              "Omagawd hey guuyyss. This is my first map pls enjoy.\nDon't dislike it. Oke bye uwu"
+            }
+            id={1}
+          />
+          <GuildMapCard
+            description={
+              "Omagawd hey guuyyss. This is my first map pls enjoy.\nDon't dislike it. Oke bye uwu"
+            }
+            id={2}
+          />
         </div>
-    );
+      </>
+    </div>
+  );
 }

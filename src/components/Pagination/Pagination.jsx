@@ -2,82 +2,84 @@ import React from "react";
 import clsx from "clsx";
 import { usePagination, DOTS } from "../../hooks/usePagination";
 import {
-    faChevronLeft,
-    faChevronRight,
+  faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Pagination.scss";
-const Pagination = (props) => {
-    const {
-        onPageChange,
-        totalCount,
-        siblingCount = 1,
-        currentPage,
-        pageSize,
-        hasPreviousPage,
-        hasNextPage,
-    } = props;
 
-    const paginationRange = usePagination({
-        currentPage,
-        totalCount,
-        siblingCount,
-        pageSize,
-    });
+const Pagination = ({
+  onPageChange,
+  totalCount,
+  siblingCount = 1,
+  currentPage,
+  pageSize,
+  hasPreviousPage,
+  hasNextPage,
+}) => {
+  const paginationRange = usePagination({
+    currentPage,
+    totalCount,
+    siblingCount,
+    pageSize,
+  });
 
-    if (currentPage === 0 || paginationRange.length < 2) {
-        return null;
-    }
+  if (currentPage === 0 || paginationRange.length < 2) {
+    return null;
+  }
 
-    const onNext = () => {
-        onPageChange(currentPage + 1);
-    };
+  const onNext = () => {
+    onPageChange(currentPage + 1);
+  };
 
-    const onPrevious = () => {
-        onPageChange(currentPage - 1);
-    };
+  const onPrevious = () => {
+    onPageChange(currentPage - 1);
+  };
 
-    return (
-        <ul className="pagination-container">
-            <li
-                className={clsx("pagination-item common-button", {
-                    disabled: !hasPreviousPage,
-                })}
-                onClick={onPrevious}
-            >
-                <FontAwesomeIcon icon={faChevronLeft} size="sm" />
+  return (
+    <ul className="flex-center gap-2 p-0 select-none">
+      <li
+        className={clsx("btn bg-gray-800 hover:opacity-80 mr-auto", {
+          "pointer-events-none bg-gray-900": !hasPreviousPage,
+        })}
+        onClick={onPrevious}
+      >
+        <span>
+          <FontAwesomeIcon icon={faChevronLeft} size="sm" />
+        </span>
+      </li>
+      {paginationRange.map((pageNumber, key) => {
+        if (pageNumber === DOTS) {
+          return (
+            <li key={key} className="flex-center px-1">
+              &#8230;
             </li>
-            {paginationRange.map((pageNumber, key) => {
-                if (pageNumber === DOTS) {
-                    return (
-                        <li key={key} className="pagination-item dots">
-                            &#8230;
-                        </li>
-                    );
-                }
+          );
+        }
 
-                return (
-                    <li
-                        key={key}
-                        className={clsx("pagination-item common-button", {
-                            selected: pageNumber === currentPage,
-                        })}
-                        onClick={() => onPageChange(pageNumber)}
-                    >
-                        {pageNumber}
-                    </li>
-                );
+        return (
+          <li
+            key={key}
+            className={clsx("flex-center btn bg-gray-800 hover:opacity-80", {
+              "bg-primary": pageNumber === currentPage,
             })}
-            <li
-                className={clsx("pagination-item common-button", {
-                    disabled: !hasNextPage,
-                })}
-                onClick={onNext}
-            >
-                <FontAwesomeIcon icon={faChevronRight} size="sm" />
-            </li>
-        </ul>
-    );
+            onClick={() => onPageChange(pageNumber)}
+          >
+            {pageNumber}
+          </li>
+        );
+      })}
+      <li
+        className={clsx("btn bg-gray-800 hover:opacity-80 ml-auto", {
+          "pointer-events-none bg-gray-900": !hasNextPage,
+        })}
+        onClick={onNext}
+      >
+        <span>
+          <FontAwesomeIcon icon={faChevronRight} size="sm" />
+        </span>
+      </li>
+    </ul>
+  );
 };
 
 export default Pagination;

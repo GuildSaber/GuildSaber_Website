@@ -1,12 +1,19 @@
-import "./SearchBar.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import clsx from "clsx";
 
-export default function SearchBar({ ...otherProps }) {
-    return (
-        <div className="search" {...otherProps}>
-            <input type="text" placeholder="Search..." />
-            <FontAwesomeIcon className="icon" icon={faMagnifyingGlass} />
-        </div>
-    );
+export default function SearchBar({ className, ...otherProps }) {
+  return (
+    <div
+      className={clsx(["flex-center bg-gray-800 rounded", className])}
+      {...otherProps}
+    >
+      <input
+        type="text"
+        placeholder="Search..."
+        className="input bg-gray-800"
+      />
+      <FontAwesomeIcon className="pr-3" icon={faMagnifyingGlass} />
+    </div>
+  );
 }
