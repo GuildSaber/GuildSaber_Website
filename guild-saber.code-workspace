@@ -53,6 +53,7 @@
     "explorer.confirmDelete": false,
     "git.autofetch": true,
     "editor.tabSize": 2,
-    "typescript.inlayHints.variableTypes.enabled": true
+    "typescript.inlayHints.variableTypes.enabled": true,
+    "typescript.tsdk": "node_modules\\typescript\\lib"
   }
 }

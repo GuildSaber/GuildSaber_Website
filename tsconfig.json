@@ -9,6 +9,7 @@
     "node_modules",
   ],
   "compilerOptions": {
+    "strict": true,
     "outDir": "dist",
     "module": "ESNext",
     "target": "es5",
@@ -32,11 +33,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "composite": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "baseUrl": "."
   }
 }

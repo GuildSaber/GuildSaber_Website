@@ -5,7 +5,7 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 import Collapse from "../../components/Common/Collapse/Collapse";
 import SearchBar from "../../components/Common/Search/SearchBar";
-import { GuildsAPIResponse } from "@/types/api";
+import { GuildsAPIResponse, GuildsAPIResponseSchema } from "../../types/api";
 
 const PAGE_SIZE = 2;
 
@@ -38,10 +38,7 @@ export default function Guilds() {
     order: "Desc",
   });
 
-  const getGuilds = async (
-    page = 1,
-    filter: FilterType,
-  ): Promise<GuildsAPIResponse> => {
+  const getGuilds = async (page = 1, filter: FilterType) => {
     const parsefilter = {
       ...filter,
       guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
@@ -52,7 +49,14 @@ export default function Guilds() {
         import.meta.env.VITE_API_BASE_URL
       }/guilds?page=${page}&pageSize=${PAGE_SIZE}&${URLParams}`,
     );
-    return await res.json();
+    const payLoad = await res.json();
+    const validationResponse = GuildsAPIResponseSchema.safeParse(payLoad);
+    if (!validationResponse.success) {
+      console.error(validationResponse.error);
+      return payLoad as GuildsAPIResponse;
+    } else {
+      return validationResponse.data as GuildsAPIResponse;
+    }
   };
 
   const {

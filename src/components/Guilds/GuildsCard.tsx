@@ -3,7 +3,7 @@ import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import useScreenSize from "../../hooks/useScreenSize";
-import { GuildAPIResponse } from "@/types/api";
+import { GuildAPIResponse } from "../../types/api";
 
 export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
   const { id, name, description, memberCount, rankedMapCount } = guildData;

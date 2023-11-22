@@ -1,4 +1,4 @@
-import { GuildAPIResponse } from "@/types/api";
+import { GuildAPIResponse } from "../types/api";
 import { ReactNode, createContext, useEffect, useReducer } from "react";
 
 interface AuthState {

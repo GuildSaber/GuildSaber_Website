@@ -3,7 +3,7 @@ import GuildHeader from "../../components/Guild/GuildHeader";
 import GuildMapCard from "../../components/Guild/GuildMapCard";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
-import { GuildAPIResponse } from "@/types/api";
+import { GuildAPIResponse, GuildAPIResponseSchema } from "../../types/api";
 
 export default function Guild() {
   const { guildID } = useParams();
@@ -26,7 +26,14 @@ export default function Guild() {
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`,
     );
-    return await res.json();
+    const payLoad = await res.json();
+    const validationResponse = GuildAPIResponseSchema.safeParse(payLoad);
+    if (!validationResponse.success) {
+      console.error(validationResponse.error);
+      return payLoad;
+    } else {
+      return validationResponse.data as GuildAPIResponse;
+    }
   };
 
   if (isLoading) {
