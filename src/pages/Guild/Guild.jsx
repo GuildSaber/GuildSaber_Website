@@ -35,12 +35,12 @@ export default function Guild() {
   }
 
   return (
-    <div className="max-w-screen-lg mx-auto">
+    <div className="mx-auto max-w-screen-lg">
       <>
         <GuildHeader guildData={guild} />
 
         <div className="flow-content-2 md:flow-content-4">
-          <h3 className="text-h4 font-bold text-center md:text-left">
+          <h3 className="text-center text-h4 font-bold md:text-left">
             New Ranked Maps
           </h3>
           <GuildMapCard

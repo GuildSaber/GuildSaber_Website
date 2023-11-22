@@ -5,7 +5,7 @@ import clsx from "clsx";
 export default function SearchBar({ className, ...otherProps }) {
   return (
     <div
-      className={clsx(["flex-center bg-gray-800 rounded", className])}
+      className={clsx(["flex-center rounded bg-gray-800", className])}
       {...otherProps}
     >
       <input

@@ -13,21 +13,21 @@ export default function Card({ guildData }) {
   return (
     <>
       {screenSize.width >= 768 && (
-        <div className="relative flex p-8 bg-gray-800 rounded overflow-hidden pr-48">
-          <div className="flex justify-between w-full gap-4">
-            <div className="absolute top-0 right-0 w-80 h-80 transform rotate-[20deg] translate-x-[140px] -translate-y-[45px] overflow-hidden mix-blend-screen">
+        <div className="relative flex overflow-hidden rounded bg-gray-800 p-8 pr-48">
+          <div className="flex w-full justify-between gap-4">
+            <div className="absolute right-0 top-0 h-80 w-80 -translate-y-[45px] translate-x-[140px] rotate-[20deg] transform overflow-hidden mix-blend-screen">
               <img
-                className="w-80 h-80 transform -translate-x-16"
+                className="h-80 w-80 -translate-x-16 transform"
                 src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
               />
             </div>
 
             <div className="details" style={{ width: "100%" }}>
               <Link to={`/guild/${id}`}>
-                <h3 className="text-h4 font-bold mb-2">{name}</h3>
+                <h3 className="mb-2 text-h4 font-bold">{name}</h3>
               </Link>
 
-              <p className="text-muted line-clamp-3">{description}</p>
+              <p className="line-clamp-3 text-muted">{description}</p>
             </div>
 
             <div className="flex flex-col items-end justify-center gap-2 text-right">
@@ -45,16 +45,16 @@ export default function Card({ guildData }) {
         </div>
       )}
       {screenSize.width < 768 && (
-        <div className="relative block bg-gray-800 rounded overflow-hidden w-full text-center">
-          <div className="w-full h-24 overflow-hidden mix-blend-screen">
+        <div className="relative block w-full overflow-hidden rounded bg-gray-800 text-center">
+          <div className="h-24 w-full overflow-hidden mix-blend-screen">
             <img
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
             />
           </div>
           <div className="flow-content-2 md:flow-content-4 p-4">
             <Link to={`/guild/${id}`}>
-              <h3 className="text-h4 font-bold mb-2">{name}</h3>
+              <h3 className="mb-2 text-h4 font-bold">{name}</h3>
             </Link>
             <div className="w-100">
               <span className="badge">
@@ -66,7 +66,7 @@ export default function Card({ guildData }) {
                 <FontAwesomeIcon icon={faLayerGroup} />
               </span>
             </div>
-            <p className="text-muted line-clamp-3">{description}</p>
+            <p className="line-clamp-3 text-muted">{description}</p>
             <Button className="btn-primary mx-auto" text="Join" />
           </div>
         </div>

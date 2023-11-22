@@ -11,17 +11,17 @@ export default function Header() {
   const [extended, setExtended] = useState(false);
 
   return (
-    <header className="container sticky top-0 left-0 right-0 z-10">
-      <div className="flex justify-between items-stretch mx-auto py-8 transition-all">
-        <nav className="flex items-center justify-between gap-4 w-full">
-          <Link className="hidden sm:flex flex-1 items-center gap-4" to="/">
+    <header className="container sticky left-0 right-0 top-0 z-10">
+      <div className="mx-auto flex items-stretch justify-between py-8 transition-all">
+        <nav className="flex w-full items-center justify-between gap-4">
+          <Link className="hidden flex-1 items-center gap-4 sm:flex" to="/">
             <img src="/gsLogo.svg" alt="logo" width={32} height={32} />
-            <span className="text-h5 font-bold hidden md:inline">
+            <span className="hidden text-h5 font-bold md:inline">
               GuildSaber
             </span>
           </Link>
           <FontAwesomeIcon
-            className="sm:hidden p-4 cursor-pointer"
+            className="cursor-pointer p-4 sm:hidden"
             size="lg"
             icon={extended ? faXmark : faBars}
             onClick={() => setExtended(!extended)}
@@ -29,7 +29,7 @@ export default function Header() {
           {session && (
             <>
               {session.selectedGuild && (
-                <div className="gap-4 hidden sm:flex">
+                <div className="hidden gap-4 sm:flex">
                   <Link to="/leaderboards">Leaderboards</Link>
                   <Link to="/maps">Maps</Link>
                   {session.memberList.length === 0 && (
@@ -68,12 +68,12 @@ export default function Header() {
           {extended && session && session.selectedGuild && (
             <div>
               <FontAwesomeIcon
-                className="cursor-pointer py-12 px-6"
+                className="cursor-pointer px-6 py-12"
                 size="lg"
                 icon={faXmark}
                 onClick={() => setExtended(false)}
               />
-              <div className="sm:hidden flex-center flex-col text-h5 gap-8">
+              <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
                 <Link to="/me">My Profile</Link>
                 <Link to="/leaderboards">Leaderboards</Link>
                 <Link to="/maps">Maps</Link>

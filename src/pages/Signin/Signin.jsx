@@ -31,9 +31,9 @@ export default function Signin() {
 
   return (
     <>
-      <div className="text-center flow-content-4 mt-32">
+      <div className="flow-content-4 mt-32 text-center">
         <h1 className="text-h1 font-bold">GuildSaber</h1>
-        <p className="text-muted text-h5">
+        <p className="text-h5 text-muted">
           Slash to the Rhythm, Unite in the Beat!
         </p>
         <div className="flex-center gap-4 pt-8">

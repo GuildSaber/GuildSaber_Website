@@ -50,7 +50,7 @@ export default function Collapse({
       {...otherProps}
     >
       <button
-        className="inline-flex !bg-gray-800 !gap-4 btn"
+        className="btn inline-flex !gap-4 !bg-gray-800"
         onClick={handleToggle}
       >
         <span>{multiple ? label : displayLabel}</span>
@@ -63,11 +63,11 @@ export default function Collapse({
       </button>
 
       {isOpen && (
-        <div className="transform left-1/2 -translate-x-1/2 absolute rounded text-btn z-10 bg-gray-800 overflow-hidden">
+        <div className="absolute left-1/2 z-10 -translate-x-1/2 transform overflow-hidden rounded bg-gray-800 text-btn">
           {options.map((option) => (
             <div
               className={clsx(
-                "px-4 py-2 hover:bg-gray-700 min-w-max cursor-pointer",
+                "min-w-max cursor-pointer px-4 py-2 hover:bg-gray-700",
                 {
                   "bg-primary": selectedOptions.includes(option.value),
                 },

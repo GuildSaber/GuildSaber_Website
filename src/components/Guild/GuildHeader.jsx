@@ -21,33 +21,33 @@ export default function GuildHeader({
   };
 
   return (
-    <div className="relative bg-gray-800 mb-8 rounded p-8 overflow-hidden md:text-left text-center">
+    <div className="relative mb-8 overflow-hidden rounded bg-gray-800 p-8 text-center md:text-left">
       <object
-        className="absolute top-0 left-0 w-full h-32 mb-4 object-cover"
+        className="absolute left-0 top-0 mb-4 h-32 w-full object-cover"
         data={`https://cdn.guildsaber.com/Guild/${id}/Banner.png`}
         type="image/png"
       >
         <img
           src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
-          className="w-full h-32 object-cover"
+          className="h-32 w-full object-cover"
         />
       </object>
 
-      <div className="flex items-end justify-between gap-4 relative pt-8 mb-4">
+      <div className="relative mb-4 flex items-end justify-between gap-4 pt-8">
         <span className="badge md:hidden">
           {memberCount} <FontAwesomeIcon icon={faUser} />
         </span>
         <img
-          className="w-32 h-32 rounded border-[6px] border-gray-800"
+          className="h-32 w-32 rounded border-[6px] border-gray-800"
           src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
         />
 
-        <span className="badge md:hidden ml-2">
+        <span className="badge ml-2 md:hidden">
           {rankedMapCount}
           <FontAwesomeIcon icon={faLayerGroup} />
         </span>
-        <div className="hidden items-center gap-2 w-full transform translate-y-2 md:flex">
-          <h1 className="flex-1 text-h3 font-bold line-clamp-1 hidden lg:block">
+        <div className="hidden w-full translate-y-2 transform items-center gap-2 md:flex">
+          <h1 className="line-clamp-1 hidden flex-1 text-h3 font-bold lg:block">
             {name}
           </h1>
 
@@ -70,14 +70,14 @@ export default function GuildHeader({
             </p>
           </div>
           <span
-            className="font-bold text-h2 hidden md:block"
+            className="hidden text-h2 font-bold md:block"
             style={{ color: `#${decimalToHex(color)}` }}
           >
             {smallName}
           </span>
         </div>
       </div>
-      <h1 className="flex-1 text-h3 font-bold line-clamp-1 mb-2 lg:hidden">
+      <h1 className="mb-2 line-clamp-1 flex-1 text-h3 font-bold lg:hidden">
         {name}
       </h1>
       <p>{description}</p>
@@ -85,7 +85,7 @@ export default function GuildHeader({
         <Button
           text="Discord"
           icon={faDiscord}
-          className="bg-discord inline-block mt-4 md:hidden"
+          className="mt-4 inline-block bg-discord md:hidden"
           onClick={handleDiscordInvite}
         />
       )}

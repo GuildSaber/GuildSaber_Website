@@ -47,7 +47,7 @@ export default function GuildMenu({ guilds }) {
     >
       <div
         className={clsx(
-          "flex items-stretch bg-gray-800 gap-2 h-full py-2 pl-3",
+          "flex h-full items-stretch gap-2 bg-gray-800 py-2 pl-3",
           { "rounded-t": isOpen, rounded: !isOpen },
         )}
       >
@@ -55,7 +55,7 @@ export default function GuildMenu({ guilds }) {
           <>
             <img
               src={`https://cdn.guildsaber.com/Guild/${selectedGuild}/Logo.png`}
-              className="w-8 h-8 rounded cursor-pointer opacity-80 active"
+              className="active h-8 w-8 cursor-pointer rounded opacity-80"
               alt="logo"
               onError={() => {
                 dispatch({
@@ -66,7 +66,7 @@ export default function GuildMenu({ guilds }) {
               }}
               onClick={() => navigate(`/guild/${selectedGuild}`)}
             />
-            <div className="self-stretch border-l border-muted m-1 opacity-50"></div>
+            <div className="m-1 self-stretch border-l border-muted opacity-50"></div>
           </>
         )}
         {session &&
@@ -78,7 +78,7 @@ export default function GuildMenu({ guilds }) {
               <img
                 key={guild.id}
                 src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
-                className="w-8 h-8 rounded cursor-pointer opacity-80"
+                className="h-8 w-8 cursor-pointer rounded opacity-80"
                 alt="guild logo"
                 onClick={handleGuildClick(guild.id)}
               />
@@ -97,7 +97,7 @@ export default function GuildMenu({ guilds }) {
 
       <ul
         className={clsx(
-          "absolute w-full bg-gray-800 rounded-b flex flex-col pb-2 select-none",
+          "absolute flex w-full select-none flex-col rounded-b bg-gray-800 pb-2",
           { hidden: !isOpen },
         )}
       >
@@ -105,20 +105,20 @@ export default function GuildMenu({ guilds }) {
           guilds.map((guild, key) => (
             <li
               key={key}
-              className="flex gap-4 px-3 py-2 items-center cursor-pointer hover:bg-gray-700"
+              className="flex cursor-pointer items-center gap-4 px-3 py-2 hover:bg-gray-700"
               onClick={handleGuildClick(guild.id)}
             >
               <img
                 src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
-                className="w-8 h-8 rounded opacity-80"
+                className="h-8 w-8 rounded opacity-80"
                 alt="logo"
               />
               <span className="line-clamp-1">{guild.name}</span>
             </li>
           ))}
 
-        <li className="flex gap-4 px-3 py-2 items-center cursor-pointer text-muted hover:bg-gray-700">
-          <div className="w-8 h-8 rounded opacity-80 flex-center">
+        <li className="flex cursor-pointer items-center gap-4 px-3 py-2 text-muted hover:bg-gray-700">
+          <div className="flex-center h-8 w-8 rounded opacity-80">
             <FontAwesomeIcon icon={faPlus} />
           </div>
           <span>Create guild</span>
@@ -126,10 +126,10 @@ export default function GuildMenu({ guilds }) {
         <li>
           <Link
             to="/guilds"
-            className="flex gap-4 px-3 py-2 items-center cursor-pointer text-muted hover:bg-gray-700"
+            className="flex cursor-pointer items-center gap-4 px-3 py-2 text-muted hover:bg-gray-700"
             onClick={() => setIsOpen(false)}
           >
-            <div className="w-8 h-8 rounded opacity-80 flex-center">
+            <div className="flex-center h-8 w-8 rounded opacity-80">
               <FontAwesomeIcon icon={faBars} />
             </div>
             <span>Discover Guilds</span>

@@ -64,7 +64,7 @@ export default function Guilds() {
   }
 
   return (
-    <div className="container flex flex-col h-full gap-2">
+    <div className="container flex h-full flex-col gap-2">
       <List
         totalCount={guilds.totalCount}
         pageSize={PAGE_SIZE}

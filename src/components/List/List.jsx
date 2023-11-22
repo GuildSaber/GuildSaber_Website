@@ -12,7 +12,7 @@ export default function List(props) {
   } = props;
 
   return (
-    <div className="flex gap-2 flex-col">
+    <div className="flex flex-col gap-2">
       {children}
 
       <Pagination

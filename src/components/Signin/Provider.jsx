@@ -13,7 +13,7 @@ export default function Provider({
       <input type="hidden" name="Provider" value={provider} />
       <input type="hidden" name="ReturnUrl" value={returnURL} />
       {token && <input type="hidden" name="Bearer" value={token} />}
-      <button type="submit" className="btn bg-gray-800 btn-primary">
+      <button type="submit" className="btn btn-primary bg-gray-800">
         {logo()}
         Sign up with {provider}
       </button>

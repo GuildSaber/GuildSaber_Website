@@ -8,7 +8,7 @@ import Home from "./pages/Home/Home";
 
 function App() {
   return (
-    <div className="text-white px-2 md:px-4 lg:px-8">
+    <div className="px-2 text-white md:px-4 lg:px-8">
       <Header />
       <div className="container">
         <Routes>

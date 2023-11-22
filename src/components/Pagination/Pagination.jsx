@@ -36,9 +36,9 @@ const Pagination = ({
   };
 
   return (
-    <ul className="flex-center gap-2 p-0 select-none">
+    <ul className="flex-center select-none gap-2 p-0">
       <li
-        className={clsx("btn bg-gray-800 hover:opacity-80 mr-auto", {
+        className={clsx("btn mr-auto bg-gray-800 hover:opacity-80", {
           "pointer-events-none bg-gray-900": !hasPreviousPage,
         })}
         onClick={onPrevious}
@@ -69,7 +69,7 @@ const Pagination = ({
         );
       })}
       <li
-        className={clsx("btn bg-gray-800 hover:opacity-80 ml-auto", {
+        className={clsx("btn ml-auto bg-gray-800 hover:opacity-80", {
           "pointer-events-none bg-gray-900": !hasNextPage,
         })}
         onClick={onNext}
