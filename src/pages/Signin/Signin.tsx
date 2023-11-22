@@ -10,14 +10,13 @@ import BeatLeader from "../../components/Icons/BeatLeader";
 export default function Signin() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { signin, error } = useSignin();
-  const { token } = useAuthContext();
+  const { session } = useAuthContext();
 
   useEffect(() => {
     const token = searchParams.get("token");
     const statusCode = searchParams.get("status");
     const message = searchParams.get("message");
-
-    if (!statusCode && !message) {
+    if (!statusCode || !message || !token) {
       return;
     }
 
@@ -27,7 +26,7 @@ export default function Signin() {
     searchParams.delete("status");
     searchParams.delete("message");
     setSearchParams(searchParams);
-  }, [searchParams, setSearchParams, signin]);
+  }, [searchParams]);
 
   return (
     <>
@@ -41,7 +40,7 @@ export default function Signin() {
           <Provider
             provider="Discord"
             logo={() => <FontAwesomeIcon icon={faDiscord} />}
-            token={token ? token : null}
+            token={session?.token}
           />
         </div>
         <p>{error}</p>

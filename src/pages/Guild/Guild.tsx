@@ -3,9 +3,13 @@ import GuildHeader from "../../components/Guild/GuildHeader";
 import GuildMapCard from "../../components/Guild/GuildMapCard";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
+import { GuildAPIResponse } from "@/types/api";
 
 export default function Guild() {
-  let { guildID } = useParams();
+  const { guildID } = useParams();
+  if (!guildID) {
+    return <p>Error</p>;
+  }
 
   const {
     data: guild,
@@ -18,12 +22,11 @@ export default function Guild() {
     placeholderData: keepPreviousData,
   });
 
-  console.log(guild);
-
-  const getGuild = (guildID) => {
-    return fetch(
+  const getGuild = async (guildID: string): Promise<GuildAPIResponse> => {
+    const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`,
-    ).then((res) => res.json());
+    );
+    return await res.json();
   };
 
   if (isLoading) {
@@ -37,7 +40,7 @@ export default function Guild() {
   return (
     <div className="mx-auto max-w-screen-lg">
       <>
-        <GuildHeader guildData={guild} />
+        {guild && <GuildHeader guildData={guild} />}
 
         <div className="flow-content-2 md:flow-content-4">
           <h3 className="text-center text-h4 font-bold md:text-left">

@@ -13,10 +13,18 @@ export default function Collapse({
   setSelectedOptions,
   className,
   ...otherProps
+}: {
+  label?: string;
+  defaultvalue: string;
+  options: { value: string; label: string }[];
+  multiple: boolean;
+  selectedOptions: string[];
+  setSelectedOptions: (options: string[]) => void;
+  className?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [displayLabel, setDisplayLabel] = useState(defaultvalue);
-  const clickRef = useRef();
+  const clickRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -26,9 +34,10 @@ export default function Collapse({
     setIsOpen(false);
   });
 
-  const handleOptionSelect = (optionValue, optionLabel) => {
-    if (!multiple) {
-      setSelectedOptions(optionValue);
+  const handleOptionSelect = (optionValue: string, optionLabel: string) => {
+    console.log(optionValue, optionLabel);
+    if (multiple !== true) {
+      setSelectedOptions([optionValue]);
       setIsOpen(false);
       setDisplayLabel(optionLabel);
       return;

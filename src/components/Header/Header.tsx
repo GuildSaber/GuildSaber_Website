@@ -32,22 +32,27 @@ export default function Header() {
                 <div className="hidden gap-4 sm:flex">
                   <Link to="/leaderboards">Leaderboards</Link>
                   <Link to="/maps">Maps</Link>
-                  {session.memberList.length === 0 && (
+                  {session.memberList && session.memberList.length === 0 && (
                     <Link to="/guilds">Guilds</Link>
                   )}
                 </div>
               )}
 
               <GuildMenu
-                guilds={session.memberList
-                  .sort((a, b) => a.priority - b.priority)
-                  .map((memberList) => memberList.guild)
-                  .flat()}
+                guilds={
+                  session.memberList
+                    ?.sort((a, b) => a.priority - b.priority)
+                    ?.map((memberList) => memberList.guild)
+                    ?.flat() ?? []
+                }
               />
               <img
                 alt="avatar"
                 className="rounded-full"
-                src={session.player.user_AvatarUrl}
+                src={
+                  session.player?.user_AvatarUrl ??
+                  "https://api.minimalavatars.com/avatar/random/png"
+                }
                 width={40}
                 height={40}
               />

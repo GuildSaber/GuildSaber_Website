@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { usePagination, DOTS } from "../../hooks/usePagination";
 import {
@@ -15,6 +14,14 @@ const Pagination = ({
   pageSize,
   hasPreviousPage,
   hasNextPage,
+}: {
+  onPageChange: (page: number) => void;
+  totalCount: number;
+  siblingCount?: number;
+  currentPage: number;
+  pageSize: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -62,7 +69,7 @@ const Pagination = ({
             className={clsx("flex-center btn bg-gray-800 hover:opacity-80", {
               "bg-primary": pageNumber === currentPage,
             })}
-            onClick={() => onPageChange(pageNumber)}
+            onClick={() => onPageChange(+pageNumber)}
           >
             {pageNumber}
           </li>

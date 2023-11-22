@@ -5,10 +5,15 @@ export default function Button({
   className,
   text,
   icon,
-  image,
   component,
   onClick,
   ...otherProps
+}: {
+  className?: string;
+  text?: string;
+  icon?: any;
+  component?: () => JSX.Element;
+  onClick?: () => void;
 }) {
   return (
     <button
@@ -17,7 +22,6 @@ export default function Button({
       {...otherProps}
     >
       {icon && <FontAwesomeIcon icon={icon} />}
-      {image && <img src={image} />}
       {component && component()}
       {text}
     </button>

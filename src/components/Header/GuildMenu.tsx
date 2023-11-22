@@ -6,36 +6,31 @@ import { Link, useNavigate } from "react-router-dom";
 import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useClickAway from "../../hooks/useClickAway";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { GuildAPIResponse } from "@/types/api";
 
-export default function GuildMenu({ guilds }) {
+export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
   const [isOpen, setIsOpen] = useState(false);
-  const clickRef = useRef();
+  const clickRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const {
-    session: { selectedGuild },
-    dispatch,
-  } = useAuthContext();
+  const { session, dispatch } = useAuthContext();
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleGuildClick = (guildID) => () => {
+  const handleGuildClick = (guildID: number) => () => {
     dispatch({
       type: "GUILD_SELECTED",
-      payload: guildID ? parseInt(guildID) : null,
+      payload: guildID.toString(),
     });
-    localStorage.setItem("selectedGuild", guildID ? parseInt(guildID) : null);
+    localStorage.setItem("selectedGuild", guildID.toString());
     setIsOpen(false);
   };
 
   useClickAway(clickRef, () => {
     setIsOpen(false);
   });
-
-  // session.selectedGuild
-  const { session } = useAuthContext();
 
   return (
     <div
@@ -54,17 +49,17 @@ export default function GuildMenu({ guilds }) {
         {session && session.selectedGuild && (
           <>
             <img
-              src={`https://cdn.guildsaber.com/Guild/${selectedGuild}/Logo.png`}
+              src={`https://cdn.guildsaber.com/Guild/${session.selectedGuild}/Logo.png`}
               className="active h-8 w-8 cursor-pointer rounded opacity-80"
               alt="logo"
               onError={() => {
                 dispatch({
                   type: "GUILD_SELECTED",
-                  payload: null,
+                  payload: "null",
                 });
-                localStorage.setItem("selectedGuild", null);
+                localStorage.setItem("selectedGuild", "null");
               }}
-              onClick={() => navigate(`/guild/${selectedGuild}`)}
+              onClick={() => navigate(`/guild/${session.selectedGuild}`)}
             />
             <div className="m-1 self-stretch border-l border-muted opacity-50"></div>
           </>
@@ -72,7 +67,11 @@ export default function GuildMenu({ guilds }) {
         {session &&
           guilds &&
           guilds
-            .filter((guild) => guild.id !== session.selectedGuild)
+            .filter(
+              (guild) =>
+                session.selectedGuild == null ||
+                guild.id.toString() !== session.selectedGuild,
+            )
             .slice(0, 3)
             .map((guild) => (
               <img

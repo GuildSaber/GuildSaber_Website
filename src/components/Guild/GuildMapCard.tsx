@@ -12,14 +12,19 @@ import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import Sparkles from "../Icons/Sparkles";
 import BeatSaver from "../Icons/BeatSaver";
 
-export default function GuildMapCard({ description, id }) {
+export default function GuildMapCard({
+  description,
+  id,
+}: {
+  description: string;
+  id: number;
+}) {
   const screenSize = useScreenSize();
   return (
     <>
       {screenSize.width >= 768 && (
         <Link
           to={`/guild/${id}`}
-          href={`#`}
           className="group relative flex w-full cursor-pointer overflow-hidden rounded bg-gray-800 p-8 pr-[14rem]"
         >
           <div className="absolute right-0 top-0 h-[340px] w-[340px] -translate-y-[75px] translate-x-[150px] rotate-[20deg] transform overflow-hidden border-8 border-transparent outline outline-8 outline-primary lg:translate-x-[150px]">

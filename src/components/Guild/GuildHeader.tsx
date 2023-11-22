@@ -3,6 +3,7 @@ import Button from "../Common/Button/Button";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
+import { GuildAPIResponse } from "@/types/api";
 
 export default function GuildHeader({
   guildData: {
@@ -15,6 +16,8 @@ export default function GuildHeader({
     memberCount,
     inviteCode,
   },
+}: {
+  guildData: GuildAPIResponse;
 }) {
   const handleDiscordInvite = () => {
     window.open(`https://discord.gg/${inviteCode}`, "_blank");

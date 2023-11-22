@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 export function useSignin() {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const signin = async (status, message, token) => {
+  const signin = async (status: number, message: string, token: string) => {
     setLoading(true);
     setError(null);
 

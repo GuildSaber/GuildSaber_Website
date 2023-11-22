@@ -1,8 +1,50 @@
-import { createContext, useEffect, useReducer } from "react";
+import { GuildAPIResponse } from "@/types/api";
+import { ReactNode, createContext, useEffect, useReducer } from "react";
 
-export const AuthContext = createContext();
+interface AuthState {
+  session: {
+    token?: string;
+    selectedGuild?: string | null;
+    isGuildSaberManager?: boolean;
+    user?: {
+      id: number;
+      discordUserID: number | null;
+      beatLeaderID: number;
+      patreonTier: number;
+      patreonBoosts: number[];
+    };
+    player?: {
+      userID: number;
+      name: string;
+      platform: number;
+      hmd: number;
+      user_AvatarUrl: string;
+    };
+    memberList?: {
+      guildID: number;
+      userID: number;
+      guild: GuildAPIResponse;
+      permissions: number;
+      priority: number;
+      joinDateUnix: number;
+    }[];
+  } | null;
+}
 
-export function authReducer(state, action) {
+type AuthAction =
+  | { type: "LOGIN"; payload: AuthState["session"] }
+  | { type: "LOGOUT" }
+  | { type: "GUILD_SELECTED"; payload: string };
+
+export interface AuthContextType extends AuthState {
+  dispatch: React.Dispatch<AuthAction>;
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
+
+export function authReducer(state: AuthState, action: AuthAction) {
   switch (action.type) {
     case "LOGIN":
       return { session: action.payload };
@@ -17,7 +59,10 @@ export function authReducer(state, action) {
   }
 }
 
-export function AuthContextProvider({ children }) {
+interface AuthContextProviderProps {
+  children: ReactNode;
+}
+export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [state, dispatch] = useReducer(authReducer, {
     session: null,
   });
@@ -43,7 +88,7 @@ export function AuthContextProvider({ children }) {
           let selectedGuild = localStorage.getItem("selectedGuild");
 
           if (!selectedGuild) {
-            localStorage.setItem("selectedGuild", null);
+            localStorage.setItem("selectedGuild", "null");
           }
 
           selectedGuild = localStorage.getItem("selectedGuild");

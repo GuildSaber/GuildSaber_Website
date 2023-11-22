@@ -3,11 +3,10 @@ import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import useScreenSize from "../../hooks/useScreenSize";
+import { GuildAPIResponse } from "@/types/api";
 
-export default function Card({ guildData }) {
-  // eslint-disable-next-line no-unused-vars
-  const { id, name, description, color, type, memberCount, rankedMapCount } =
-    guildData;
+export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
+  const { id, name, description, memberCount, rankedMapCount } = guildData;
   const screenSize = useScreenSize();
 
   return (

@@ -3,6 +3,11 @@ export default function Provider({
   returnURL = window.location.href,
   logo,
   token,
+}: {
+  provider: string;
+  returnURL?: string;
+  logo: any;
+  token?: string;
 }) {
   return (
     <form

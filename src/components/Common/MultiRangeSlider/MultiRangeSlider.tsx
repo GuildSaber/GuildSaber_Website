@@ -1,17 +1,25 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import "./multiRangeSlider.css";
 
-const MultiRangeSlider = ({ min, max, onChange }) => {
+const MultiRangeSlider = ({
+  min,
+  max,
+  onChange,
+}: {
+  min: number;
+  max: number;
+  onChange: (value: { min: number; max: number }) => void;
+}) => {
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
   const minValRef = useRef(min);
   const maxValRef = useRef(max);
-  const range = useRef(null);
+  const range = useRef<HTMLElement>(null);
 
   // Convert to percentage
   const getPercent = useCallback(
-    (value) => Math.round(((value - min) / (max - min)) * 100),
+    (value: number) => Math.round(((value - min) / (max - min)) * 100),
     [min, max],
   );
 
@@ -54,7 +62,6 @@ const MultiRangeSlider = ({ min, max, onChange }) => {
           minValRef.current = value;
         }}
         className="thumb thumb--left"
-        style={{ zIndex: minVal > max - 100 && "5" }}
       />
       <input
         type="range"
@@ -71,7 +78,7 @@ const MultiRangeSlider = ({ min, max, onChange }) => {
 
       <div className="slider">
         <div className="slider__track" />
-        <div ref={range} className="slider__range" />
+        <div ref="range" className="slider__range" />
         <div className="slider__left-value">{minVal}</div>
         <div className="slider__right-value">{maxVal}</div>
       </div>
