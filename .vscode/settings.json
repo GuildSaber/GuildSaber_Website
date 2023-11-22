@@ -32,5 +32,8 @@
   "editor.smoothScrolling": true,
   "explorer.confirmDelete": false,
   "git.autofetch": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
