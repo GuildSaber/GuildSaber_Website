@@ -10,7 +10,8 @@
       "esbenp.prettier-vscode",
       "formulahendry.auto-rename-tag",
       "naumovs.color-highlight",
-      "usernamehw.errorlens"
+      "usernamehw.errorlens",
+      "bradlc.vscode-tailwindcss"
     ]
   },
   "settings": {
@@ -51,5 +52,6 @@
     "explorer.confirmDelete": false,
     "git.autofetch": true,
     "editor.tabSize": 2,
+    "typescript.inlayHints.variableTypes.enabled": true
   }
 }
