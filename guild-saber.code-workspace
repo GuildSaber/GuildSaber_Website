@@ -11,7 +11,8 @@
       "formulahendry.auto-rename-tag",
       "naumovs.color-highlight",
       "usernamehw.errorlens",
-      "bradlc.vscode-tailwindcss"
+      "bradlc.vscode-tailwindcss",
+      "actboy168.tasks"
     ]
   },
   "settings": {
