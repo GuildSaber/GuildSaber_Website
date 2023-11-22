@@ -53,6 +53,7 @@
     "explorer.confirmDelete": false,
     "git.autofetch": true,
     "editor.tabSize": 2,
-    "typescript.tsdk": "node_modules\\typescript\\lib"
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "scss.lint.unknownAtRules": "ignore",
   }
 }
