@@ -1,0 +1,38 @@
+{
+  "include": [
+    "./env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "src/**/__tests__/*",
+    "node_modules",
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "dist",
+    "module": "ESNext",
+    "target": "es5",
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "sourceMap": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "strictNullChecks": true,
+    "allowJs": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "baseUrl": "."
+  }
+}

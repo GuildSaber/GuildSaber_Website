@@ -1,31 +1,56 @@
-@import "/src/variables";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-* {
-    box-sizing: border-box;
-    font-family: sans-serif;
-    color: white;
-    font-family: "Poppins", sans-serif;
-    font-size: 16px;
-    margin: 0;
+@layer components {
+  .btn {
+    @apply inline-flex cursor-pointer items-center gap-2 rounded px-3 py-2 text-btn font-medium text-white;
+  }
+
+  .input {
+    @apply inline-flex items-center gap-2 rounded px-3 py-2 text-btn font-medium text-white focus:outline-none;
+  }
+
+  .badge {
+    @apply inline-flex items-center justify-center gap-1 rounded border-2 border-muted px-2.5 py-1 text-btn text-white;
+  }
 }
 
-body {
-    background: $c-tritary;
-    margin: 0;
-}
+@layer utilities {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark-25 focus:ring-offset-2;
+  }
 
-.hidden {
-    display: none;
-}
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary-dark-25 focus:ring-offset-2;
+  }
 
-.common-button {
-    display: flex;
-    align-items: center;
-    padding: 6px 17px;
-    border: none;
-    color: white;
-    background-color: $c-primary;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
+  .btn-tritary {
+    @apply bg-gray-900 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2;
+  }
+
+  .badge-secondary {
+    @apply border-secondary text-secondary;
+  }
+
+  .flow-content-2 > * + * {
+    @apply mt-2;
+  }
+
+  .flow-content-4 > * + * {
+    @apply mt-4;
+  }
+
+  .flow-content-8 > * + * {
+    @apply mt-8;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: 100lvh;
+  }
 }
