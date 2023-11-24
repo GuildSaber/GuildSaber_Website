@@ -1,3 +1,12 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import clsx from "clsx";
+import BeatSaver from "../../components/Icons/BeatSaver";
+import List from "../../components/List/List";
+import Button from "../../components/Common/Button/Button";
+import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
+import { useAuthContext } from "../../hooks/useAuthContext";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -7,25 +16,30 @@ import {
   faSkull,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { useEffect, useState } from "react";
-import { PlayerScoresAPIResponse, PointsAPIResponse } from "../../types/api";
-import List from "../../components/List/List";
-import Button from "../../components/Common/Button/Button";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import BeatSaver from "../../components/Icons/BeatSaver";
-import { formatDurationSince, formatLargeNumber } from "../../utils/format";
-import clsx from "clsx";
+import {
+  formatDurationSince,
+  formatHMD,
+  formatLargeNumber,
+  formatModifiers,
+} from "../../utils/format";
+import { PlayerScoresAPIResponse, PointsAPIResponse } from "../../types/api";
 
 export default function PlayerProfile() {
   const { session } = useAuthContext();
   const [scores, setScores] = useState<PlayerScoresAPIResponse | null>(null);
   const [points, setPoints] = useState<PointsAPIResponse | null>(null);
   const [activePoint, setActivePoint] = useState<number | null>(null);
+  const [showArcViewer, setShowArcViewer] = useState(false);
+  const [playerStats, setPlayerStats] = useState<any>(null);
 
-  function fetchPlayerScores(page: number) {
+  function fetchPlayerScores(page: number, pointID?: number) {
+    console.log("FETCHING SCORES");
     fetch(
-      `https://api-dev.guildsaber.com/ranked-scores?userID=${session?.user?.id}&pointID=1&page=${page}&pageSize=10&include=SongDifficulties,SongDifficultyStats,Songs,Scores,ScoreStatistics,HitTrackers`,
+      `https://api-dev.guildsaber.com/ranked-scores?userID=${session?.user
+        ?.id}&pointID=${
+        pointID ?? activePoint ?? 1
+      }&page=${page}&pageSize=10&include=SongDifficulties,SongDifficultyStats,Songs,Scores,ScoreStatistics,HitTrackers,GameModes`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -34,7 +48,22 @@ export default function PlayerProfile() {
       });
   }
 
+  function fetchPlayerStats() {
+    // https://api-dev.guildsaber.com/player/9/stats/1
+    fetch(
+      `https://api-dev.guildsaber.com/player/${session?.user?.id}/stats/${
+        activePoint ?? 1
+      }`,
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setPlayerStats(data);
+      });
+  }
+
   function fetchPoints() {
+    console.log("FETCHING POINTS");
     fetch(`https://api-dev.guildsaber.com/points?page=1&pageSize=10`)
       .then((res) => res.json())
       .then((data) => {
@@ -42,10 +71,6 @@ export default function PlayerProfile() {
         setActivePoint(data.data[0].id);
         //console.log(data);
       });
-  }
-
-  function switchPage(page: number) {
-    fetchPlayerScores(page);
   }
 
   function getTotalMisses(score: PlayerScoresAPIResponse["data"][0]) {
@@ -61,10 +86,16 @@ export default function PlayerProfile() {
 
   useEffect(() => {
     if (session) {
-      fetchPlayerScores(1);
       fetchPoints();
     }
   }, [session]);
+
+  useEffect(() => {
+    if (session) {
+      fetchPlayerScores(1);
+      fetchPlayerStats();
+    }
+  }, [activePoint]);
 
   return (
     <>
@@ -91,23 +122,23 @@ export default function PlayerProfile() {
               <span>
                 <FontAwesomeIcon icon={faRankingStar} />
               </span>
-              #15
+              #{playerStats?.rank ?? 0}
             </span>
             <span className="badge badge-secondary">
               <span className="font-bold tracking-tighter">CPP</span>
-              8666.42
+              {playerStats?.pointValue ?? 0}
             </span>
             <span className="badge badge-split">
               <span>Avg Acc</span>
-              <span>76.45%</span>
+              <span>0%</span>
             </span>
             <span className="badge badge-split">
               <span>HMD</span>
-              <span>Quest 2</span>
+              <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
             </span>
             <span className="badge badge-split">
               <span>Total Passes</span>
-              <span>273</span>
+              <span>{playerStats?.validPassCount ?? 0}</span>
             </span>
           </div>
         </section>
@@ -132,19 +163,19 @@ export default function PlayerProfile() {
               hasPreviousPage={scores.hasPreviousPage}
               hasNextPage={scores.hasNextPage}
               currentPage={scores.page}
-              setCurrentPage={switchPage}
+              setCurrentPage={(page) =>
+                fetchPlayerScores(page, points?.data[0].id)
+              }
             >
               {scores.data.map((score) => (
                 <div
                   key={score.id}
-                  className="grid grid-cols-[1fr_6rem] items-center gap-y-2 border-t-2 border-gray-700 py-4 md:grid-cols-[6rem_1fr_16rem_6rem] md:gap-2"
+                  className="grid grid-cols-[1fr_6rem] items-center gap-y-2 border-t-2 border-gray-700 py-4 md:grid-cols-[6rem_1fr_14rem_6rem] md:gap-2 md:rounded md:border-0 md:px-2 md:hover:bg-gray-700"
                 >
                   <div className="hidden text-right md:block">
                     <p className="text-h6 font-bold">#{score.rank}</p>
                     <p className="text-btn text-muted">
-                      {formatDurationSince(
-                        score.songDifficulty.song.unixUploadedTime,
-                      )}
+                      {formatDurationSince(score.score.unixTimeSet)}
                     </p>
                   </div>
                   <div className="flex items-center">
@@ -159,14 +190,17 @@ export default function PlayerProfile() {
                     </div>
                     <div className="ml-2">
                       <p className="line-clamp-2 text-btn text-muted">
-                        {score.songDifficulty.song.songAuthorName}[
+                        {score.songDifficulty.song.songAuthorName} [
                         {score.songDifficulty.song.mapperName}]
                       </p>
                       <h1 className="line-clamp-2 text-h6 font-bold">
                         {score.songDifficulty.song.songName}
                       </h1>
                       <p className="line-clamp-1 text-btn text-muted">
-                        {formatDurationSince(score.score.unixTimeSet)}
+                        {formatDurationSince(
+                          score.songDifficulty.song.unixUploadedTime,
+                        )}{" "}
+                        ago
                       </p>
                     </div>
                   </div>
@@ -180,7 +214,13 @@ export default function PlayerProfile() {
                       </span>
                       <span className="badge badge-secondary">
                         {Math.round(100 * score.rawPoints * score.weight) / 100}{" "}
-                        <span className="font-bold tracking-tighter">CPP</span>
+                        <span className="font-bold tracking-tighter">
+                          {
+                            points?.data.find(
+                              (point) => point.id === activePoint,
+                            )?.name
+                          }
+                        </span>
                       </span>
                       <span
                         className={clsx("badge", {
@@ -195,7 +235,11 @@ export default function PlayerProfile() {
                           />
                         </span>
                       </span>
-                      <span className="badge">DA | FS</span>
+                      {score.score.modifiers > 0 && (
+                        <span className="badge">
+                          {formatModifiers(score.score.modifiers).join(" | ")}
+                        </span>
+                      )}
                       <span className="badge">
                         {(
                           Math.round(
@@ -215,14 +259,25 @@ export default function PlayerProfile() {
                       <Button
                         className="btn btn-tritary"
                         icon={faTwitch}
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            `!bsr ${score.songDifficulty.song.beatSaverKey}`,
+                          )
+                        }
                       ></Button>
-                      <Button
-                        className="btn btn-tritary"
-                        component={() => <BeatSaver />}
-                      ></Button>
+                      <Link
+                        to={`https://beatsaver.com/maps/${score.songDifficulty.song.beatSaverKey}`}
+                        target="_blank"
+                      >
+                        <Button
+                          className="btn btn-tritary"
+                          component={() => <BeatSaver />}
+                        ></Button>
+                      </Link>
                       <Button
                         className="btn btn-tritary"
                         icon={faPlay}
+                        onClick={() => setShowArcViewer(true)}
                       ></Button>
                       <Button
                         className="btn btn-tritary hidden"
@@ -236,6 +291,14 @@ export default function PlayerProfile() {
           )}
         </section>
       </div>
+      {showArcViewer && (
+        <ArcViewer
+          bsrCode="37737"
+          difficulty="Easy"
+          mode="Standard"
+          onClose={() => setShowArcViewer(false)}
+        ></ArcViewer>
+      )}
     </>
   );
 }
