@@ -11,7 +11,7 @@ export default function Header() {
   const [extended, setExtended] = useState(false);
 
   return (
-    <header className="container sticky left-0 right-0 top-0 z-10">
+    <header className="container sticky left-0 right-0 top-0 z-10 bg-gray-900">
       <div className="mx-auto flex items-stretch justify-between py-8 transition-all">
         <nav className="flex w-full items-center justify-between gap-4">
           <Link className="hidden flex-1 items-center gap-4 sm:flex" to="/">
@@ -46,16 +46,18 @@ export default function Header() {
                     ?.flat() ?? []
                 }
               />
-              <img
-                alt="avatar"
-                className="rounded-full"
-                src={
-                  session.player?.user_AvatarUrl ??
-                  "https://api.minimalavatars.com/avatar/random/png"
-                }
-                width={40}
-                height={40}
-              />
+              <Link to="/me">
+                <img
+                  alt="avatar"
+                  className="rounded-full"
+                  src={
+                    session.player?.user_AvatarUrl ??
+                    "https://api.minimalavatars.com/avatar/random/png"
+                  }
+                  width={40}
+                  height={40}
+                />
+              </Link>
             </>
           )}
           {!session && (

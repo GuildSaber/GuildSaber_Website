@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Pagination from "../Pagination/Pagination";
 
 export default function List<C extends React.ReactNode>({
@@ -8,6 +9,7 @@ export default function List<C extends React.ReactNode>({
   currentPage,
   setCurrentPage,
   children,
+  className,
 }: {
   totalCount: number;
   pageSize: number;
@@ -16,9 +18,10 @@ export default function List<C extends React.ReactNode>({
   currentPage: number;
   setCurrentPage: (page: number) => void;
   children: C;
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={clsx("flex flex-col gap-2", className)}>
       {children}
 
       <Pagination

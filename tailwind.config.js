@@ -30,6 +30,7 @@ export default {
       },
       muted: "#7E8691",
       error: "#EA4C66",
+      success: "#34D399",
       discord: "#5865f2",
       white: "#FFFFFF",
       gray: {
@@ -45,6 +46,7 @@ export default {
       h3: "2.074rem",
       h4: "1.728rem",
       h5: "1.44rem",
+      h6: "1.2rem",
       p: "1rem",
       btn: "0.875rem",
     },

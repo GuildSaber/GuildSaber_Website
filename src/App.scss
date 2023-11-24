@@ -12,7 +12,11 @@
   }
 
   .badge {
-    @apply inline-flex items-center justify-center gap-1 rounded border-2 border-muted px-2.5 py-1 text-btn text-white;
+    @apply inline-flex items-center justify-center gap-2 rounded border-[1px] border-muted px-2.5 py-1 text-btn text-white;
+  }
+
+  .card {
+    @apply flow-content-4 overflow-hidden rounded bg-gray-800;
   }
 }
 
@@ -31,6 +35,31 @@
 
   .badge-secondary {
     @apply border-secondary text-secondary;
+  }
+
+  .badge-error {
+    @apply border-error text-error;
+  }
+
+  .badge-success {
+    @apply border-success text-success;
+  }
+
+  .badge-split {
+    @apply gap-2.5 p-0;
+
+    > :last-of-type {
+      @apply min-w-max py-1 pr-2.5;
+    }
+
+    > :first-of-type {
+      @apply relative isolate min-w-max px-2.5 py-1;
+
+      &::after {
+        @apply absolute left-0 right-0 top-0 -z-10 h-full rounded-l bg-gray-900;
+        content: "";
+      }
+    }
   }
 
   .flow-content-2 > * + * {

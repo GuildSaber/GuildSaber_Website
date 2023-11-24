@@ -5,6 +5,7 @@ import Guilds from "./pages/Guilds/Guilds";
 import Guild from "./pages/Guild/Guild";
 import Signin from "./pages/Signin/Signin";
 import Home from "./pages/Home/Home";
+import PlayerProfile from "./pages/Player/PlayerProfile";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/me" element={<PlayerProfile />} />
           <Route path="/signin" element={<Signin />} />
 
           <Route path="/guilds" element={<Guilds />} />
