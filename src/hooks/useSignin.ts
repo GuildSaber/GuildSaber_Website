@@ -4,7 +4,11 @@ export function useSignin() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const signin = async (status: number, message: string, token: string) => {
+  const signin = async (
+    status: number,
+    message: string | null,
+    token: string,
+  ) => {
     setLoading(true);
     setError(null);
 

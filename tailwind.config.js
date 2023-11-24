@@ -32,7 +32,13 @@ export default {
       error: "#EA4C66",
       discord: "#5865f2",
       white: "#FFFFFF",
+      "expert-plus": "#8f48db",
+      expert: "#bf2a42",
+      hard: "#ee5e44",
+      normal: "#59b0f4",
+      easy: "#3cb371",
       gray: {
+        1000: "#0d0e0f",
         900: "#111213",
         800: "#1A1C1E",
         700: "#2E3136",

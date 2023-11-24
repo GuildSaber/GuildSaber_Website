@@ -53,13 +53,12 @@ export default function Collapse({
   };
 
   return (
-    <div
-      ref={clickRef}
-      className={clsx(["relative select-none", className])}
-      {...otherProps}
-    >
+    <div ref={clickRef} className="relative select-none" {...otherProps}>
       <button
-        className="btn inline-flex !gap-4 !bg-gray-800"
+        className={clsx(
+          "btn inline-flex justify-between !gap-4 !bg-gray-800",
+          className,
+        )}
         onClick={handleToggle}
       >
         <span>{multiple ? label : displayLabel}</span>
@@ -72,7 +71,7 @@ export default function Collapse({
       </button>
 
       {isOpen && (
-        <div className="absolute left-1/2 z-10 -translate-x-1/2 transform overflow-hidden rounded bg-gray-800 text-btn">
+        <div className="absolute z-10 mt-2 w-full transform overflow-hidden rounded bg-gray-800 text-btn">
           {options.map((option) => (
             <div
               className={clsx(

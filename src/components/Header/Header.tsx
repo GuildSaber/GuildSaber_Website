@@ -3,16 +3,31 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const { session } = useAuthContext();
   const [extended, setExtended] = useState(false);
 
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    });
+  }, []);
+
   return (
-    <header className="container sticky left-0 right-0 top-0 z-10">
-      <div className="mx-auto flex items-stretch justify-between py-8 transition-all">
+    <header
+      className={clsx("sticky left-0 right-0 top-0 z-10 transition-colors", {
+        "bg-gray-1000": isScrolled,
+      })}
+    >
+      <div className="container mx-auto mb-4 flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
         <nav className="flex w-full items-center justify-between gap-4">
           <Link className="hidden flex-1 items-center gap-4 sm:flex" to="/">
             <img src="/gsLogo.svg" alt="logo" width={32} height={32} />
