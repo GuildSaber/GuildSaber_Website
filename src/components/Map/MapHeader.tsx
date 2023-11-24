@@ -113,15 +113,44 @@ export default function MapHeader() {
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 text-right">
-              <div>
-                <span className="badge badge-secondary">
-                  27
-                  <FontAwesomeIcon icon={faStar} size="sm" />
-                </span>
-                <span className="badge badge-secondary ml-2">
-                  20.93
-                  <Sparkles />
-                </span>
+              <div className="flex flex-col justify-center gap-4">
+                <div className="flex gap-2">
+                  <p className="badge">
+                    1:05
+                    <FontAwesomeIcon icon={faHourglassStart} />
+                  </p>
+                  <p className="badge">
+                    Lawless
+                    <FontAwesomeIcon icon={faSkull} />
+                  </p>
+                  <p className="badge badge-secondary">
+                    20.93
+                    <Sparkles />
+                  </p>
+                  <p className="badge badge-secondary">
+                    27
+                    <FontAwesomeIcon icon={faStar} size="sm" />
+                  </p>
+                </div>
+
+                <div className="flex justify-center gap-2">
+                  <p className="badge">
+                    194
+                    <Bpm />
+                  </p>
+                  <p className="badge">
+                    12.11
+                    <img src="/assets/nps.png" height="16px" width="16px" />
+                  </p>
+                  <p className="badge">
+                    767
+                    <img src="/assets/note.png" height="16px" width="16px" />
+                  </p>
+                  <p className="badge">
+                    20
+                    <img src="/assets/njs.png" height="16px" width="16px" />
+                  </p>
+                </div>
               </div>
               <div className="flex gap-2">
                 <Button className="btn-tritary" icon={faTwitch} />

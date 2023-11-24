@@ -6,24 +6,24 @@ export default function MapRequirements() {
       </h3>
 
       <div className="flex w-full flex-wrap justify-center gap-2 md:justify-start">
-        <p className="badge gap-2 overflow-hidden p-0">
-          <span className="h-full bg-gray-900 px-2.5 py-1">Min Accuracy</span>
-          <span className="h-full py-1 pr-2.5">50%</span>
-        </p>
+        <span className="badge badge-split">
+          <span>Min Accuracy</span>
+          <span>50%</span>
+        </span>
 
-        <p className="badge gap-2 overflow-hidden p-0">
-          <span className="h-full bg-gray-900 px-2.5 py-1">Total Pause</span>
-          <span className="h-full py-1 pr-2.5">{"<5s"}</span>
-        </p>
+        <span className="badge badge-split">
+          <span>Total Pause</span>
+          <span>{"<5s"}</span>
+        </span>
 
-        <p className="badge gap-2 overflow-hidden p-0">
-          <span className="h-full bg-gray-900 px-2.5 py-1">Allowed</span>
-          <span className="h-full py-1 pr-2.5">FS | DA</span>
-        </p>
+        <span className="badge badge-split">
+          <span>Allowed</span>
+          <span>FS | DA</span>
+        </span>
 
-        <p className="badge gap-2 overflow-hidden p-0">
-          <span className="h-full bg-gray-900 px-2.5 py-1">Not Allowed</span>
-          <span className="h-full py-1 pr-2.5">SA | PM</span>
+        <p className="badge badge-split">
+          <span>Not Allowed</span>
+          <span>SA | PM</span>
         </p>
       </div>
     </div>

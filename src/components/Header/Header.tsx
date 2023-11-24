@@ -95,22 +95,24 @@ export default function Header() {
             hidden: !extended,
           })}
         >
-          {extended && session && session.selectedGuild && (
-            <div>
-              <FontAwesomeIcon
-                className="cursor-pointer px-6 py-12"
-                size="lg"
-                icon={faXmark}
-                onClick={() => setExtended(false)}
-              />
-              <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
-                <Link to="/me">My Profile</Link>
-                <Link to="/leaderboards">Leaderboards</Link>
-                <Link to="/maps">Maps</Link>
-                <Link to="/guilds">Guilds</Link>
-              </div>
+          <div className="px-2 py-4">
+            <FontAwesomeIcon
+              className="cursor-pointer p-4"
+              size="lg"
+              icon={faXmark}
+              onClick={() => setExtended(false)}
+            />
+            <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
+              {extended && session && session.selectedGuild && (
+                <>
+                  <Link to="/me">My Profile</Link>
+                  <Link to="/leaderboards">Leaderboards</Link>
+                  <Link to="/maps">Maps</Link>
+                  <Link to="/guilds">Guilds</Link>
+                </>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </header>
