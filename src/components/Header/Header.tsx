@@ -24,7 +24,7 @@ export default function Header() {
   return (
     <header
       className={clsx("sticky left-0 right-0 top-0 z-10 transition-colors", {
-        "bg-gray-1000": isScrolled,
+        "bg-[#0d0e0f]": isScrolled,
       })}
     >
       <div className="container mx-auto mb-4 flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
@@ -45,10 +45,16 @@ export default function Header() {
             <>
               {session.selectedGuild && (
                 <div className="hidden gap-4 sm:flex">
-                  <Link to="/leaderboards">Leaderboards</Link>
-                  <Link to="/maps">Maps</Link>
+                  <Link to="/leaderboards" className="btn text-p">
+                    Leaderboards
+                  </Link>
+                  <Link to="/maps" className="btn text-p">
+                    Maps
+                  </Link>
                   {session.memberList && session.memberList.length === 0 && (
-                    <Link to="/guilds">Guilds</Link>
+                    <Link to="/guilds" className="btn text-p">
+                      Guilds
+                    </Link>
                   )}
                 </div>
               )}
@@ -75,8 +81,12 @@ export default function Header() {
           )}
           {!session && (
             <div className="flex gap-4">
-              <Link to="/guilds">Guilds</Link>
-              <Link to="/signin">Login</Link>
+              <Link to="/guilds" className="btn text-p">
+                Guilds
+              </Link>
+              <Link to="/signin" className="btn text-p">
+                Login
+              </Link>
             </div>
           )}
         </nav>

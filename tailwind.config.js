@@ -38,7 +38,6 @@ export default {
       normal: "#59b0f4",
       easy: "#3cb371",
       gray: {
-        1000: "#0d0e0f",
         900: "#111213",
         800: "#1A1C1E",
         700: "#2E3136",
