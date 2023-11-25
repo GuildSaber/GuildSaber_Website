@@ -16,7 +16,7 @@ export default function Signin() {
     const token = searchParams.get("token");
     const statusCode = searchParams.get("status");
     const message = searchParams.get("message");
-    if (!statusCode || !message || !token) {
+    if (!statusCode) {
       return;
     }
 

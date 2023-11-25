@@ -88,7 +88,7 @@ export default function GuildHeader({
         <Button
           text="Discord"
           icon={faDiscord}
-          className="mt-4 inline-block bg-discord md:hidden"
+          className="mt-4 bg-discord md:hidden"
           onClick={handleDiscordInvite}
         />
       )}
