@@ -7,12 +7,13 @@ import Signin from "./pages/Signin/Signin";
 import Home from "./pages/Home/Home";
 import Map from "./pages/Map/Map";
 import PlayerProfile from "./pages/Player/PlayerProfile";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
-    <div className="text-white">
+    <div className="flex min-h-screen flex-col justify-between text-white">
       <Header />
-      <div className="container px-2 text-white md:px-4 lg:px-8">
+      <div className="container mb-auto flex-grow px-2 text-white md:px-4 lg:px-8">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/me" element={<PlayerProfile />} />
@@ -24,6 +25,7 @@ function App() {
           <Route path="/map/:mapID" element={<Map />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 }
