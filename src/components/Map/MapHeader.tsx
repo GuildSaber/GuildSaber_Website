@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import useScreenSize from "../../hooks/useScreenSize";
 import Button from "../Common/Button/Button";
 
@@ -14,11 +13,24 @@ import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import Sparkles from "../Icons/Sparkles";
 import BeatSaver from "../Icons/BeatSaver";
 import Bpm from "../Icons/Bpm";
+import { MapAPIResponse } from "src/types/api";
 
-export default function MapHeader() {
+export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
   const screenSize = useScreenSize();
 
-  const id = 1;
+  const {
+    song,
+    songDifficultyStats: difficulty,
+    gameMode,
+  } = mapData.rankedSongDifficulties[0].songDifficulty;
+
+  const rating = mapData.rating.default.stars;
+
+  const songDuration =
+    Math.floor(song.duration / 60) +
+    ":" +
+    (song.duration - Math.floor(song.duration / 60) * 60);
+
   const description = "A map of the best place to play";
 
   return (
@@ -28,16 +40,16 @@ export default function MapHeader() {
           <div className="absolute right-0 top-0 h-[340px] w-[340px] -translate-y-[75px] translate-x-[150px] rotate-[20deg] transform overflow-hidden border-8 border-transparent outline outline-8 outline-expert-plus lg:translate-x-[150px]">
             <img
               className="h-[340px] w-[340px] translate-x-[-80px] transform object-cover transition-[filter,transform]"
-              src={`https://eu.cdn.beatsaver.com/191cafd1d0d6ab46545a8bfcb904c5b6dab4b1f1.jpg`}
+              src={song.coverURL}
             />
           </div>
           <div className="flex w-full justify-between gap-4">
             <div>
               <h3 className="line-clamp-1 text-h4 font-bold">
-                Powa Of Da Wildanes{" "}
+                {song.songName}
               </h3>
               <p className="mb-2 text-p font-normal text-secondary">
-                by Camellia [Rogdude]
+                by {song.songAuthorName} [{song.mapperName}]
               </p>
 
               <p className="line-clamp-2">{description}</p>
@@ -46,38 +58,38 @@ export default function MapHeader() {
             <div className="flex flex-col items-end justify-center gap-2 text-right">
               <div className="flex gap-2">
                 <p className="badge">
-                  1:05
+                  {songDuration}
                   <FontAwesomeIcon icon={faHourglassStart} />
                 </p>
                 <p className="badge">
-                  Lawless
+                  {gameMode.name}
                   <FontAwesomeIcon icon={faSkull} />
                 </p>
                 <p className="badge badge-secondary">
-                  20.93
+                  {rating.acc}
                   <Sparkles />
                 </p>
                 <p className="badge badge-secondary">
-                  27
+                  {rating.difficulty}
                   <FontAwesomeIcon icon={faStar} size="sm" />
                 </p>
               </div>
 
               <div className="mr-4 flex gap-2">
                 <p className="badge">
-                  194
+                  {song.bpm}
                   <Bpm />
                 </p>
                 <p className="badge">
-                  12.11
+                  {difficulty.notesPerSecond.toFixed(2)}
                   <img src="/assets/nps.png" height="16px" width="16px" />
                 </p>
                 <p className="badge">
-                  767
+                  {difficulty.noteCount}
                   <img src="/assets/note.png" height="16px" width="16px" />
                 </p>
                 <p className="badge">
-                  20
+                  {difficulty.noteJumpSpeed}
                   <img src="/assets/njs.png" height="16px" width="16px" />
                 </p>
               </div>
@@ -95,18 +107,13 @@ export default function MapHeader() {
       {screenSize.width < 768 && (
         <div className="relative mb-8 block w-full overflow-hidden rounded bg-gray-800 text-center">
           <div className="h-24 w-full overflow-hidden border-b-8 border-primary">
-            <img
-              className="h-24 w-full object-cover"
-              src={`https://eu.cdn.beatsaver.com/191cafd1d0d6ab46545a8bfcb904c5b6dab4b1f1.jpg`}
-            />
+            <img className="h-24 w-full object-cover" src={song.coverURL} />
           </div>
           <div className="flex w-full flex-col justify-between gap-4 p-8">
             <div>
-              <h3 className="line-clamp-1 text-h4 font-bold">
-                Powa Of Da Wildanes{" "}
-              </h3>
+              <h3 className="line-clamp-1 text-h4 font-bold">{song.name}</h3>
               <p className="mb-2 text-p font-normal text-secondary">
-                by Camellia [Rogdude]
+                by {song.songAuthorName} [{song.mapperName}]
               </p>
 
               <p className="line-clamp-2">{description}</p>
@@ -114,13 +121,13 @@ export default function MapHeader() {
 
             <div className="flex flex-col items-center justify-center gap-4 text-right">
               <div className="flex flex-col justify-center gap-4">
-                <div className="flex gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                   <p className="badge">
-                    1:05
+                    {songDuration}
                     <FontAwesomeIcon icon={faHourglassStart} />
                   </p>
                   <p className="badge">
-                    Lawless
+                    {gameMode.name}
                     <FontAwesomeIcon icon={faSkull} />
                   </p>
                   <p className="badge badge-secondary">
@@ -133,34 +140,30 @@ export default function MapHeader() {
                   </p>
                 </div>
 
-                <div className="flex justify-center gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                   <p className="badge">
-                    194
+                    {song.bpm}
                     <Bpm />
                   </p>
                   <p className="badge">
-                    12.11
+                    {difficulty.notesPerSecond}
                     <img src="/assets/nps.png" height="16px" width="16px" />
                   </p>
                   <p className="badge">
-                    767
+                    {difficulty.noteCount}
                     <img src="/assets/note.png" height="16px" width="16px" />
                   </p>
                   <p className="badge">
-                    20
+                    {difficulty.noteJumpSpeed}
                     <img src="/assets/njs.png" height="16px" width="16px" />
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap justify-center gap-2">
                 <Button className="btn-tritary" icon={faTwitch} />
                 <Button className="btn-tritary" icon={faPlay} />
                 <Button className="btn-tritary" component={BeatSaver} />
-              </div>
-              <div className="flex gap-2">
-                <Link to={`/guild/${id}`}>
-                  <Button className="btn-primary" text={"View"} />
-                </Link>
+                <Button className="btn-primary" icon={faCloudArrowDown} />
               </div>
             </div>
           </div>

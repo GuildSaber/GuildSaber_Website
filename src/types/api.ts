@@ -31,5 +31,65 @@ export const GuildsAPIResponseSchema = z.object({
   hasNextPage: z.boolean(),
 });
 
+export const MapAPIResponseSchema = z.object({
+  id: z.number(),
+  guildID: z.number(),
+  rankingState: z.number(),
+  requirements: z.object({
+    doesNeedConfirmation: z.boolean(),
+    doesNeedFullCombo: z.boolean(),
+    maxPauseDuration: z.number(),
+    prohibitedModifiers: z.number(),
+    mandatoryModifiers: z.number(),
+    minAccuracy: z.number(),
+  }),
+  rating: z.object({
+    customModifiersRating: z.number(),
+    default: z.object({
+      stars: z.object({ difficulty: z.number(), acc: z.number() }),
+    }),
+    modifiers: z.null(),
+  }),
+  unixCreationTime: z.number(),
+  unixEditTime: z.number(),
+  rankedSongDifficulties: z.array(
+    z.object({
+      songDifficulty: z.object({
+        id: z.number(),
+        gameMode: z.object({ id: z.number(), name: z.string() }),
+        difficulty: z.number(),
+        song: z.object({
+          id: z.number(),
+          hash: z.string(),
+          beatSaverKey: z.string(),
+          name: z.string(),
+          songName: z.string(),
+          songSubName: z.string(),
+          songAuthorName: z.string(),
+          mapperName: z.string(),
+          isAutoMapped: z.boolean(),
+          bpm: z.number(),
+          duration: z.number(),
+          unixUploadedTime: z.number(),
+          coverURL: z.string(),
+        }),
+        blid: z.string(),
+        songDifficultyStats: z.object({
+          id: z.number(),
+          maxScore: z.number(),
+          noteJumpSpeed: z.number(),
+          noteCount: z.number(),
+          bombCount: z.number(),
+          obstacleCount: z.number(),
+          notesPerSecond: z.number(),
+          duration: z.number(),
+        }),
+      }),
+    }),
+  ),
+});
+
 export type GuildsAPIResponse = z.infer<typeof GuildsAPIResponseSchema>;
 export type GuildAPIResponse = z.infer<typeof GuildAPIResponseSchema>;
+
+export type MapAPIResponse = z.infer<typeof MapAPIResponseSchema>;

@@ -3,20 +3,63 @@ import MapHeader from "../../components/Map/MapHeader";
 import MapRequirements from "../../components/Map/MapRequirements";
 import List from "../../components/List/List";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { MapAPIResponseSchema } from "../../types/api";
+import Loader from "../../components/Common/Loader/Loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const PAGE_SIZE = 10;
+const API_DATA_INCLUDES = [
+  "RankedSongDifficulties",
+  "SongDifficulties",
+  "Songs",
+  "GameModes",
+  "SongDifficultyStats",
+];
 
 export default function Map() {
   const { mapID } = useParams();
-  if (!mapID) {
-    return <p>Error</p>;
-  }
   const [currentPage, setCurrentPage] = useState(1);
+
+  const getMap = async () =>
+    fetch(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/ranked-map/by-id/${mapID}?include=${API_DATA_INCLUDES.toString()}`,
+    )
+      .then((res) => res.json())
+      .then(MapAPIResponseSchema.parse);
+
+  const {
+    data: map,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["maps", mapID],
+    queryFn: () => getMap(),
+    staleTime: 60_000,
+    enabled: !!mapID,
+    retry: 0,
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError || map == null) {
+    return (
+      <div className="text-center">
+        <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
+        <h3 className="text-h3">Map not found</h3>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-screen-lg">
       <>
-        <MapHeader />
+        <MapHeader mapData={map} />
 
         <MapRequirements />
         <div className="flex w-full rounded bg-gray-800 p-8">
