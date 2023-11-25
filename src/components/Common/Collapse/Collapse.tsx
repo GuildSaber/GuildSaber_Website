@@ -1,7 +1,12 @@
 import { useRef, useState } from "react";
 import clsx from "clsx";
 import useClickAway from "../../../hooks/useClickAway";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronUp,
+  faSquareCheck,
+} from "@fortawesome/free-solid-svg-icons";
+import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Collapse({
@@ -53,13 +58,12 @@ export default function Collapse({
   };
 
   return (
-    <div
-      ref={clickRef}
-      className={clsx(["relative select-none", className])}
-      {...otherProps}
-    >
+    <div ref={clickRef} className="relative select-none" {...otherProps}>
       <button
-        className="btn inline-flex !gap-4 !bg-gray-800"
+        className={clsx(
+          "btn inline-flex justify-between !gap-4 !bg-gray-800",
+          className,
+        )}
         onClick={handleToggle}
       >
         <span>{multiple ? label : displayLabel}</span>
@@ -72,18 +76,31 @@ export default function Collapse({
       </button>
 
       {isOpen && (
-        <div className="absolute left-1/2 z-10 -translate-x-1/2 transform overflow-hidden rounded bg-gray-800 text-btn">
+        <div className="absolute z-10 mt-2 w-full transform overflow-hidden rounded border border-gray-700 bg-gray-800 text-btn sm:w-auto">
           {options.map((option) => (
             <div
               className={clsx(
                 "min-w-max cursor-pointer px-4 py-2 hover:bg-gray-700",
                 {
-                  "bg-primary": selectedOptions.includes(option.value),
+                  "text-primary":
+                    !multiple && selectedOptions.includes(option.value),
                 },
               )}
               key={option.value}
               onClick={() => handleOptionSelect(option.value, option.label)}
             >
+              {multiple && (
+                <FontAwesomeIcon
+                  className={clsx("-translate-x-1 text-p", {
+                    "text-primary": selectedOptions.includes(option.value),
+                  })}
+                  icon={
+                    selectedOptions.includes(option.value)
+                      ? faSquareCheck
+                      : faSquare
+                  }
+                />
+              )}{" "}
               {option.label}
             </div>
           ))}

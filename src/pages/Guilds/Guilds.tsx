@@ -81,7 +81,7 @@ export default function Guilds() {
   return (
     <>
       {guilds && (
-        <div className="container flex h-full flex-col gap-2">
+        <div className="flex h-full gap-2">
           <List
             totalCount={guilds.totalCount}
             pageSize={PAGE_SIZE}
@@ -90,9 +90,10 @@ export default function Guilds() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           >
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Collapse
                 defaultvalue={FILTER_SORT_BY_VALUES[0].value}
+                className="w-full sm:w-auto"
                 options={FILTER_SORT_BY_VALUES}
                 selectedOptions={[filter["sort-By"]]}
                 multiple={false}
@@ -102,6 +103,7 @@ export default function Guilds() {
               />
               <Collapse
                 label="Guild Type"
+                className="w-full sm:w-auto"
                 multiple={true}
                 defaultvalue={FILTER_GUILD_TYPES[0].value}
                 options={FILTER_GUILD_TYPES}
@@ -110,7 +112,7 @@ export default function Guilds() {
                   setFilter({ ...filter, guildTypes: value })
                 }
               />
-              <SearchBar className="ml-auto" />
+              <SearchBar className="ml-auto w-full sm:w-auto" />
             </div>
 
             {guilds?.data.map((guild, key) => (

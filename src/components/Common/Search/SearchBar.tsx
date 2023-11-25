@@ -16,7 +16,7 @@ export default function SearchBar({
       <input
         type="text"
         placeholder="Search..."
-        className="input bg-gray-800"
+        className="input w-full bg-gray-800"
       />
       <FontAwesomeIcon className="pr-3" icon={faMagnifyingGlass} />
     </div>

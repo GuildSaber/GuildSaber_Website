@@ -21,7 +21,7 @@ export default function List<C extends React.ReactNode>({
   className?: string;
 }) {
   return (
-    <div className={clsx("flex flex-col gap-2", className)}>
+    <div className={clsx("flex w-full flex-col gap-2", className)}>
       {children}
 
       <Pagination

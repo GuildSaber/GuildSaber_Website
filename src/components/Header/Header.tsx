@@ -3,16 +3,34 @@ import { Link } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const { session } = useAuthContext();
   const [extended, setExtended] = useState(false);
 
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    });
+  }, []);
+
   return (
-    <header className="container sticky left-0 right-0 top-0 z-10 bg-gray-900">
-      <div className="mx-auto flex items-stretch justify-between py-8 transition-all">
+    <header
+      className={clsx(
+        "container sticky left-0 right-0 top-0 z-10 transition-colors",
+        {
+          "bg-[#0d0e0f]": isScrolled,
+        },
+      )}
+    >
+      <div className="mx-auto mb-4 flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
         <nav className="flex w-full items-center justify-between gap-4">
           <Link className="hidden flex-1 items-center gap-4 sm:flex" to="/">
             <img src="/gsLogo.svg" alt="logo" width={32} height={32} />
@@ -30,10 +48,16 @@ export default function Header() {
             <>
               {session.selectedGuild && (
                 <div className="hidden gap-4 sm:flex">
-                  <Link to="/leaderboards">Leaderboards</Link>
-                  <Link to="/maps">Maps</Link>
+                  <Link to="/leaderboards" className="btn text-p">
+                    Leaderboards
+                  </Link>
+                  <Link to="/maps" className="btn text-p">
+                    Maps
+                  </Link>
                   {session.memberList && session.memberList.length === 0 && (
-                    <Link to="/guilds">Guilds</Link>
+                    <Link to="/guilds" className="btn text-p">
+                      Guilds
+                    </Link>
                   )}
                 </div>
               )}
@@ -62,8 +86,12 @@ export default function Header() {
           )}
           {!session && (
             <div className="flex gap-4">
-              <Link to="/guilds">Guilds</Link>
-              <Link to="/signin">Login</Link>
+              <Link to="/guilds" className="btn text-p">
+                Guilds
+              </Link>
+              <Link to="/signin" className="btn text-p">
+                Login
+              </Link>
             </div>
           )}
         </nav>
@@ -72,22 +100,24 @@ export default function Header() {
             hidden: !extended,
           })}
         >
-          {extended && session && session.selectedGuild && (
-            <div>
-              <FontAwesomeIcon
-                className="cursor-pointer px-6 py-12"
-                size="lg"
-                icon={faXmark}
-                onClick={() => setExtended(false)}
-              />
-              <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
-                <Link to="/me">My Profile</Link>
-                <Link to="/leaderboards">Leaderboards</Link>
-                <Link to="/maps">Maps</Link>
-                <Link to="/guilds">Guilds</Link>
-              </div>
+          <div className="px-2 py-4">
+            <FontAwesomeIcon
+              className="cursor-pointer p-4"
+              size="lg"
+              icon={faXmark}
+              onClick={() => setExtended(false)}
+            />
+            <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
+              {extended && session && session.selectedGuild && (
+                <>
+                  <Link to="/me">My Profile</Link>
+                  <Link to="/leaderboards">Leaderboards</Link>
+                  <Link to="/maps">Maps</Link>
+                  <Link to="/guilds">Guilds</Link>
+                </>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </header>

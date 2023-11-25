@@ -8,6 +8,10 @@ import useClickAway from "../../hooks/useClickAway";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { GuildAPIResponse } from "../../types/api";
 
+const MAX_GUILD_NAME_LENGTH = 16;
+const MAX_VISIBLE_GUILD_COUNT = 3;
+const MAX_COLLAPSED_GUILD_COUNT = 5;
+
 export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const clickRef = useRef<HTMLDivElement>(null);
@@ -67,12 +71,12 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
         {session &&
           guilds &&
           guilds
-            .filter(
+            /*.filter(
               (guild) =>
                 session.selectedGuild == null ||
                 guild.id.toString() !== session.selectedGuild,
-            )
-            .slice(0, 3)
+            )*/
+            .slice(0, MAX_VISIBLE_GUILD_COUNT)
             .map((guild) => (
               <img
                 key={guild.id}
@@ -101,20 +105,29 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
         )}
       >
         {guilds &&
-          guilds.map((guild, key) => (
-            <li
-              key={key}
-              className="flex cursor-pointer items-center gap-4 px-3 py-2 hover:bg-gray-700"
-              onClick={handleGuildClick(guild.id)}
-            >
-              <img
-                src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
-                className="h-8 w-8 rounded opacity-80"
-                alt="logo"
-              />
-              <span className="line-clamp-1">{guild.name}</span>
-            </li>
-          ))}
+          guilds
+            .slice(
+              MAX_VISIBLE_GUILD_COUNT,
+              MAX_VISIBLE_GUILD_COUNT + MAX_COLLAPSED_GUILD_COUNT,
+            )
+            .map((guild, key) => (
+              <li
+                key={key}
+                className="flex cursor-pointer items-center gap-4 px-3 py-2 hover:bg-gray-700"
+                onClick={handleGuildClick(guild.id)}
+              >
+                <img
+                  src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
+                  className="h-8 w-8 rounded opacity-80"
+                  alt="logo"
+                />
+                <span className="line-clamp-1">
+                  {guild.name.length <= MAX_GUILD_NAME_LENGTH
+                    ? guild.name
+                    : guild.smallName}
+                </span>
+              </li>
+            ))}
 
         <li className="flex cursor-pointer items-center gap-4 px-3 py-2 text-muted hover:bg-gray-700">
           <div className="flex-center h-8 w-8 rounded opacity-80">

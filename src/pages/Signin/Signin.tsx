@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSignin } from "../../hooks/useSignin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
@@ -11,12 +11,14 @@ export default function Signin() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { signin, error } = useSignin();
   const { session } = useAuthContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = searchParams.get("token");
     const statusCode = searchParams.get("status");
     const message = searchParams.get("message");
-    if (!statusCode) {
+    if (!statusCode || !token) {
+      if (session) navigate("/");
       return;
     }
 

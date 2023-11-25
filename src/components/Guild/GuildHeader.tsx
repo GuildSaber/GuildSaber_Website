@@ -37,7 +37,7 @@ export default function GuildHeader({
       </object>
 
       <div className="relative mb-4 flex items-end justify-between gap-4 pt-8">
-        <span className="badge md:hidden">
+        <span className="badge w-20 text-left md:hidden">
           {memberCount} <FontAwesomeIcon icon={faUser} />
         </span>
         <img
@@ -45,7 +45,7 @@ export default function GuildHeader({
           src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
         />
 
-        <span className="badge ml-2 md:hidden">
+        <span className="badge w-20 text-right md:hidden">
           {rankedMapCount}
           <FontAwesomeIcon icon={faLayerGroup} />
         </span>
