@@ -7,7 +7,7 @@ export default function ArcViewer({
   onClose,
 }: {
   bsrCode: string;
-  difficulty: string;
+  difficulty: number;
   mode: string;
   onClose: () => void;
 }) {

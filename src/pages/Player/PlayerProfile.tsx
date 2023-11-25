@@ -32,6 +32,9 @@ export default function PlayerProfile() {
   const [activePoint, setActivePoint] = useState<number | null>(null);
   const [showArcViewer, setShowArcViewer] = useState(false);
   const [playerStats, setPlayerStats] = useState<any>(null);
+  const [arcViewerBeatSaverKey, setArcViewerBeatSaverKey] = useState("");
+  const [arcViewerDifficulty, setArcViewerDifficulty] = useState<number>(9);
+  const [arcViewerMode, setArcViewerMode] = useState("Standard");
 
   function fetchPlayerScores(page: number, pointID?: number) {
     console.log("FETCHING SCORES");
@@ -49,7 +52,6 @@ export default function PlayerProfile() {
   }
 
   function fetchPlayerStats() {
-    // https://api-dev.guildsaber.com/player/9/stats/1
     fetch(
       `https://api-dev.guildsaber.com/player/${session?.user?.id}/stats/${
         activePoint ?? 1
@@ -84,6 +86,27 @@ export default function PlayerProfile() {
     );
   }
 
+  function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {
+    setArcViewerBeatSaverKey(score.songDifficulty.song.beatSaverKey);
+    setArcViewerDifficulty(score.songDifficulty.difficulty);
+    setArcViewerMode(score.songDifficulty.gameMode.name);
+    setShowArcViewer(true);
+  }
+
+  function getDiffShort(score: PlayerScoresAPIResponse["data"][0]) {
+    if (score.songDifficulty.gameMode.name === "Standard") {
+      return {
+        1: "E",
+        3: "N",
+        5: "H",
+        7: "E",
+        9: "E+",
+      }[score.songDifficulty.difficulty];
+    } else {
+      return <FontAwesomeIcon icon={faSkull} />;
+    }
+  }
+
   useEffect(() => {
     if (session) {
       fetchPoints();
@@ -100,46 +123,48 @@ export default function PlayerProfile() {
   return (
     <>
       <div className="flow-content-2">
-        <section className="card">
+        <section className="card md:flex md:gap-4 md:p-4">
           <img
             src={session?.player?.user_AvatarUrl}
-            className="h-24 w-full object-cover"
+            className="h-24 w-full object-cover md:h-32 md:w-32 md:rounded"
           />
-          <div className="flex-center gap-4">
-            <img
-              src={
-                "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png"
-              }
-              className="h-6 rounded"
-            />
-            <h1 className="text-h5 font-bold">{session?.player?.name}</h1>
-            <span className="badge hidden h-6 !border-0 bg-[#9300e4]">
-              {25}
-            </span>
-          </div>
-          <div className="flex-center mb-4 flex-wrap gap-2">
-            <span className="badge badge-secondary">
-              <span>
-                <FontAwesomeIcon icon={faRankingStar} />
+          <div className="flex flex-col gap-2">
+            <div className="flex-center gap-4 md:!justify-start">
+              <img
+                src={
+                  "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png"
+                }
+                className="h-6 rounded"
+              />
+              <h1 className="text-h5 font-bold">{session?.player?.name}</h1>
+              <span className="badge hidden h-6 !border-0 bg-[#9300e4]">
+                {25}
               </span>
-              #{playerStats?.rank ?? 0}
-            </span>
-            <span className="badge badge-secondary">
-              <span className="font-bold tracking-tighter">CPP</span>
-              {playerStats?.pointValue ?? 0}
-            </span>
-            <span className="badge badge-split">
-              <span>Avg Acc</span>
-              <span>0%</span>
-            </span>
-            <span className="badge badge-split">
-              <span>HMD</span>
-              <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
-            </span>
-            <span className="badge badge-split">
-              <span>Total Passes</span>
-              <span>{playerStats?.validPassCount ?? 0}</span>
-            </span>
+            </div>
+            <div className="flex-center mb-4 flex-wrap gap-2 md:!justify-start">
+              <span className="badge badge-secondary">
+                <span>
+                  <FontAwesomeIcon icon={faRankingStar} />
+                </span>
+                #{playerStats?.rank ?? 0}
+              </span>
+              <span className="badge badge-secondary">
+                <span className="font-bold tracking-tighter">CPP</span>
+                {playerStats?.pointValue ?? 0}
+              </span>
+              <span className="badge badge-split">
+                <span>Avg Acc</span>
+                <span>0%</span>
+              </span>
+              <span className="badge badge-split">
+                <span>HMD</span>
+                <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
+              </span>
+              <span className="badge badge-split">
+                <span>Total Passes</span>
+                <span>{playerStats?.validPassCount ?? 0}</span>
+              </span>
+            </div>
           </div>
         </section>
         <section className="card px-2 py-4">
@@ -185,7 +210,7 @@ export default function PlayerProfile() {
                         className="h-12 w-12 max-w-none rounded"
                       />
                       <span className="badge absolute left-1/2 top-full h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-gray-900">
-                        <FontAwesomeIcon icon={faSkull} />
+                        {getDiffShort(score)}
                       </span>
                     </div>
                     <div className="ml-2">
@@ -277,7 +302,7 @@ export default function PlayerProfile() {
                       <Button
                         className="btn btn-tritary"
                         icon={faPlay}
-                        onClick={() => setShowArcViewer(true)}
+                        onClick={() => onPlayClick(score)}
                       ></Button>
                       <Button
                         className="btn btn-tritary hidden"
@@ -293,9 +318,9 @@ export default function PlayerProfile() {
       </div>
       {showArcViewer && (
         <ArcViewer
-          bsrCode="37737"
-          difficulty="Easy"
-          mode="Standard"
+          bsrCode={arcViewerBeatSaverKey}
+          difficulty={arcViewerDifficulty}
+          mode={arcViewerMode}
           onClose={() => setShowArcViewer(false)}
         ></ArcViewer>
       )}
