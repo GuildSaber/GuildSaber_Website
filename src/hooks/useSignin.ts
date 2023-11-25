@@ -7,18 +7,18 @@ export function useSignin() {
   const signin = async (
     status: number,
     message: string | null,
-    token: string,
+    token: string | null,
   ) => {
     setLoading(true);
     setError(null);
 
     if (status !== 200) {
       setLoading(false);
-      setError(message);
+      if (message != null) setError(message);
     }
 
     if (status === 200) {
-      localStorage.setItem("token", token);
+      if (token != null) localStorage.setItem("token", token);
       setLoading(false);
     }
   };

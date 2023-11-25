@@ -13,7 +13,7 @@ import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import Sparkles from "../Icons/Sparkles";
 import BeatSaver from "../Icons/BeatSaver";
 import Bpm from "../Icons/Bpm";
-import { MapAPIResponse } from "src/types/api";
+import { MapAPIResponse } from "../../types/api";
 
 export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
   const screenSize = useScreenSize();

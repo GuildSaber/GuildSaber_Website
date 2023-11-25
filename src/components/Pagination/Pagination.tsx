@@ -68,6 +68,7 @@ const Pagination = ({
             key={key}
             className={clsx("flex-center btn bg-gray-800 hover:opacity-80", {
               "bg-primary": pageNumber === currentPage,
+              "hover:bg-gray-900": pageNumber !== currentPage,
             })}
             onClick={() => onPageChange(+pageNumber)}
           >

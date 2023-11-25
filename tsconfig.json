@@ -33,6 +33,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "composite": true,
-    "baseUrl": "."
+    "baseUrl": "./src",
   }
 }
