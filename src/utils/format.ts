@@ -138,3 +138,11 @@ export type ModifierShort =
   | "OD"
   | "OP"
   | "UNK";
+
+export const formatDifficulty: { [key: string]: string } = {
+  1: "easy",
+  3: "normal",
+  5: "hard",
+  7: "expert",
+  9: "expert-plus",
+};

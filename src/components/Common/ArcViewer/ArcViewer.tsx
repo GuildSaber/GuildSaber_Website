@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import useClickAway from "../../../hooks/useClickAway";
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 export default function ArcViewer({
   bsrCode,
@@ -12,6 +14,7 @@ export default function ArcViewer({
   onClose: () => void;
 }) {
   const [iframeSrc, setIframeSrc] = useState("");
+  const clickRef = useRef(null);
 
   useEffect(() => {
     setIframeSrc(
@@ -19,22 +22,17 @@ export default function ArcViewer({
     );
   }, [bsrCode, difficulty, mode]);
 
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
+  useClickAway(clickRef, () => onClose());
 
-  return (
-    <div
-      className="flex-center fixed inset-0 z-20 min-h-screen select-none bg-[#000000b0] backdrop-blur-md"
-      onClick={handleBackdropClick}
-    >
+  return createPortal(
+    <div className="flex-center fixed inset-0 z-20 min-h-screen select-none bg-[#000000b0] backdrop-blur-md">
       <iframe
+        ref={clickRef}
         src={iframeSrc}
         allowFullScreen
         className="m-auto h-3/4 w-3/4 rounded"
       ></iframe>
-    </div>
+    </div>,
+    document.body,
   );
 }

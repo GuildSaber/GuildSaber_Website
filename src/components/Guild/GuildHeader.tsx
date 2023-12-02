@@ -4,6 +4,7 @@ import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
 import { GuildAPIResponse } from "../../types/api";
+import { Link } from "react-router-dom";
 
 export default function GuildHeader({
   guildData: {
@@ -19,10 +20,6 @@ export default function GuildHeader({
 }: {
   guildData: GuildAPIResponse;
 }) {
-  const handleDiscordInvite = () => {
-    window.open(`https://discord.gg/${inviteCode}`, "_blank");
-  };
-
   return (
     <div className="relative mb-8 overflow-hidden rounded bg-gray-800 p-8 text-center md:text-left">
       <object
@@ -55,12 +52,13 @@ export default function GuildHeader({
           </h1>
 
           {inviteCode && (
-            <Button
-              text="Discord"
-              icon={faDiscord}
-              className="ml-auto bg-discord"
-              onClick={handleDiscordInvite}
-            />
+            <Link to={`https://discord.gg/${inviteCode}`} target="_blank">
+              <Button
+                text="Discord"
+                icon={faDiscord}
+                className="ml-auto bg-discord"
+              />
+            </Link>
           )}
 
           <div>
@@ -85,12 +83,13 @@ export default function GuildHeader({
       </h1>
       <p>{description}</p>
       {inviteCode && (
-        <Button
-          text="Discord"
-          icon={faDiscord}
-          className="mt-4 bg-discord md:hidden"
-          onClick={handleDiscordInvite}
-        />
+        <Link to={`https://discord.gg/${inviteCode}`} target="_blank">
+          <Button
+            text="Discord"
+            icon={faDiscord}
+            className="mt-4 bg-discord md:hidden"
+          />
+        </Link>
       )}
     </div>
   );

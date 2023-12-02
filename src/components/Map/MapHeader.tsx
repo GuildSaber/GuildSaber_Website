@@ -15,6 +15,10 @@ import BeatSaver from "../Icons/BeatSaver";
 import Bpm from "../Icons/Bpm";
 import { MapAPIResponse } from "../../types/api";
 import { Link } from "react-router-dom";
+import clsx from "clsx";
+import { formatDifficulty } from "../../utils/format";
+import { useState } from "react";
+import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 
 export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
   const screenSize = useScreenSize();
@@ -22,8 +26,15 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
   const {
     song,
     songDifficultyStats: difficulty,
+    difficulty: levelDifficulty,
     gameMode,
   } = mapData.rankedMapVersions[0].songDifficulty;
+  const [arcViewer, setArcViewer] = useState({
+    isOpen: false,
+    bsrCode: song.beatSaverKey,
+    difficulty: levelDifficulty,
+    mode: gameMode.name,
+  });
 
   const rating = mapData.rating.default.stars;
 
@@ -38,7 +49,13 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
     <>
       {screenSize.width >= 768 && (
         <div className="group relative mb-8 flex w-full overflow-hidden rounded bg-gray-800 p-8 pr-[14rem]">
-          <div className="absolute right-0 top-0 h-[340px] w-[340px] -translate-y-[75px] translate-x-[150px] rotate-[20deg] transform overflow-hidden border-8 border-transparent outline outline-8 outline-expert-plus lg:translate-x-[150px]">
+          <div
+            className={clsx(
+              "absolute right-0 top-0 h-[340px] w-[340px] -translate-y-[75px] translate-x-[150px] rotate-[20deg] transform overflow-hidden border-8 border-transparent outline outline-8",
+              "outline-" + formatDifficulty[levelDifficulty],
+              "lg:translate-x-[150px]",
+            )}
+          >
             <img
               className="h-[340px] w-[340px] translate-x-[-80px] transform object-cover transition-[filter,transform]"
               src={song.coverURL}
@@ -98,10 +115,27 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
               </div>
 
               <div className="mr-8 flex gap-2">
-                <Button className="btn-tritary" icon={faTwitch} />
-                <Button className="btn-tritary" icon={faPlay} />
-                <Button className="btn-tritary" component={BeatSaver} />
-                <Button className="btn-primary" icon={faCloudArrowDown} />
+                <Button
+                  className="btn-tritary"
+                  onClick={() =>
+                    navigator.clipboard.writeText(`!bsr ${song.beatSaverKey}`)
+                  }
+                  icon={faTwitch}
+                />
+                <Button
+                  className="btn-tritary"
+                  onClick={() => setArcViewer({ ...arcViewer, isOpen: true })}
+                  icon={faPlay}
+                />
+                <Link
+                  to={`https://beatsaver.com/maps/${song.beatSaverKey}`}
+                  target="_blank"
+                >
+                  <Button className="btn-tritary" component={BeatSaver} />
+                </Link>
+                <Link to={`beatsaver://${song.beatSaverKey}`}>
+                  <Button className="btn-primary" icon={faCloudArrowDown} />
+                </Link>
               </div>
             </div>
           </div>
@@ -163,14 +197,40 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
                 </div>
               </div>
               <div className="flex flex-wrap justify-center gap-2">
-                <Button className="btn-tritary" icon={faTwitch} />
-                <Button className="btn-tritary" icon={faPlay} />
-                <Button className="btn-tritary" component={BeatSaver} />
-                <Button className="btn-primary" icon={faCloudArrowDown} />
+                <Button
+                  className="btn-tritary"
+                  onClick={() =>
+                    navigator.clipboard.writeText(`!bsr ${song.beatSaverKey}`)
+                  }
+                  icon={faTwitch}
+                />
+                <Button
+                  className="btn-tritary"
+                  onClick={() => setArcViewer({ ...arcViewer, isOpen: true })}
+                  icon={faPlay}
+                />
+                <Link
+                  to={`https://beatsaver.com/maps/${song.beatSaverKey}`}
+                  target="_blank"
+                >
+                  <Button className="btn-tritary" component={BeatSaver} />
+                </Link>
+                <Link to={`beatsaver://${song.beatSaverKey}`}>
+                  <Button className="btn-primary" icon={faCloudArrowDown} />
+                </Link>
               </div>
             </div>
           </div>
         </div>
+      )}
+
+      {arcViewer.isOpen && (
+        <ArcViewer
+          bsrCode={arcViewer.bsrCode}
+          difficulty={arcViewer.difficulty}
+          mode={arcViewer.mode}
+          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
+        />
       )}
     </>
   );
