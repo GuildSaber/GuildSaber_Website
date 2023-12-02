@@ -1,15 +1,47 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import GuildHeader from "../../components/Guild/GuildHeader";
-import GuildMapCard from "../../components/Guild/GuildMapCard";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
-import { GuildAPIResponse, GuildAPIResponseSchema } from "../../types/api";
+import {
+  EIncludeFlags,
+  GuildAPIResponseSchema,
+  GuildMapsAPIResponseSchema,
+} from "../../types/api";
+import MapHeader from "../../components/Map/MapHeader";
+import { useState } from "react";
+import List from "../../components/List/List";
+
+const PAGE_SIZE = 2;
+const API_MAPS_DATA_INCLUDES =
+  EIncludeFlags.RankedMapVersions |
+  EIncludeFlags.SongDifficulties |
+  EIncludeFlags.Songs |
+  EIncludeFlags.GameModes |
+  EIncludeFlags.SongDifficultyStats;
 
 export default function Guild() {
   const { guildID } = useParams();
   if (!guildID) {
     return <p>Error</p>;
   }
+  const [searchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") as string) || 1,
+  );
+
+  const getGuild = async (guildID: string) =>
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`)
+      .then((res) => res.json())
+      .then(GuildAPIResponseSchema.parse);
+
+  const getMaps = async (guildID: string, currentPage: number) =>
+    fetch(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/ranked-maps/${guildID}?sort-by=Time&page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_MAPS_DATA_INCLUDES}`,
+    )
+      .then((res) => res.json())
+      .then(GuildMapsAPIResponseSchema.parse);
 
   const {
     data: guild,
@@ -20,53 +52,51 @@ export default function Guild() {
     queryFn: () => getGuild(guildID),
     staleTime: 60_000,
     placeholderData: keepPreviousData,
+    retry: 2,
   });
 
-  const getGuild = async (guildID: string): Promise<GuildAPIResponse> => {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`,
-    );
-    const payLoad = await res.json();
-    const validationResponse = GuildAPIResponseSchema.safeParse(payLoad);
-    if (!validationResponse.success) {
-      console.error(validationResponse.error);
-      return payLoad;
-    } else {
-      return validationResponse.data as GuildAPIResponse;
-    }
-  };
+  const {
+    data: maps,
+    isLoading: isMapsLoading,
+    isError: isMapsError,
+  } = useQuery({
+    queryKey: ["guilds", guildID, "maps", currentPage],
+    queryFn: () => getMaps(guildID, currentPage),
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+    enabled: !!guildID,
+    retry: 2,
+  });
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (isError) {
+  if (isError || guild == null) {
     return <p>Error</p>;
   }
 
   return (
     <div className="mx-auto max-w-screen-lg">
-      <>
-        {guild && <GuildHeader guildData={guild} />}
+      <GuildHeader guildData={guild} />
 
-        <div className="flow-content-2 md:flow-content-4">
-          <h3 className="text-center text-h4 font-bold md:text-left">
-            New Ranked Maps
-          </h3>
-          <GuildMapCard
-            description={
-              "Omagawd hey guuyyss. This is my first map pls enjoy.\nDon't dislike it. Oke bye uwu"
-            }
-            id={1}
-          />
-          <GuildMapCard
-            description={
-              "Omagawd hey guuyyss. This is my first map pls enjoy.\nDon't dislike it. Oke bye uwu"
-            }
-            id={2}
-          />
-        </div>
-      </>
+      <div className="flow-content-2 md:flow-content-4">
+        <h3 className="text-center text-h4 font-bold md:text-left">
+          New Ranked Maps
+        </h3>
+        {maps && !isMapsLoading && !isMapsError && (
+          <List
+            totalCount={maps.totalCount}
+            pageSize={PAGE_SIZE}
+            hasPreviousPage={maps.hasPreviousPage}
+            hasNextPage={maps.hasNextPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          >
+            {maps?.data.map((map) => <MapHeader mapData={map} />)}
+          </List>
+        )}
+      </div>
     </div>
   );
 }

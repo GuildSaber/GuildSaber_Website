@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import Pagination from "../Pagination/Pagination";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function List<C extends React.ReactNode>({
   totalCount,
@@ -20,6 +21,24 @@ export default function List<C extends React.ReactNode>({
   children: C;
   className?: string;
 }) {
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+
+  const onPageChangeHandler = (page: number) => {
+    searchParams.set("page", page.toString());
+    navigate({ search: searchParams.toString() }, { replace: true });
+    setCurrentPage(page);
+  };
+
+  /*useEffect(() => {
+    const getPageParam = searchParams.get("page");
+
+    if (getPageParam) {
+      setCurrentPage(parseInt(getPageParam));
+    }
+  }, []);*/
+
   return (
     <div className={clsx("flex w-full flex-col gap-2", className)}>
       {children}
@@ -30,7 +49,7 @@ export default function List<C extends React.ReactNode>({
         pageSize={pageSize}
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
-        onPageChange={(page) => setCurrentPage(page)}
+        onPageChange={(page) => onPageChangeHandler(page)}
       />
     </div>
   );

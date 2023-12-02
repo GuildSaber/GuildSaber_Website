@@ -22,7 +22,7 @@ function App() {
           <Route path="/guilds" element={<Guilds />} />
           <Route path="/guild/:guildID" element={<Guild />} />
 
-          <Route path="/map/:mapID" element={<Map />} />
+          <Route path="/map/:mapID/" element={<Map />} />
         </Routes>
       </div>
       <Footer />

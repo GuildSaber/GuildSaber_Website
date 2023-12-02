@@ -23,11 +23,14 @@ export default function Header() {
 
   return (
     <header
-      className={clsx("sticky left-0 right-0 top-0 z-10 transition-colors", {
-        "bg-[#0d0e0f]": isScrolled,
-      })}
+      className={clsx(
+        "sticky left-0 right-0 top-0 z-10 mb-4 transition-colors",
+        {
+          "bg-[#0d0e0f]": isScrolled,
+        },
+      )}
     >
-      <div className="container mx-auto mb-4 flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
+      <div className="container mx-auto flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
         <nav className="flex w-full items-center justify-between gap-4">
           <Link className="hidden flex-1 items-center gap-4 sm:flex" to="/">
             <img src="/gsLogo.svg" alt="logo" width={32} height={32} />

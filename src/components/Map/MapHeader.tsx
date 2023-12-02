@@ -14,6 +14,7 @@ import Sparkles from "../Icons/Sparkles";
 import BeatSaver from "../Icons/BeatSaver";
 import Bpm from "../Icons/Bpm";
 import { MapAPIResponse } from "../../types/api";
+import { Link } from "react-router-dom";
 
 export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
   const screenSize = useScreenSize();
@@ -22,7 +23,7 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
     song,
     songDifficultyStats: difficulty,
     gameMode,
-  } = mapData.rankedSongDifficulties[0].songDifficulty;
+  } = mapData.rankedMapVersions[0].songDifficulty;
 
   const rating = mapData.rating.default.stars;
 
@@ -45,9 +46,11 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
           </div>
           <div className="flex w-full justify-between gap-4">
             <div>
-              <h3 className="line-clamp-1 text-h4 font-bold">
-                {song.songName}
-              </h3>
+              <Link to={`/map/${mapData.id}`}>
+                <h3 className="line-clamp-1 text-h4 font-bold">
+                  {song.songName}
+                </h3>
+              </Link>
               <p className="mb-2 text-p font-normal text-secondary">
                 by {song.songAuthorName} [{song.mapperName}]
               </p>

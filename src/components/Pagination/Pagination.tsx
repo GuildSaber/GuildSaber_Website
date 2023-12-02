@@ -45,9 +45,12 @@ const Pagination = ({
   return (
     <ul className="flex-center select-none gap-2 p-0">
       <li
-        className={clsx("btn mr-auto bg-gray-800 hover:opacity-80", {
-          "pointer-events-none bg-gray-900": !hasPreviousPage,
-        })}
+        className={clsx(
+          "btn mr-auto bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",
+          {
+            "!bg-transparant pointer-events-none opacity-20": !hasPreviousPage,
+          },
+        )}
         onClick={onPrevious}
       >
         <span>
@@ -66,10 +69,13 @@ const Pagination = ({
         return (
           <li
             key={key}
-            className={clsx("flex-center btn bg-gray-800 hover:opacity-80", {
-              "bg-primary": pageNumber === currentPage,
-              "hover:bg-gray-900": pageNumber !== currentPage,
-            })}
+            className={clsx(
+              "flex-center btn bg-gray-700/50 px-4 py-1.5 hover:opacity-80",
+              {
+                "!bg-primary": pageNumber === currentPage,
+                "hover:bg-gray-700/30": pageNumber !== currentPage,
+              },
+            )}
             onClick={() => onPageChange(+pageNumber)}
           >
             {pageNumber}
@@ -77,9 +83,12 @@ const Pagination = ({
         );
       })}
       <li
-        className={clsx("btn ml-auto bg-gray-800 hover:opacity-80", {
-          "pointer-events-none bg-gray-900": !hasNextPage,
-        })}
+        className={clsx(
+          "btn ml-auto bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",
+          {
+            "!bg-transparant pointer-events-none opacity-20": !hasNextPage,
+          },
+        )}
         onClick={onNext}
       >
         <span>
