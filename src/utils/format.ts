@@ -25,6 +25,16 @@ export function formatDurationSince(start: number): string {
   }
 }
 
+export function formatMinSec(seconds: number) {
+  return (
+    (seconds - (seconds %= 60)) / 60 + (9 < seconds ? ":" : ":0") + seconds
+  );
+}
+
+export function formatAccuracy(baseScore: number, maxScore: number) {
+  return ((baseScore / maxScore) * 100).toFixed(2) + "%";
+}
+
 export function formatHMD(hmd: number): string {
   return (
     {

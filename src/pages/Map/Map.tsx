@@ -5,26 +5,19 @@ import List from "../../components/List/List";
 import { useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
-  EIncludeFlags,
   MapAPIResponseSchema,
   MapLeaderboardAPIResponseSchema,
-} from "../../types/api";
+} from "../../types/api/map";
 import Loader from "../../components/Common/Loader/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { formatHMD, formatModifiers } from "../../utils/format";
+import { formatAccuracy, formatHMD, formatModifiers } from "../../utils/format";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import clsx from "clsx";
-
-/*
-  <ArcViewer
-    bsrCode={song.beatSaverKey}
-    difficulty={difficultyKey}
-    mode={gameMode.name}
-  />
-*/
+import { EIncludeFlags } from "../../enums/api";
 
 const PAGE_SIZE = 2;
+
 const API_MAP_DATA_INCLUDES =
   EIncludeFlags.Songs |
   EIncludeFlags.SongDifficulties |
@@ -184,18 +177,17 @@ export default function Map() {
                       </span>
                     </p>
                     <p className="hidden md:block">
-                      {
-                        data.rankedScore.score.scoreStatistic.winTracker
-                          .pauseCount
-                      }
+                      {(data.rankedScore.score.scoreStatistic
+                        ? data.rankedScore.score.scoreStatistic.winTracker
+                            .totalPauseDuration
+                        : "??") + "s"}
                     </p>
                     <p>
-                      {`${(
-                        (data.rankedScore.score.baseScore /
-                          map.rankedMapVersions[0].songDifficulty
-                            .songDifficultyStats.maxScore) *
-                        100
-                      ).toFixed(2)}%`}
+                      {formatAccuracy(
+                        data.rankedScore.score.baseScore,
+                        map.rankedMapVersions[0].songDifficulty
+                          .songDifficultyStats.maxScore,
+                      )}
                     </p>
                     <p className="hidden md:block">
                       {new Intl.NumberFormat("en").format(

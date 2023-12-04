@@ -1,40 +1,11 @@
-import { GuildAPIResponse } from "../types/api";
 import { ReactNode, createContext, useEffect, useReducer } from "react";
-
-interface AuthState {
-  session: {
-    token?: string;
-    selectedGuild?: string | null;
-    isGuildSaberManager?: boolean;
-    user?: {
-      id: number;
-      discordUserID: number | null;
-      beatLeaderID: number;
-      patreonTier: number;
-      patreonBoosts: number[];
-    };
-    player?: {
-      userID: number;
-      name: string;
-      platform: number;
-      hmd: number;
-      user_AvatarUrl: string;
-    };
-    memberList?: {
-      guildID: number;
-      userID: number;
-      guild: GuildAPIResponse;
-      permissions: number;
-      priority: number;
-      joinDateUnix: number;
-    }[];
-  } | null;
-}
+import { AuthState, MemberList } from "../types/api/auth";
 
 type AuthAction =
   | { type: "LOGIN"; payload: AuthState["session"] }
   | { type: "LOGOUT" }
-  | { type: "GUILD_SELECTED"; payload: string };
+  | { type: "GUILD_SELECTED"; payload: string }
+  | { type: "GUILD_ADD"; payload: MemberList };
 
 export interface AuthContextType extends AuthState {
   dispatch: React.Dispatch<AuthAction>;
@@ -54,6 +25,18 @@ export function authReducer(state: AuthState, action: AuthAction) {
       return {
         session: { ...state.session, selectedGuild: action.payload },
       };
+    case "GUILD_ADD": {
+      const newMemberList = state.session?.memberList;
+
+      if (!newMemberList) return state;
+
+      return {
+        session: {
+          ...state.session,
+          memberList: newMemberList.concat(action.payload),
+        },
+      };
+    }
     default:
       return state;
   }

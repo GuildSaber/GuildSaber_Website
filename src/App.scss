@@ -30,7 +30,7 @@
   }
 
   .btn-tritary {
-    @apply bg-gray-900 hover:opacity-80 focus:outline-none focus:ring-4 focus:ring-gray-700;
+    @apply bg-gray-900 hover:bg-gray-900 hover:opacity-80 focus:outline-none focus:ring-4 focus:ring-gray-700;
   }
 
   .badge-secondary {

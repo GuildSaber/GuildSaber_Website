@@ -3,9 +3,27 @@ import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import useScreenSize from "../../hooks/useScreenSize";
-import { GuildAPIResponse } from "../../types/api";
+import { GuildAPIResponse } from "../../types/api/guild";
+import clsx from "clsx";
+import { EJoinState } from "../../enums/guild";
 
-export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
+const GUILD_STATES: { [key: string]: string } = {
+  [EJoinState.None]: "None",
+  [EJoinState.Requested]: "Requested",
+  [EJoinState.Joined]: "Joined",
+  [EJoinState.Refused]: "Refused",
+  [EJoinState.Banned]: "Banned",
+};
+
+export default function Card({
+  guildData,
+  guildState,
+  onJoin,
+}: {
+  guildData: GuildAPIResponse;
+  guildState: number | undefined;
+  onJoin: () => void;
+}) {
   const { id, name, description, memberCount, rankedMapCount } = guildData;
   const screenSize = useScreenSize();
 
@@ -23,7 +41,9 @@ export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
 
             <div className="details" style={{ width: "100%" }}>
               <Link to={`/guild/${id}`}>
-                <h3 className="mb-2 text-h4 font-bold">{name}</h3>
+                <h3 className="mb-2 text-h4 font-bold hover:underline">
+                  {name}
+                </h3>
               </Link>
 
               <p className="line-clamp-3 text-muted">{description}</p>
@@ -38,7 +58,13 @@ export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
                 {rankedMapCount}
                 <FontAwesomeIcon icon={faLayerGroup} />
               </p>
-              <Button className="btn-primary mr-8" text="Join" />
+              <Button
+                className={clsx("btn-primary mr-8", {
+                  "btn-tritary pointer-events-none": guildState,
+                })}
+                text={(guildState && GUILD_STATES[guildState]) || "Join"}
+                onClick={() => !guildState && onJoin()}
+              />
             </div>
           </div>
         </div>
@@ -53,7 +79,7 @@ export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
           </div>
           <div className="flow-content-2 md:flow-content-4 p-4">
             <Link to={`/guild/${id}`}>
-              <h3 className="mb-2 text-h4 font-bold">{name}</h3>
+              <h3 className="mb-2 text-h4 font-bold hover:underline">{name}</h3>
             </Link>
             <div className="w-100">
               <span className="badge">
@@ -66,7 +92,13 @@ export default function Card({ guildData }: { guildData: GuildAPIResponse }) {
               </span>
             </div>
             <p className="line-clamp-3 text-muted">{description}</p>
-            <Button className="btn-primary mx-auto" text="Join" />
+            <Button
+              className={clsx("btn-primary mx-auto", {
+                "btn-tritary pointer-events-none": guildState,
+              })}
+              text={(guildState && GUILD_STATES[guildState]) || "Join"}
+              onClick={() => !guildState && onJoin()}
+            />
           </div>
         </div>
       )}

@@ -1,11 +1,19 @@
 import Card from "../../components/Guilds/GuildsCard";
 import { useState } from "react";
 import List from "../../components/List/List";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import {
+  useQuery,
+  keepPreviousData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 import Collapse from "../../components/Common/Collapse/Collapse";
 import SearchBar from "../../components/Common/Search/SearchBar";
-import { GuildsAPIResponse, GuildsAPIResponseSchema } from "../../types/api";
+import { GuildsAPIResponseSchema } from "../../types/api/guild";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { toast } from "react-hot-toast";
+import { EJoinState } from "../../enums/guild";
 
 const PAGE_SIZE = 2;
 
@@ -38,25 +46,97 @@ export default function Guilds() {
     order: "Desc",
   });
 
+  const { session, dispatch } = useAuthContext();
+
+  const queryClient = useQueryClient();
+
+  const joinGuild = (guildID: number) =>
+    fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/members/join-guild/${guildID}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      },
+    ).then((res) => res.json());
+
+  const mutation = useMutation({
+    mutationFn: (guildID: number) => joinGuild(guildID),
+    onSuccess: (data) => {
+      switch (data.state) {
+        case EJoinState.Joined:
+          toast.success("Successfully joined");
+          break;
+
+        case EJoinState.Requested:
+          toast.success("Successfully requested");
+          break;
+      }
+
+      dispatch({ type: "GUILD_ADD", payload: data });
+      queryClient.invalidateQueries({
+        queryKey: ["guilds", currentPage, filter],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to join guild");
+    },
+  });
+
+  const tryJoin = async (guildID: number) => {
+    mutation.mutate(guildID);
+    /*if (!session?.token) {
+      toast.error("You need to be logged in to join");
+      return;
+    }
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/members/join-guild/${guildID}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      },
+    );
+
+    const data = await res.json();
+    if (!res.ok) {
+      if (data.detail) {
+        toast.error(data.detail);
+        return;
+      }
+
+      toast.error("Unknown error");
+      return;
+    }
+
+    if (data.state === EJoinState.Requested) {
+      toast.success("Successfully requested");
+    }
+
+    if (data.state === EJoinState.Joined) {
+      toast.success("Successfully joined the guild");
+    }*/
+  };
+
   const getGuilds = async (page = 1, filter: FilterType) => {
     const parsefilter = {
       ...filter,
       guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
     };
     const URLParams = new URLSearchParams(parsefilter).toString();
+
     const res = await fetch(
       `${
         import.meta.env.VITE_API_BASE_URL
       }/guilds?page=${page}&pageSize=${PAGE_SIZE}&${URLParams}`,
-    );
-    const payLoad = await res.json();
-    const validationResponse = GuildsAPIResponseSchema.safeParse(payLoad);
-    if (!validationResponse.success) {
-      console.error(validationResponse.error);
-      return payLoad as GuildsAPIResponse;
-    } else {
-      return validationResponse.data as GuildsAPIResponse;
-    }
+    )
+      .then((res) => res.json())
+      .then(GuildsAPIResponseSchema.parse);
+
+    return res;
   };
 
   const {
@@ -116,7 +196,15 @@ export default function Guilds() {
             </div>
 
             {guilds?.data.map((guild, key) => (
-              <Card key={key} guildData={guild} />
+              <Card
+                key={key}
+                guildData={guild}
+                guildState={
+                  session?.memberList?.find((g) => guild.id === g.guildID)
+                    ?.state
+                }
+                onJoin={() => tryJoin(guild.id)}
+              />
             ))}
           </List>
         </div>

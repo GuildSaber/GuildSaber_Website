@@ -5,6 +5,7 @@ export default {
     {
       pattern: /outline-(easy|normal|hard|expert|expert-plus)/,
     },
+    "bg-gray-700",
   ],
   theme: {
     fontFamily: {

@@ -3,13 +3,13 @@ import GuildHeader from "../../components/Guild/GuildHeader";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 import {
-  EIncludeFlags,
   GuildAPIResponseSchema,
   GuildMapsAPIResponseSchema,
-} from "../../types/api";
+} from "../../types/api/guild";
 import MapHeader from "../../components/Map/MapHeader";
 import { useState } from "react";
 import List from "../../components/List/List";
+import { EIncludeFlags } from "../../enums/api";
 
 const PAGE_SIZE = 2;
 const API_MAPS_DATA_INCLUDES =

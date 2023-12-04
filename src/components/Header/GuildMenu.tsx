@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useClickAway from "../../hooks/useClickAway";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { GuildAPIResponse } from "../../types/api";
+import { GuildAPIResponse } from "../../types/api/guild";
 
 const MAX_GUILD_NAME_LENGTH = 16;
 const MAX_VISIBLE_GUILD_COUNT = 3;

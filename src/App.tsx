@@ -1,5 +1,6 @@
 import "./App.scss";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Header from "./components/Header/Header";
 import Guilds from "./pages/Guilds/Guilds";
 import Guild from "./pages/Guild/Guild";
@@ -25,6 +26,16 @@ function App() {
           <Route path="/map/:mapID/" element={<Map />} />
         </Routes>
       </div>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: "#1A1C1E",
+            border: "1px solid #2E3136",
+            color: "white",
+          },
+        }}
+      />
       <Footer />
     </div>
   );

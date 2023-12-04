@@ -16,7 +16,7 @@ import Bpm from "../Icons/Bpm";
 import { MapAPIResponse } from "../../types/api";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import { formatDifficulty } from "../../utils/format";
+import { formatDifficulty, formatMinSec } from "../../utils/format";
 import { useState } from "react";
 import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 
@@ -38,10 +38,7 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
 
   const rating = mapData.rating.default.stars;
 
-  const songDuration =
-    Math.floor(song.duration / 60) +
-    ":" +
-    (song.duration - Math.floor(song.duration / 60) * 60);
+  const songDuration = formatMinSec(song.duration);
 
   const description = "A map of the best place to play";
 
@@ -64,7 +61,7 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
           <div className="flex w-full justify-between gap-4">
             <div>
               <Link to={`/map/${mapData.id}`}>
-                <h3 className="line-clamp-1 text-h4 font-bold">
+                <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
                   {song.songName}
                 </h3>
               </Link>
@@ -148,7 +145,11 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
           </div>
           <div className="flex w-full flex-col justify-between gap-4 p-8">
             <div>
-              <h3 className="line-clamp-1 text-h4 font-bold">{song.name}</h3>
+              <Link to={`/map/${mapData.id}`}>
+                <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
+                  {song.name}
+                </h3>
+              </Link>
               <p className="mb-2 text-p font-normal text-secondary">
                 by {song.songAuthorName} [{song.mapperName}]
               </p>

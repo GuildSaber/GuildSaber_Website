@@ -23,7 +23,10 @@ import {
   formatLargeNumber,
   formatModifiers,
 } from "../../utils/format";
-import { PlayerScoresAPIResponse, PointsAPIResponse } from "../../types/api";
+import {
+  PlayerScoresAPIResponse,
+  PointsAPIResponse,
+} from "../../types/api/player";
 
 export default function PlayerProfile() {
   const { session } = useAuthContext();
