@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import clsx from "clsx";
 import BeatSaver from "../../components/Icons/BeatSaver";
 import List from "../../components/List/List";
@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import {
+  formatDifficulty,
   formatDurationSince,
   formatHMD,
   formatLargeNumber,
@@ -25,47 +26,86 @@ import {
 } from "../../utils/format";
 import {
   PlayerScoresAPIResponse,
+  PlayerScoresAPIResponseSchema,
+  PlayerStatsAPIResponseSchema,
   PointsAPIResponse,
 } from "../../types/api/player";
+import { EIncludeFlags } from "../../enums/api";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import Loader from "../../components/Common/Loader/Loader";
+
+const PAGE_SIZE = 10;
+const API_PLAYER_SCORES_DATA_INCLUDES =
+  EIncludeFlags.RankedMapVersions |
+  EIncludeFlags.Scores |
+  EIncludeFlags.Songs |
+  EIncludeFlags.GameModes |
+  EIncludeFlags.SongDifficulties |
+  EIncludeFlags.SongDifficultyStats |
+  EIncludeFlags.ScoreStatistics |
+  EIncludeFlags.HitTrackers;
 
 export default function PlayerProfile() {
   const { session } = useAuthContext();
-  const [scores, setScores] = useState<PlayerScoresAPIResponse | null>(null);
-  const [points, setPoints] = useState<PointsAPIResponse | null>(null);
-  const [activePoint, setActivePoint] = useState<number | null>(null);
-  const [showArcViewer, setShowArcViewer] = useState(false);
-  const [playerStats, setPlayerStats] = useState<any>(null);
-  const [arcViewerBeatSaverKey, setArcViewerBeatSaverKey] = useState("");
-  const [arcViewerDifficulty, setArcViewerDifficulty] = useState<number>(9);
-  const [arcViewerMode, setArcViewerMode] = useState("Standard");
+  const [searchParams] = useSearchParams();
 
-  function fetchPlayerScores(page: number, pointID?: number) {
-    console.log("FETCHING SCORES");
+  const [points, setPoints] = useState<PointsAPIResponse | null>(null);
+  const [activePoint, setActivePoint] = useState(1);
+  const [arcViewer, setArcViewer] = useState({
+    isOpen: false,
+    bsrCode: "",
+    difficulty: 0,
+    mode: "",
+  });
+
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") as string) || 1,
+  );
+
+  const playerID = session?.user?.id;
+
+  const getPlayerScores = async (page: number, pointID?: number) =>
     fetch(
-      `https://api-dev.guildsaber.com/ranked-scores?userID=${session?.user
-        ?.id}&pointID=${
-        pointID ?? activePoint ?? 1
-      }&page=${page}&pageSize=10&include=SongDifficulties,SongDifficultyStats,Songs,Scores,ScoreStatistics,HitTrackers,GameModes`,
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/ranked-scores?userID=${playerID}&pointID=${
+        pointID ?? activePoint
+      }&page=${page}&pageSize=${PAGE_SIZE}&include=${API_PLAYER_SCORES_DATA_INCLUDES}
+      `,
     )
       .then((res) => res.json())
-      .then((data) => {
-        setScores(data);
-        console.log(data);
-      });
-  }
+      .then(PlayerScoresAPIResponseSchema.parse);
 
-  function fetchPlayerStats() {
+  const getPlayerStats = async (pointID: number) =>
     fetch(
-      `https://api-dev.guildsaber.com/player/${session?.user?.id}/stats/${
-        activePoint ?? 1
+      `${import.meta.env.VITE_API_BASE_URL}/player/${session?.user?.id}/stats/${
+        pointID ?? 1
       }`,
     )
       .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setPlayerStats(data);
-      });
-  }
+      .then(PlayerStatsAPIResponseSchema.parse);
+
+  const {
+    data: scores,
+    isLoading: isScoresLoading,
+    isError: isScoresError,
+  } = useQuery({
+    queryKey: ["player", playerID, "scores", activePoint, currentPage],
+    queryFn: () => getPlayerScores(currentPage, activePoint),
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+    enabled: !!playerID,
+    retry: 0,
+  });
+
+  const { data: playerStats } = useQuery({
+    queryKey: ["player", playerID, "stats", activePoint],
+    queryFn: () => getPlayerStats(activePoint),
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+    enabled: !!playerID,
+    retry: 0,
+  });
 
   function fetchPoints() {
     console.log("FETCHING POINTS");
@@ -74,26 +114,28 @@ export default function PlayerProfile() {
       .then((data) => {
         setPoints(data);
         setActivePoint(data.data[0].id);
-        //console.log(data);
       });
   }
 
   function getTotalMisses(score: PlayerScoresAPIResponse["data"][0]) {
-    return (
-      score.score.scoreStatistic.hitTracker.leftBadCuts +
-      score.score.scoreStatistic.hitTracker.rightBadCuts +
-      score.score.scoreStatistic.hitTracker.leftBombs +
-      score.score.scoreStatistic.hitTracker.rightBombs +
-      score.score.scoreStatistic.hitTracker.leftMiss +
-      score.score.scoreStatistic.hitTracker.rightMiss
-    );
+    return score.score.scoreStatistic == null
+      ? "??"
+      : score.score.scoreStatistic.hitTracker.leftBadCuts +
+          score.score.scoreStatistic.hitTracker.rightBadCuts +
+          score.score.scoreStatistic.hitTracker.leftBombs +
+          score.score.scoreStatistic.hitTracker.rightBombs +
+          score.score.scoreStatistic.hitTracker.leftMiss +
+          score.score.scoreStatistic.hitTracker.rightMiss;
   }
 
   function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {
-    setArcViewerBeatSaverKey(score.songDifficulty.song.beatSaverKey);
-    setArcViewerDifficulty(score.songDifficulty.difficulty);
-    setArcViewerMode(score.songDifficulty.gameMode.name);
-    setShowArcViewer(true);
+    console.log(score.songDifficulty.difficulty);
+    setArcViewer({
+      isOpen: true,
+      bsrCode: score.songDifficulty.song.beatSaverKey,
+      difficulty: score.songDifficulty.difficulty,
+      mode: score.songDifficulty.gameMode.name,
+    });
   }
 
   function getDiffShort(score: PlayerScoresAPIResponse["data"][0]) {
@@ -102,8 +144,8 @@ export default function PlayerProfile() {
         1: "E",
         3: "N",
         5: "H",
-        7: "E",
-        9: "E+",
+        7: "Ex",
+        9: "Ex+",
       }[score.songDifficulty.difficulty];
     } else {
       return <FontAwesomeIcon icon={faSkull} />;
@@ -115,13 +157,6 @@ export default function PlayerProfile() {
       fetchPoints();
     }
   }, [session]);
-
-  useEffect(() => {
-    if (session) {
-      fetchPlayerScores(1);
-      fetchPlayerStats();
-    }
-  }, [activePoint]);
 
   return (
     <>
@@ -140,65 +175,70 @@ export default function PlayerProfile() {
                 className="h-6 rounded"
               />
               <h1 className="text-h5 font-bold">{session?.player?.name}</h1>
-              <span className="badge hidden h-6 !border-0 bg-[#9300e4]">
-                {25}
-              </span>
             </div>
-            <div className="flex-center mb-4 flex-wrap gap-2 md:!justify-start">
-              <span className="badge badge-secondary">
-                <span>
-                  <FontAwesomeIcon icon={faRankingStar} />
+            <div className="mb-4 flex flex-col flex-wrap items-center gap-2 md:items-start md:!justify-start">
+              <div className="flex flex-wrap justify-center gap-2">
+                <span className="badge badge-secondary">
+                  <span>
+                    <FontAwesomeIcon icon={faRankingStar} />
+                  </span>
+                  #{playerStats?.rank ?? 0}
                 </span>
-                #{playerStats?.rank ?? 0}
-              </span>
-              <span className="badge badge-secondary">
-                <span className="font-bold tracking-tighter">CPP</span>
-                {playerStats?.pointValue ?? 0}
-              </span>
-              <span className="badge badge-split">
-                <span>Avg Acc</span>
-                <span>0%</span>
-              </span>
-              <span className="badge badge-split">
-                <span>HMD</span>
-                <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
-              </span>
-              <span className="badge badge-split">
-                <span>Total Passes</span>
-                <span>{playerStats?.validPassCount ?? 0}</span>
-              </span>
+                <span className="badge badge-secondary">
+                  <span className="font-bold tracking-tighter">CPP</span>
+                  {playerStats?.pointValue ?? 0}
+                </span>
+              </div>
+              <div className="flex flex-wrap justify-center gap-2">
+                <span className="badge badge-split">
+                  <span>Avg Acc</span>
+                  <span>0%</span>
+                </span>
+                <span className="badge badge-split">
+                  <span>HMD</span>
+                  <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
+                </span>
+                <span className="badge badge-split">
+                  <span>Total Passes</span>
+                  <span>{playerStats?.validPassCount ?? 0}</span>
+                </span>
+              </div>
             </div>
           </div>
         </section>
         <section className="card px-2 py-4">
           <div className="flex-center gap-2">
             {points &&
-              points.data.map((point) => (
+              points?.data.map((point) => (
                 <Button
                   key={point.id}
                   className={clsx("btn bg-tritary bg-gray-900", {
                     "btn-primary": activePoint === point.id,
                   })}
                   text={point.name}
-                  onClick={() => setActivePoint(point.id)}
+                  onClick={() => {
+                    setActivePoint(point.id);
+                    setCurrentPage(1);
+                  }}
                 ></Button>
               ))}
           </div>
-          {scores && (
+
+          {isScoresLoading && <Loader />}
+
+          {scores && !isScoresError && (
             <List
               totalCount={scores.totalCount}
               pageSize={scores.pageSize}
               hasPreviousPage={scores.hasPreviousPage}
               hasNextPage={scores.hasNextPage}
-              currentPage={scores.page}
-              setCurrentPage={(page) =>
-                fetchPlayerScores(page, points?.data[0].id)
-              }
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
             >
-              {scores.data.map((score) => (
+              {scores?.data.map((score) => (
                 <div
                   key={score.id}
-                  className="grid grid-cols-[1fr_6rem] items-center gap-y-2 border-t-2 border-gray-700 py-4 md:grid-cols-[6rem_1fr_14rem_6rem] md:gap-2 md:rounded md:border-0 md:px-2 md:hover:bg-gray-700"
+                  className="grid grid-cols-[1fr_6rem] items-center gap-y-2 border-t-2 border-gray-700 py-4 transition-colors md:grid-cols-[6rem_1fr_14rem_6rem] md:gap-2 md:rounded md:border-0 md:px-2 md:hover:bg-gray-900"
                 >
                   <div className="hidden text-right md:block">
                     <p className="text-h6 font-bold">#{score.rank}</p>
@@ -210,9 +250,15 @@ export default function PlayerProfile() {
                     <div className="relative">
                       <img
                         src={`https://eu.cdn.beatsaver.com/${score.songDifficulty.song.hash}.jpg`}
-                        className="h-12 w-12 max-w-none rounded"
+                        className="aspect-square h-14 max-w-none rounded"
                       />
-                      <span className="badge absolute left-1/2 top-full h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-gray-900">
+                      <span
+                        className={`badge text-base/2 absolute left-1/2 top-full h-8 w-8 -translate-x-1/2 -translate-y-1/2 border-2 bg-gray-800 font-bold border-${
+                          formatDifficulty[score.songDifficulty.difficulty]
+                        } text-${
+                          formatDifficulty[score.songDifficulty.difficulty]
+                        }`}
+                      >
                         {getDiffShort(score)}
                       </span>
                     </div>
@@ -221,9 +267,11 @@ export default function PlayerProfile() {
                         {score.songDifficulty.song.songAuthorName} [
                         {score.songDifficulty.song.mapperName}]
                       </p>
-                      <h1 className="line-clamp-2 text-h6 font-bold">
-                        {score.songDifficulty.song.songName}
-                      </h1>
+                      <Link to={`/map/${score.rankedMap.id}`}>
+                        <h1 className="line-clamp-2 text-h6 font-bold">
+                          {score.songDifficulty.song.songName}
+                        </h1>
+                      </Link>
                       <p className="line-clamp-1 text-btn text-muted">
                         {formatDurationSince(
                           score.songDifficulty.song.unixUploadedTime,
@@ -319,13 +367,13 @@ export default function PlayerProfile() {
           )}
         </section>
       </div>
-      {showArcViewer && (
+      {arcViewer.isOpen && (
         <ArcViewer
-          bsrCode={arcViewerBeatSaverKey}
-          difficulty={arcViewerDifficulty}
-          mode={arcViewerMode}
-          onClose={() => setShowArcViewer(false)}
-        ></ArcViewer>
+          bsrCode={arcViewer.bsrCode}
+          difficulty={arcViewer.difficulty}
+          mode={arcViewer.mode}
+          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
+        />
       )}
     </>
   );

@@ -3,7 +3,7 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./index.html"],
   safelist: [
     {
-      pattern: /outline-(easy|normal|hard|expert|expert-plus)/,
+      pattern: /(easy|normal|hard|expert|expert-plus)/,
     },
     "bg-gray-700",
   ],

@@ -1,6 +1,7 @@
 import useClickAway from "../../../hooks/useClickAway";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { formatDifficulty } from "../../../utils/format";
 
 export default function ArcViewer({
   bsrCode,
@@ -18,7 +19,7 @@ export default function ArcViewer({
 
   useEffect(() => {
     setIframeSrc(
-      `https://allpoland.github.io/ArcViewer/?id=${bsrCode}&difficulty=${difficulty}&mode=${mode}`,
+      `https://allpoland.github.io/ArcViewer/?id=${bsrCode}&difficulty=${formatDifficulty[difficulty]}&mode=${mode}`,
     );
   }, [bsrCode, difficulty, mode]);
 

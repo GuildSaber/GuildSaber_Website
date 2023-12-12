@@ -149,7 +149,7 @@ export type ModifierShort =
   | "OP"
   | "UNK";
 
-export const formatDifficulty: { [key: string]: string } = {
+export const formatDifficulty: Record<string, string> = {
   1: "easy",
   3: "normal",
   5: "hard",

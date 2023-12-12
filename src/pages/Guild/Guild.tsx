@@ -93,7 +93,9 @@ export default function Guild() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           >
-            {maps?.data.map((map) => <MapHeader mapData={map} />)}
+            {maps?.data.map((map, key) => (
+              <MapHeader key={key} mapData={map} />
+            ))}
           </List>
         )}
       </div>

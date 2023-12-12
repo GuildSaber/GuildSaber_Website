@@ -92,12 +92,14 @@ export const PointsAPIResponseSchema = z.object({
         strictAngles: z.number(),
         oldDots: z.number(),
       }),
-      scale: z.number(),
+      difficultyScale: z.number(),
+      accuracyScale: z.number(),
       slopeMultiplier: z.number(),
       isSlopeEnabled: z.boolean(),
       isCurveEnabled: z.boolean(),
       defaultAverageAccForPointCalculation: z.number(),
-      curve: z.string(),
+      diffCurve: z.string(),
+      accCurve: z.string(),
     }),
   ),
   page: z.number(),
@@ -108,7 +110,12 @@ export const PointsAPIResponseSchema = z.object({
   hasNextPage: z.boolean(),
 });
 
+export const PlayerStatsAPIResponseSchema = z.any();
+
 export type PlayerScoresAPIResponse = z.infer<
   typeof PlayerScoresAPIResponseSchema
 >;
 export type PointsAPIResponse = z.infer<typeof PointsAPIResponseSchema>;
+export type PlayerStatsAPIResponse = z.infer<
+  typeof PlayerStatsAPIResponseSchema
+>;
