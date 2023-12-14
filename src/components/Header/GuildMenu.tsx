@@ -53,7 +53,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
         {session && session.selectedGuild && (
           <>
             <img
-              src={`https://cdn.guildsaber.com/Guild/${session.selectedGuild}/Logo.png`}
+              src={`https://cdn.guildsaber.com/Guild/${session.selectedGuild}/Logo.jpg`}
               className="active h-8 w-8 cursor-pointer rounded opacity-80"
               alt="logo"
               onError={() => {
@@ -80,7 +80,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
             .map((guild) => (
               <img
                 key={guild.id}
-                src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
+                src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.jpg`}
                 className="h-8 w-8 cursor-pointer rounded opacity-80"
                 alt="guild logo"
                 onClick={handleGuildClick(guild.id)}
@@ -117,7 +117,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
                 onClick={handleGuildClick(guild.id)}
               >
                 <img
-                  src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.png`}
+                  src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.jpg`}
                   className="h-8 w-8 rounded opacity-80"
                   alt="logo"
                 />

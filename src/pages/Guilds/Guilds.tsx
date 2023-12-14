@@ -15,7 +15,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "../../enums/guild";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 3;
 
 const FILTER_GUILD_TYPES = [
   { value: "1", label: "Unverified" },

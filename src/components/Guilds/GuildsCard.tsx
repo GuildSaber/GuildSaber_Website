@@ -35,7 +35,7 @@ export default function Card({
             <div className="absolute right-0 top-0 h-80 w-80 -translate-y-[45px] translate-x-[140px] rotate-[20deg] transform overflow-hidden mix-blend-screen">
               <img
                 className="h-80 w-80 -translate-x-16 transform"
-                src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
+                src={`https://cdn.guildsaber.com/Guild/${id}/Logo.jpg`}
               />
             </div>
 
@@ -74,7 +74,7 @@ export default function Card({
           <div className="h-24 w-full overflow-hidden mix-blend-screen">
             <img
               className="h-full w-full object-cover"
-              src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
+              src={`https://cdn.guildsaber.com/Guild/${id}/Logo.jpg`}
             />
           </div>
           <div className="flow-content-2 md:flow-content-4 p-4">

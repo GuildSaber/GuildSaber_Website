@@ -41,9 +41,7 @@ const API_PLAYER_SCORES_DATA_INCLUDES =
   EIncludeFlags.Songs |
   EIncludeFlags.GameModes |
   EIncludeFlags.SongDifficulties |
-  EIncludeFlags.SongDifficultyStats |
-  EIncludeFlags.ScoreStatistics |
-  EIncludeFlags.HitTrackers;
+  EIncludeFlags.SongDifficultyStats;
 
 export default function PlayerProfile() {
   const { session } = useAuthContext();
@@ -118,14 +116,7 @@ export default function PlayerProfile() {
   }
 
   function getTotalMisses(score: PlayerScoresAPIResponse["data"][0]) {
-    return score.score.scoreStatistic == null
-      ? "??"
-      : score.score.scoreStatistic.hitTracker.leftBadCuts +
-          score.score.scoreStatistic.hitTracker.rightBadCuts +
-          score.score.scoreStatistic.hitTracker.leftBombs +
-          score.score.scoreStatistic.hitTracker.rightBombs +
-          score.score.scoreStatistic.hitTracker.leftMiss +
-          score.score.scoreStatistic.hitTracker.rightMiss;
+    return score.score.missedNotes + score.score.badCuts;
   }
 
   function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {

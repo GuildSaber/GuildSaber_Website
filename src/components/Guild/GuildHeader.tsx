@@ -24,11 +24,11 @@ export default function GuildHeader({
     <div className="relative mb-8 overflow-hidden rounded bg-gray-800 p-8 text-center md:text-left">
       <object
         className="absolute left-0 top-0 mb-4 h-32 w-full object-cover"
-        data={`https://cdn.guildsaber.com/Guild/${id}/Banner.png`}
-        type="image/png"
+        data={`https://cdn.guildsaber.com/Guild/${id}/Banner.jpg`}
+        type="image/jpeg"
       >
         <img
-          src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
+          src={`https://cdn.guildsaber.com/Guild/${id}/Logo.jpg`}
           className="h-32 w-full object-cover"
         />
       </object>
@@ -39,7 +39,7 @@ export default function GuildHeader({
         </span>
         <img
           className="h-32 w-32 rounded border-[6px] border-gray-800"
-          src={`https://cdn.guildsaber.com/Guild/${id}/Logo.png`}
+          src={`https://cdn.guildsaber.com/Guild/${id}/Logo.jpg`}
         />
 
         <span className="badge w-20 text-right md:hidden">

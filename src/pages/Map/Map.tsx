@@ -53,7 +53,7 @@ export default function Map() {
     fetch(
       `${
         import.meta.env.VITE_API_BASE_URL
-      }/leaderboard/ranked-map/${mapID}?pointID=1&page=${page}&pageSize=${PAGE_SIZE}&include=${API_LEADERBOARD_DATA_INCLUDES}`,
+      }/leaderboard/ranked-map/${mapID}?pointID=2&page=${page}&pageSize=${PAGE_SIZE}&include=${API_LEADERBOARD_DATA_INCLUDES}`,
     )
       .then((res) => res.json())
       .then(MapLeaderboardAPIResponseSchema.parse);
@@ -113,14 +113,14 @@ export default function Map() {
               setCurrentPage={setCurrentPage}
             >
               <div className="flex gap-2">
-                <button className="badge">CPP</button>
-                <button className="badge">CPA</button>
+                <button className="badge" disabled>CPP</button>
+                <button className="badge">CAP</button>
               </div>
 
               <div className="grid w-full grid-cols-[2fr_10fr_repeat(2,_4fr)] gap-2 px-1 py-2 text-btn md:grid-cols-[2fr_10fr_6fr_repeat(5,_4fr)]">
                 <p>Rank</p>
                 <p></p>
-                <p>Pass Points</p>
+                <p>CAP</p>
                 <p className="hidden md:block">Modifiers</p>
                 <p className="hidden md:block">Headset</p>
                 <p className="hidden md:block">Pause</p>

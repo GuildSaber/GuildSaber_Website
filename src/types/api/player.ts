@@ -14,8 +14,9 @@ export const PlayerScoresAPIResponseSchema = z.object({
         modifiers: z.number(),
         unixTimeSet: z.number(),
         controller: z.number(),
-        hasScoreStatistic: z.boolean(),
-        scoreStatistic: z.any(),
+        missedNotes: z.number(),
+        badCuts: z.number(),
+        hasTrackers: z.boolean(),
       }),
       rankedMap: z.object({
         id: z.number(),
