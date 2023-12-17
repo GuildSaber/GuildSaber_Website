@@ -29,7 +29,6 @@ const API_LEADERBOARD_DATA_INCLUDES =
   EIncludeFlags.Players |
   EIncludeFlags.Users |
   EIncludeFlags.Scores |
-  EIncludeFlags.ScoreStatistics |
   EIncludeFlags.WinTrackers;
 
 export default function Map() {
@@ -177,8 +176,8 @@ export default function Map() {
                       </span>
                     </p>
                     <p className="hidden md:block">
-                      {(data.rankedScore.score.scoreStatistic
-                        ? data.rankedScore.score.scoreStatistic.winTracker
+                      {(data.rankedScore.score.hasTrackers
+                        ? data.rankedScore.score.winTracker
                             .totalPauseDuration
                         : "??") + "s"}
                     </p>
