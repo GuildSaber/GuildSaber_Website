@@ -70,7 +70,7 @@ export default function Header() {
                     ?.flat() ?? []
                 }
               />
-              <Link to="/me">
+              <Link to={`/player/${session.player?.userID}`}>
                 <img
                   alt="avatar"
                   className="rounded-full"

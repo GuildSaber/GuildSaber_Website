@@ -47,7 +47,10 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
       <div
         className={clsx(
           "flex h-full items-stretch gap-2 bg-gray-800 py-2 pl-3",
-          { "rounded-t": isOpen, rounded: !isOpen },
+          {
+            "rounded-t outline outline-1 outline-gray-700": isOpen,
+            rounded: !isOpen,
+          },
         )}
       >
         {session && session.selectedGuild && (
@@ -100,7 +103,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
 
       <ul
         className={clsx(
-          "absolute flex w-full select-none flex-col rounded-b bg-gray-800 pb-2",
+          "absolute right-0 flex w-full min-w-[180px] select-none flex-col rounded-b bg-gray-800 pb-2 outline outline-1 outline-gray-700",
           { hidden: !isOpen },
         )}
       >

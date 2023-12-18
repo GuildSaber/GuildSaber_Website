@@ -111,7 +111,45 @@ export const PointsAPIResponseSchema = z.object({
   hasNextPage: z.boolean(),
 });
 
-export const PlayerStatsAPIResponseSchema = z.any();
+export const PlayerAPIResponseSchema = z.object({
+  player: z.object({
+    userID: z.number(),
+    name: z.string(),
+    platform: z.number(),
+    hmd: z.number(),
+    user_AvatarUrl: z.string(),
+  }),
+  guilds: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      smallName: z.string(),
+      description: z.string(),
+      color: z.number(),
+      type: z.number(),
+      joinRequirements: z.object({
+        requirements: z.number(),
+        minRank: z.number(),
+        maxRank: z.number(),
+        minPP: z.number(),
+        maxPP: z.number(),
+        accountAgeUnix: z.number(),
+      }),
+      unixCreationTime: z.number(),
+      inviteCode: z.null(),
+      rankedMapCount: z.null(),
+      memberCount: z.null(),
+    }),
+  ),
+});
+
+export const PlayerStatsAPIResponseSchema = z.object({
+  playerID: z.number(),
+  pointID: z.number(),
+  rank: z.number(),
+  validPassCount: z.number(),
+  pointValue: z.number(),
+});
 
 export type PlayerScoresAPIResponse = z.infer<
   typeof PlayerScoresAPIResponseSchema

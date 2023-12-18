@@ -100,7 +100,7 @@ export const MapLeaderboardAPIResponseSchema = z.object({
             }),
             totalScore: z.number(),
             maxScore: z.number(),
-          }).nullable(),
+          }),
           accuracyTracker: z.null(),
           graphTracker: z.null(),
         }),

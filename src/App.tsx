@@ -17,7 +17,7 @@ function App() {
       <div className="container mb-auto flex-grow px-2 text-white md:px-4 lg:px-8">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/me" element={<PlayerProfile />} />
+          <Route path="/player/:playerID" element={<PlayerProfile />} />
           <Route path="/signin" element={<Signin />} />
 
           <Route path="/guilds" element={<Guilds />} />

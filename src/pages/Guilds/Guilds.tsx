@@ -1,12 +1,7 @@
 import Card from "../../components/Guilds/GuildsCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import List from "../../components/List/List";
-import {
-  useQuery,
-  keepPreviousData,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 import Collapse from "../../components/Common/Collapse/Collapse";
 import SearchBar from "../../components/Common/Search/SearchBar";
@@ -40,6 +35,7 @@ type FilterType = {
 
 export default function Guilds() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterType>({
     guildTypes: ["0", "1", "2", "4"],
     "sort-By": "Popularity",
@@ -85,40 +81,12 @@ export default function Guilds() {
   });
 
   const tryJoin = async (guildID: number) => {
-    mutation.mutate(guildID);
-    /*if (!session?.token) {
+    if (!session?.token) {
       toast.error("You need to be logged in to join");
       return;
     }
 
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/members/join-guild/${guildID}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      },
-    );
-
-    const data = await res.json();
-    if (!res.ok) {
-      if (data.detail) {
-        toast.error(data.detail);
-        return;
-      }
-
-      toast.error("Unknown error");
-      return;
-    }
-
-    if (data.state === EJoinState.Requested) {
-      toast.success("Successfully requested");
-    }
-
-    if (data.state === EJoinState.Joined) {
-      toast.success("Successfully joined the guild");
-    }*/
+    mutation.mutate(guildID);
   };
 
   const getGuilds = async (page = 1, filter: FilterType) => {
@@ -131,7 +99,10 @@ export default function Guilds() {
     const res = await fetch(
       `${
         import.meta.env.VITE_API_BASE_URL
-      }/guilds?page=${page}&pageSize=${PAGE_SIZE}&${URLParams}`,
+      }/guilds?page=${page}&pageSize=${PAGE_SIZE}&${URLParams}${
+        search && "&search=" + search
+      }
+      `,
     )
       .then((res) => res.json())
       .then(GuildsAPIResponseSchema.parse);
@@ -139,15 +110,22 @@ export default function Guilds() {
     return res;
   };
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      refetchGuilds();
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
+
   const {
     data: guilds,
     isLoading,
     isError,
+    refetch: refetchGuilds,
   } = useQuery({
     queryKey: ["guilds", currentPage, filter],
     queryFn: () => getGuilds(currentPage, filter),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
   });
 
   if (isLoading) {
@@ -192,7 +170,10 @@ export default function Guilds() {
                   setFilter({ ...filter, guildTypes: value })
                 }
               />
-              <SearchBar className="ml-auto w-full sm:w-auto" />
+              <SearchBar
+                className="ml-auto w-full sm:w-auto"
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
 
             {guilds?.data.map((guild, key) => (

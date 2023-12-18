@@ -1,6 +1,6 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import GuildHeader from "../../components/Guild/GuildHeader";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 import {
   GuildAPIResponseSchema,
@@ -50,8 +50,6 @@ export default function Guild() {
   } = useQuery({
     queryKey: ["guilds", guildID],
     queryFn: () => getGuild(guildID),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
     retry: 2,
   });
 
@@ -62,8 +60,6 @@ export default function Guild() {
   } = useQuery({
     queryKey: ["guilds", guildID, "maps", currentPage],
     queryFn: () => getMaps(guildID, currentPage),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
     enabled: !!guildID,
     retry: 2,
   });

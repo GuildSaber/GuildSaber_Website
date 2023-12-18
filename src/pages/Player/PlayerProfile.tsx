@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import clsx from "clsx";
 import BeatSaver from "../../components/Icons/BeatSaver";
 import List from "../../components/List/List";
@@ -25,13 +30,14 @@ import {
   formatModifiers,
 } from "../../utils/format";
 import {
+  PlayerAPIResponseSchema,
   PlayerScoresAPIResponse,
   PlayerScoresAPIResponseSchema,
   PlayerStatsAPIResponseSchema,
-  PointsAPIResponse,
+  PointsAPIResponseSchema,
 } from "../../types/api/player";
 import { EIncludeFlags } from "../../enums/api";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
 
 const PAGE_SIZE = 10;
@@ -44,10 +50,15 @@ const API_PLAYER_SCORES_DATA_INCLUDES =
   EIncludeFlags.SongDifficultyStats;
 
 export default function PlayerProfile() {
+  const { playerID } = useParams();
+  if (!playerID) {
+    return <p>Error</p>;
+  }
+
   const { session } = useAuthContext();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const [points, setPoints] = useState<PointsAPIResponse | null>(null);
   const [activePoint, setActivePoint] = useState(1);
   const [arcViewer, setArcViewer] = useState({
     isOpen: false,
@@ -60,7 +71,9 @@ export default function PlayerProfile() {
     parseInt(searchParams.get("page") as string) || 1,
   );
 
-  const playerID = session?.user?.id;
+  const [activeGuild, setActiveGuild] = useState(
+    parseInt(searchParams.get("guild") as string) || 1,
+  );
 
   const getPlayerScores = async (page: number, pointID?: number) =>
     fetch(
@@ -74,14 +87,31 @@ export default function PlayerProfile() {
       .then((res) => res.json())
       .then(PlayerScoresAPIResponseSchema.parse);
 
-  const getPlayerStats = async (pointID: number) =>
+  const getPlayer = async (playerID: string) =>
     fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/player/${session?.user?.id}/stats/${
+      `${import.meta.env.VITE_API_BASE_URL}/player/by-id/${playerID}?include=${
+        EIncludeFlags.Users
+      }`,
+    )
+      .then((res) => res.json())
+      .then(PlayerAPIResponseSchema.parse);
+
+  const getPlayerStats = async (playerID: string, pointID: number) =>
+    fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/player/${playerID}/stats/${
         pointID ?? 1
       }`,
     )
       .then((res) => res.json())
       .then(PlayerStatsAPIResponseSchema.parse);
+
+  const getPointsByGuildID = (guildID: number) => {
+    return fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/points?guildID=${guildID}`,
+    )
+      .then((res) => res.json())
+      .then(PointsAPIResponseSchema.parse);
+  };
 
   const {
     data: scores,
@@ -90,37 +120,28 @@ export default function PlayerProfile() {
   } = useQuery({
     queryKey: ["player", playerID, "scores", activePoint, currentPage],
     queryFn: () => getPlayerScores(currentPage, activePoint),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
-    enabled: !!playerID,
-    retry: 0,
+  });
+
+  const { data: player, isError } = useQuery({
+    queryKey: ["player", playerID],
+    queryFn: () => getPlayer(playerID),
   });
 
   const { data: playerStats } = useQuery({
     queryKey: ["player", playerID, "stats", activePoint],
-    queryFn: () => getPlayerStats(activePoint),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
-    enabled: !!playerID,
-    retry: 0,
+    queryFn: () => getPlayerStats(playerID, activePoint),
   });
 
-  function fetchPoints() {
-    console.log("FETCHING POINTS");
-    fetch(`https://api-dev.guildsaber.com/points?page=1&pageSize=10`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPoints(data);
-        setActivePoint(data.data[0].id);
-      });
-  }
+  const { data: guildPoints } = useQuery({
+    queryKey: ["player", playerID, "guild", activeGuild, "points", 1],
+    queryFn: () => getPointsByGuildID(activeGuild),
+  });
 
   function getTotalMisses(score: PlayerScoresAPIResponse["data"][0]) {
     return score.score.missedNotes + score.score.badCuts;
   }
 
   function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {
-    console.log(score.songDifficulty.difficulty);
     setArcViewer({
       isOpen: true,
       bsrCode: score.songDifficulty.song.beatSaverKey,
@@ -128,6 +149,19 @@ export default function PlayerProfile() {
       mode: score.songDifficulty.gameMode.name,
     });
   }
+
+  const selectGuild = (guildID: number) => {
+    setActiveGuild(guildID);
+    searchParams.set("guild", guildID.toString());
+    navigate({ search: searchParams.toString() }), { replace: true };
+  };
+
+  useEffect(() => {
+    if (!guildPoints?.data[0]) {
+      return;
+    }
+    setActivePoint(guildPoints?.data[0].id || 0);
+  }, [guildPoints]);
 
   function getDiffShort(score: PlayerScoresAPIResponse["data"][0]) {
     if (score.songDifficulty.gameMode.name === "Standard") {
@@ -143,18 +177,16 @@ export default function PlayerProfile() {
     }
   }
 
-  useEffect(() => {
-    if (session) {
-      fetchPoints();
-    }
-  }, [session]);
+  if (isError) {
+    return <div>Error</div>;
+  }
 
   return (
     <>
       <div className="flow-content-2">
         <section className="card md:flex md:gap-4 md:p-4">
           <img
-            src={session?.player?.user_AvatarUrl}
+            src={player?.player?.user_AvatarUrl}
             className="h-24 w-full object-cover md:h-32 md:w-32 md:rounded"
           />
           <div className="flex flex-col gap-2">
@@ -165,7 +197,7 @@ export default function PlayerProfile() {
                 }
                 className="h-6 rounded"
               />
-              <h1 className="text-h5 font-bold">{session?.player?.name}</h1>
+              <h1 className="text-h5 font-bold">{player?.player?.name}</h1>
             </div>
             <div className="mb-4 flex flex-col flex-wrap items-center gap-2 md:items-start md:!justify-start">
               <div className="flex flex-wrap justify-center gap-2">
@@ -199,8 +231,22 @@ export default function PlayerProfile() {
         </section>
         <section className="card px-2 py-4">
           <div className="flex-center gap-2">
-            {points &&
-              points?.data.map((point) => (
+            {player?.guilds.map((guild, key) => (
+              <img
+                key={key}
+                src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.jpg`}
+                onClick={() => selectGuild(guild.id)}
+                className={clsx("h-10 cursor-pointer rounded-full", {
+                  "outline outline-2 outline-primary": guild.id === activeGuild,
+                })}
+              />
+            ))}
+            <p></p>
+          </div>
+
+          <div className="flex-center gap-2">
+            {guildPoints &&
+              guildPoints?.data.map((point) => (
                 <Button
                   key={point.id}
                   className={clsx("btn bg-tritary bg-gray-900", {
@@ -283,7 +329,7 @@ export default function PlayerProfile() {
                         {Math.round(100 * score.rawPoints * score.weight) / 100}{" "}
                         <span className="font-bold tracking-tighter">
                           {
-                            points?.data.find(
+                            guildPoints?.data.find(
                               (point) => point.id === activePoint,
                             )?.name
                           }

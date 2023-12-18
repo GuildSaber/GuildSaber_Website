@@ -3,7 +3,7 @@ import MapHeader from "../../components/Map/MapHeader";
 import MapRequirements from "../../components/Map/MapRequirements";
 import List from "../../components/List/List";
 import { useState } from "react";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   MapAPIResponseSchema,
   MapLeaderboardAPIResponseSchema,
@@ -64,9 +64,7 @@ export default function Map() {
   } = useQuery({
     queryKey: ["maps", mapID],
     queryFn: () => getMap(),
-    staleTime: 60_000,
     enabled: !!mapID,
-    retry: 0,
   });
 
   const {
@@ -76,10 +74,7 @@ export default function Map() {
   } = useQuery({
     queryKey: ["leaderboard", mapID, currentPage],
     queryFn: () => getMapLeaderboard(currentPage),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
     enabled: !!mapID,
-    retry: 0,
   });
 
   if (isLoading) {
@@ -112,7 +107,9 @@ export default function Map() {
               setCurrentPage={setCurrentPage}
             >
               <div className="flex gap-2">
-                <button className="badge" disabled>CPP</button>
+                <button className="badge" disabled>
+                  CPP
+                </button>
                 <button className="badge">CAP</button>
               </div>
 
@@ -177,8 +174,7 @@ export default function Map() {
                     </p>
                     <p className="hidden md:block">
                       {(data.rankedScore.score.hasTrackers
-                        ? data.rankedScore.score.winTracker
-                            .totalPauseDuration
+                        ? data.rankedScore.score.winTracker.totalPauseDuration
                         : "??") + "s"}
                     </p>
                     <p>
