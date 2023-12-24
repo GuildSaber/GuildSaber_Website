@@ -26,4 +26,6 @@ export enum EIncludeFlags {
   Tags = 1 << 23,
   Users = 1 << 24,
   UserSessions = 1 << 25,
+  PrevScores = 1 << 26,
+  PrevScoreTrackers = 1 << 27,
 }

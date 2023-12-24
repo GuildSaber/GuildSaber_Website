@@ -173,7 +173,7 @@ export default function Map() {
                       </span>
                     </p>
                     <p className="hidden md:block">
-                      {(data.rankedScore.score.hasTrackers
+                      {(!!data.rankedScore.score.hasTrackers
                         ? data.rankedScore.score.winTracker.totalPauseDuration
                         : "??") + "s"}
                     </p>
