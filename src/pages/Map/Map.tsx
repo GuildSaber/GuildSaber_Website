@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import MapHeader from "../../components/Map/MapHeader";
 import MapRequirements from "../../components/Map/MapRequirements";
 import List from "../../components/List/List";
@@ -147,20 +147,22 @@ export default function Map() {
                     )}
                   >
                     <p>{`#${(currentPage - 1) * PAGE_SIZE + key + 1}`}</p>
-                    <div className="inline-flex items-center gap-2 overflow-hidden">
-                      <img
-                        className="rounded-full"
-                        src={data.player.user_AvatarUrl}
-                        height={28}
-                        width={28}
-                      />
-                      <p className="truncate text-[0.80rem]">
-                        {data.player.name}
-                      </p>
-                      <p className="inline-block rounded bg-muted px-2 align-middle text-[0.80rem]">
-                        25
-                      </p>
-                    </div>
+                    <Link to={`/player/${data.player.userID}`}>
+                      <div className="inline-flex items-center gap-2 overflow-hidden">
+                        <img
+                          className="rounded-full"
+                          src={data.player.user_AvatarUrl}
+                          height={28}
+                          width={28}
+                        />
+                        <p className="truncate text-[0.80rem]">
+                          {data.player.name}
+                        </p>
+                        <p className="inline-block rounded bg-muted px-2 align-middle text-[0.80rem]">
+                          25
+                        </p>
+                      </div>
+                    </Link>
                     <p className="text-secondary">{`${data.rankedScore.rawPoints.toFixed(
                       2,
                     )}`}</p>
@@ -174,7 +176,7 @@ export default function Map() {
                     </p>
                     <p className="hidden md:block">
                       {(!!data.rankedScore.score.hasTrackers
-                        ? data.rankedScore.score.winTracker.totalPauseDuration
+                        ? data.rankedScore.score.winTracker?.totalPauseDuration
                         : "??") + "s"}
                     </p>
                     <p>

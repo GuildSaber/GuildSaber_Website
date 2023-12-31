@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import Card from "../../components/Guilds/GuildsCard";
 import { useEffect, useState } from "react";
 import List from "../../components/List/List";
@@ -29,22 +30,31 @@ const FILTER_SORT_BY_VALUES = [
 
 type FilterType = {
   guildTypes: string[];
-  "sort-By": string;
-  order: "Asc" | "Desc";
+  "sort-by": string;
+  "order-by": "Asc" | "Desc";
 };
 
 export default function Guilds() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [intermediateSearch, setIntermediateSearch] = useState("");
   const [filter, setFilter] = useState<FilterType>({
     guildTypes: ["0", "1", "2", "4"],
-    "sort-By": "Popularity",
-    order: "Desc",
+    "sort-by": "Popularity",
+    "order-by": "Desc",
   });
 
   const { session, dispatch } = useAuthContext();
 
   const queryClient = useQueryClient();
+
+  const updateSearch = (term: string) => {
+    setSearch(term);
+    setCurrentPage(1);
+    searchParams.set("page", '1');
+    setSearchParams(searchParams);
+  };
 
   const joinGuild = (guildID: number) =>
     fetch(
@@ -89,7 +99,7 @@ export default function Guilds() {
     mutation.mutate(guildID);
   };
 
-  const getGuilds = async (page = 1, filter: FilterType) => {
+  const getGuilds = async (page = 1, filter: FilterType, search: string) => {
     const parsefilter = {
       ...filter,
       guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
@@ -112,8 +122,8 @@ export default function Guilds() {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      refetchGuilds();
-    }, 1000);
+      setIntermediateSearch(search);
+    }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
@@ -122,10 +132,9 @@ export default function Guilds() {
     data: guilds,
     isLoading,
     isError,
-    refetch: refetchGuilds,
   } = useQuery({
-    queryKey: ["guilds", currentPage, filter],
-    queryFn: () => getGuilds(currentPage, filter),
+    queryKey: ["guilds", currentPage, filter, intermediateSearch],
+    queryFn: () => getGuilds(currentPage, filter, intermediateSearch),
   });
 
   if (isLoading) {
@@ -153,10 +162,10 @@ export default function Guilds() {
                 defaultvalue={FILTER_SORT_BY_VALUES[0].value}
                 className="w-full sm:w-auto"
                 options={FILTER_SORT_BY_VALUES}
-                selectedOptions={[filter["sort-By"]]}
+                selectedOptions={[filter["sort-by"]]}
                 multiple={false}
                 setSelectedOptions={(value) =>
-                  setFilter({ ...filter, "sort-By": value[0] })
+                  setFilter({ ...filter, "sort-by": value[0] })
                 }
               />
               <Collapse
@@ -172,7 +181,7 @@ export default function Guilds() {
               />
               <SearchBar
                 className="ml-auto w-full sm:w-auto"
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => updateSearch(e.target.value)}
               />
             </div>
 

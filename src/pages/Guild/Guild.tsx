@@ -2,16 +2,30 @@ import { useParams, useSearchParams } from "react-router-dom";
 import GuildHeader from "../../components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
+import Collapse from "../../components/Common/Collapse/Collapse";
 import {
   GuildAPIResponseSchema,
   GuildMapsAPIResponseSchema,
 } from "../../types/api/guild";
 import MapHeader from "../../components/Map/MapHeader";
-import { useState } from "react";
+import SearchBar from "../../components/Common/Search/SearchBar";
+import { Key, useEffect, useState } from "react";
 import List from "../../components/List/List";
 import { EIncludeFlags } from "../../enums/api";
 
-const PAGE_SIZE = 2;
+const FILTER_SORT_BY_VALUES = [
+  { value: "Difficulty", label: "Difficulty"},
+  { value: "Time", label: "RankTime" },
+  { value: "EditTime", label: "EditTime" },
+  { value: "Accuracy", label: "MinAccuracy" },
+];
+
+type FilterType = {
+  "sort-by": string;
+  "order-by": "Asc" | "Desc";
+};
+
+const PAGE_SIZE = 3;
 const API_MAPS_DATA_INCLUDES =
   EIncludeFlags.RankedMapVersions |
   EIncludeFlags.SongDifficulties |
@@ -24,24 +38,55 @@ export default function Guild() {
   if (!guildID) {
     return <p>Error</p>;
   }
-  const [searchParams] = useSearchParams();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState("");
+  const [intermediateSearch, setIntermediateSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") as string) || 1,
   );
+  const [filter, setFilter] = useState<FilterType>({
+    "sort-by": "Difficulty",
+    "order-by": "Asc",
+  });
+
+  const updateSearch = (term: string) => {
+    setSearch(term);
+    setCurrentPage(1);
+    searchParams.set("page", '1');
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setIntermediateSearch(search);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
 
   const getGuild = async (guildID: string) =>
     fetch(`${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`)
       .then((res) => res.json())
       .then(GuildAPIResponseSchema.parse);
 
-  const getMaps = async (guildID: string, currentPage: number) =>
-    fetch(
+  const getMaps = async (guildID: string, currentPage: number, filter: FilterType, search: string) => {
+    /* Still doing this for when adding more params */
+    const parsefilter = {
+      ...filter
+    };
+    const URLParams = new URLSearchParams(parsefilter).toString();
+
+    return fetch(
       `${
         import.meta.env.VITE_API_BASE_URL
-      }/ranked-maps/${guildID}?sort-by=Time&page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_MAPS_DATA_INCLUDES}`,
+      }/ranked-maps/${guildID}?page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_MAPS_DATA_INCLUDES}&${URLParams}${
+        search && "&search=" + search
+      }`,
     )
       .then((res) => res.json())
       .then(GuildMapsAPIResponseSchema.parse);
+  };
 
   const {
     data: guild,
@@ -58,8 +103,8 @@ export default function Guild() {
     isLoading: isMapsLoading,
     isError: isMapsError,
   } = useQuery({
-    queryKey: ["guilds", guildID, "maps", currentPage],
-    queryFn: () => getMaps(guildID, currentPage),
+    queryKey: ["guilds", guildID, "maps", currentPage, filter, intermediateSearch],
+    queryFn: () => getMaps(guildID, currentPage, filter, intermediateSearch),
     enabled: !!guildID,
     retry: 2,
   });
@@ -78,8 +123,24 @@ export default function Guild() {
 
       <div className="flow-content-2 md:flow-content-4">
         <h3 className="text-center text-h4 font-bold md:text-left">
-          New Ranked Maps
+          Ranked Maps
         </h3>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Collapse
+                defaultvalue={FILTER_SORT_BY_VALUES[0].value}
+                className="w-full sm:w-auto"
+                options={FILTER_SORT_BY_VALUES}
+                selectedOptions={[filter["sort-by"]]}
+                multiple={false}
+                setSelectedOptions={(value) =>
+                  setFilter({ ...filter, "sort-by": value[0] })
+                }
+              />
+        <SearchBar
+                className="ml-auto w-full sm:w-auto"
+                onChange={(e) => updateSearch(e.target.value)}
+              />
+              </div>
         {maps && !isMapsLoading && !isMapsError && (
           <List
             totalCount={maps.totalCount}
@@ -89,7 +150,7 @@ export default function Guild() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           >
-            {maps?.data.map((map, key) => (
+            {maps?.data.map((map: { guildID: number; id: number; requirements: { doesNeedConfirmation: boolean; doesNeedFullCombo: boolean; maxPauseDuration: number; prohibitedModifiers: number; mandatoryModifiers: number; minAccuracy: number; }; unixCreationTime: number; rankingState: number; rating: { customModifiersRating: number; default: { stars: { difficulty: number; acc: number; }; }; modifiers: null; }; unixEditTime: number; rankedMapVersions: { version: number; songDifficulty: { id: number; difficulty: number; gameMode: { id: number; name: string; }; song: { id: number; name: string; hash: string; beatSaverKey: string; songName: string; songSubName: string; songAuthorName: string; mapperName: string; isAutoMapped: boolean; bpm: number; duration: number; unixUploadedTime: number; coverURL: string; }; blid: string; songDifficultyStats: { id: number; duration: number; maxScore: number; noteJumpSpeed: number; noteCount: number; bombCount: number; obstacleCount: number; notesPerSecond: number; }; }; }[]; }, key: Key | null | undefined) => (
               <MapHeader key={key} mapData={map} />
             ))}
           </List>

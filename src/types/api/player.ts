@@ -111,7 +111,7 @@ export const PointsAPIResponseSchema = z.object({
       accuracyScale: z.number(),
       slopeMultiplier: z.number(),
       isSlopeEnabled: z.boolean(),
-      isCurveEnabled: z.boolean(),
+      isAccCurveEnabled: z.boolean(),
       defaultAverageAccForPointCalculation: z.number(),
       diffCurve: z.string(),
       accCurve: z.string(),
