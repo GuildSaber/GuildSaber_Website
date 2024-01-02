@@ -18,18 +18,20 @@ export const PlayerScoresAPIResponseSchema = z.object({
         badCuts: z.number(),
         hasTrackers: z.boolean(),
       }),
-      prevScore: z.object({
-        id: z.number(),
-        playerID: z.number(),
-        songDifficultyID: z.number(),
-        baseScore: z.number(),
-        modifiers: z.number(),
-        unixTimeSet: z.number(),
-        controller: z.number(),
-        missedNotes: z.number(),
-        badCuts: z.number(),
-        hasTrackers: z.boolean(),
-      }).nullable(),
+      prevScore: z
+        .object({
+          id: z.number(),
+          playerID: z.number(),
+          songDifficultyID: z.number(),
+          baseScore: z.number(),
+          modifiers: z.number(),
+          unixTimeSet: z.number(),
+          controller: z.number(),
+          missedNotes: z.number(),
+          badCuts: z.number(),
+          hasTrackers: z.boolean(),
+        })
+        .nullable(),
       rankedMap: z.object({
         id: z.number(),
         guildID: z.number(),
@@ -141,6 +143,9 @@ export const PlayerAPIResponseSchema = z.object({
       description: z.string(),
       color: z.number(),
       type: z.number(),
+      simplifiedPoints: z.array(
+        z.object({ id: z.number(), guildID: z.number(), name: z.string() }),
+      ),
       joinRequirements: z.object({
         requirements: z.number(),
         minRank: z.number(),

@@ -15,6 +15,7 @@ import { formatAccuracy, formatHMD, formatModifiers } from "../../utils/format";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import clsx from "clsx";
 import { EIncludeFlags } from "../../enums/api";
+import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 
 const PAGE_SIZE = 2;
 
@@ -35,6 +36,14 @@ export default function Map() {
   const { mapID } = useParams();
   const { session } = useAuthContext();
   const [searchParams] = useSearchParams();
+
+  const [arcViewer, setArcViewer] = useState({
+    isOpen: false,
+    bsrCode: "",
+    difficulty: 0,
+    mode: "",
+  });
+
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") as string) || 1,
   );
@@ -93,7 +102,7 @@ export default function Map() {
   return (
     <div className="mx-auto max-w-screen-lg">
       <>
-        <MapHeader mapData={map} />
+        <MapHeader mapData={map} setArcViewer={setArcViewer} />
 
         <MapRequirements />
         <div className="flex w-full rounded bg-gray-800 p-4 lg:p-8">
@@ -198,6 +207,14 @@ export default function Map() {
           )}
         </div>
       </>
+      {arcViewer.isOpen && (
+        <ArcViewer
+          bsrCode={arcViewer.bsrCode}
+          difficulty={arcViewer.difficulty}
+          mode={arcViewer.mode}
+          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
+        />
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import Button from "../Common/Button/Button";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
-import { GuildAPIResponse } from "../../types/api";
+import { GuildAPIResponse } from "../../types/api/guild";
 import { Link } from "react-router-dom";
 
 export default function GuildHeader({

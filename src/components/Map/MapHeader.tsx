@@ -16,27 +16,30 @@ import { MapAPIResponse } from "../../types/api/map";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { formatDifficulty, formatMinSec } from "../../utils/format";
-import { useState } from "react";
-import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 
-export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
+type arcViewer = {
+  isOpen: boolean;
+  bsrCode: string;
+  difficulty: number;
+  mode: string;
+};
+
+export default function MapHeader({
+  mapData,
+  setArcViewer,
+}: {
+  mapData: MapAPIResponse;
+  setArcViewer: (arg0: arcViewer) => void;
+}) {
   const {
     song,
     songDifficultyStats: difficulty,
     difficulty: levelDifficulty,
     gameMode,
   } = mapData.rankedMapVersions[0].songDifficulty;
-  const [arcViewer, setArcViewer] = useState({
-    isOpen: false,
-    bsrCode: song.beatSaverKey,
-    difficulty: levelDifficulty,
-    mode: gameMode.name,
-  });
 
   const rating = mapData.rating.default.stars;
-
   const songDuration = formatMinSec(song.duration);
-
   const description = "A map of the best place to play";
 
   return (
@@ -117,7 +120,14 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
               />
               <Button
                 className="btn-tritary"
-                onClick={() => setArcViewer({ ...arcViewer, isOpen: true })}
+                onClick={() => {
+                  setArcViewer({
+                    bsrCode: song.beatSaverKey,
+                    difficulty: levelDifficulty,
+                    mode: gameMode.name,
+                    isOpen: true,
+                  });
+                }}
                 icon={faPlay}
               />
               <Link
@@ -133,15 +143,6 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
           </div>
         </div>
       </div>
-
-      {arcViewer.isOpen && (
-        <ArcViewer
-          bsrCode={arcViewer.bsrCode}
-          difficulty={arcViewer.difficulty}
-          mode={arcViewer.mode}
-          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
-        />
-      )}
     </>
   );
 }

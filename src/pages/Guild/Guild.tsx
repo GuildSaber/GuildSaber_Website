@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import GuildHeader from "../../components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
@@ -12,9 +12,11 @@ import SearchBar from "../../components/Common/Search/SearchBar";
 import { Key, useEffect, useState } from "react";
 import List from "../../components/List/List";
 import { EIncludeFlags } from "../../enums/api";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 
 const FILTER_SORT_BY_VALUES = [
-  { value: "Difficulty", label: "Difficulty"},
+  { value: "Difficulty", label: "Difficulty" },
   { value: "Time", label: "RankTime" },
   { value: "EditTime", label: "EditTime" },
   { value: "Accuracy", label: "MinAccuracy" },
@@ -39,6 +41,12 @@ export default function Guild() {
     return <p>Error</p>;
   }
 
+  const { session } = useAuthContext();
+
+  if (session?.selectedGuild !== guildID) {
+    return <Navigate to={`/guild/${session?.selectedGuild}`} />;
+  }
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
@@ -50,10 +58,17 @@ export default function Guild() {
     "order-by": "Asc",
   });
 
+  const [arcViewer, setArcViewer] = useState({
+    isOpen: false,
+    bsrCode: "",
+    difficulty: 0,
+    mode: "",
+  });
+
   const updateSearch = (term: string) => {
     setSearch(term);
     setCurrentPage(1);
-    searchParams.set("page", '1');
+    searchParams.set("page", "1");
     setSearchParams(searchParams);
   };
 
@@ -70,10 +85,15 @@ export default function Guild() {
       .then((res) => res.json())
       .then(GuildAPIResponseSchema.parse);
 
-  const getMaps = async (guildID: string, currentPage: number, filter: FilterType, search: string) => {
+  const getMaps = async (
+    guildID: string,
+    currentPage: number,
+    filter: FilterType,
+    search: string,
+  ) => {
     /* Still doing this for when adding more params */
     const parsefilter = {
-      ...filter
+      ...filter,
     };
     const URLParams = new URLSearchParams(parsefilter).toString();
 
@@ -103,7 +123,14 @@ export default function Guild() {
     isLoading: isMapsLoading,
     isError: isMapsError,
   } = useQuery({
-    queryKey: ["guilds", guildID, "maps", currentPage, filter, intermediateSearch],
+    queryKey: [
+      "guilds",
+      guildID,
+      "maps",
+      currentPage,
+      filter,
+      intermediateSearch,
+    ],
     queryFn: () => getMaps(guildID, currentPage, filter, intermediateSearch),
     enabled: !!guildID,
     retry: 2,
@@ -125,22 +152,22 @@ export default function Guild() {
         <h3 className="text-center text-h4 font-bold md:text-left">
           Ranked Maps
         </h3>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Collapse
-                defaultvalue={FILTER_SORT_BY_VALUES[0].value}
-                className="w-full sm:w-auto"
-                options={FILTER_SORT_BY_VALUES}
-                selectedOptions={[filter["sort-by"]]}
-                multiple={false}
-                setSelectedOptions={(value) =>
-                  setFilter({ ...filter, "sort-by": value[0] })
-                }
-              />
-        <SearchBar
-                className="ml-auto w-full sm:w-auto"
-                onChange={(e) => updateSearch(e.target.value)}
-              />
-              </div>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Collapse
+            defaultvalue={FILTER_SORT_BY_VALUES[0].value}
+            className="w-full sm:w-auto"
+            options={FILTER_SORT_BY_VALUES}
+            selectedOptions={[filter["sort-by"]]}
+            multiple={false}
+            setSelectedOptions={(value) =>
+              setFilter({ ...filter, "sort-by": value[0] })
+            }
+          />
+          <SearchBar
+            className="ml-auto w-full sm:w-auto"
+            onChange={(e) => updateSearch(e.target.value)}
+          />
+        </div>
         {maps && !isMapsLoading && !isMapsError && (
           <List
             totalCount={maps.totalCount}
@@ -150,12 +177,82 @@ export default function Guild() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           >
-            {maps?.data.map((map: { guildID: number; id: number; requirements: { doesNeedConfirmation: boolean; doesNeedFullCombo: boolean; maxPauseDuration: number; prohibitedModifiers: number; mandatoryModifiers: number; minAccuracy: number; }; unixCreationTime: number; rankingState: number; rating: { customModifiersRating: number; default: { stars: { difficulty: number; acc: number; }; }; modifiers: null; }; unixEditTime: number; rankedMapVersions: { version: number; songDifficulty: { id: number; difficulty: number; gameMode: { id: number; name: string; }; song: { id: number; name: string; hash: string; beatSaverKey: string; songName: string; songSubName: string; songAuthorName: string; mapperName: string; isAutoMapped: boolean; bpm: number; duration: number; unixUploadedTime: number; coverURL: string; }; blid: string; songDifficultyStats: { id: number; duration: number; maxScore: number; noteJumpSpeed: number; noteCount: number; bombCount: number; obstacleCount: number; notesPerSecond: number; }; }; }[]; }, key: Key | null | undefined) => (
-              <MapHeader key={key} mapData={map} />
-            ))}
+            {maps?.data.map(
+              (
+                map: {
+                  guildID: number;
+                  id: number;
+                  requirements: {
+                    doesNeedConfirmation: boolean;
+                    doesNeedFullCombo: boolean;
+                    maxPauseDuration: number;
+                    prohibitedModifiers: number;
+                    mandatoryModifiers: number;
+                    minAccuracy: number;
+                  };
+                  unixCreationTime: number;
+                  rankingState: number;
+                  rating: {
+                    customModifiersRating: number;
+                    default: { stars: { difficulty: number; acc: number } };
+                    modifiers: null;
+                  };
+                  unixEditTime: number;
+                  rankedMapVersions: {
+                    version: number;
+                    songDifficulty: {
+                      id: number;
+                      difficulty: number;
+                      gameMode: { id: number; name: string };
+                      song: {
+                        id: number;
+                        name: string;
+                        hash: string;
+                        beatSaverKey: string;
+                        songName: string;
+                        songSubName: string;
+                        songAuthorName: string;
+                        mapperName: string;
+                        isAutoMapped: boolean;
+                        bpm: number;
+                        duration: number;
+                        unixUploadedTime: number;
+                        coverURL: string;
+                      };
+                      blid: string;
+                      songDifficultyStats: {
+                        id: number;
+                        duration: number;
+                        maxScore: number;
+                        noteJumpSpeed: number;
+                        noteCount: number;
+                        bombCount: number;
+                        obstacleCount: number;
+                        notesPerSecond: number;
+                      };
+                    };
+                  }[];
+                },
+                key: Key | null | undefined,
+              ) => (
+                <MapHeader
+                  key={key}
+                  mapData={map}
+                  setArcViewer={setArcViewer}
+                />
+              ),
+            )}
           </List>
         )}
       </div>
+      {arcViewer.isOpen && (
+        <ArcViewer
+          bsrCode={arcViewer.bsrCode}
+          difficulty={arcViewer.difficulty}
+          mode={arcViewer.mode}
+          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
+        />
+      )}
     </div>
   );
 }

@@ -18,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/player/:playerID" element={<PlayerProfile />} />
+
           <Route path="/signin" element={<Signin />} />
 
           <Route path="/guilds" element={<Guilds />} />
