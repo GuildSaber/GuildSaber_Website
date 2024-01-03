@@ -76,7 +76,7 @@ export default function Guild() {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setIntermediateSearch(search);
-    }, 500);
+    }, 700);
 
     return () => clearTimeout(delayDebounceFn);
   }, [search]);

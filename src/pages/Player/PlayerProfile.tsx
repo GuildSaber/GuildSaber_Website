@@ -90,10 +90,29 @@ export default function PlayerProfile() {
   const { data: player, isError: isPlayerError } = useQuery({
     queryKey: ['playerProfile', playerID],
     queryFn: async () => {
-      const result = await fetch(`${import.meta.env.VITE_API_BASE_URL}/player/by-id/${playerID}?include=${EIncludeFlags.Users | EIncludeFlags.Points}`).then((res) => res.json()).then(PlayerAPIResponseSchema.parse)
+      let result = await fetch(`${import.meta.env.VITE_API_BASE_URL}/player/by-id/${playerID}?include=${EIncludeFlags.Users | EIncludeFlags.Points}`).then((res) => res.json()).then(PlayerAPIResponseSchema.parse)
       if (!!result && !!result?.guilds && result.guilds.length !== 0) {
         if (!guildID) setGuildID(result.guilds[0].id);
         if (!pointID) setPointID(result.guilds[0].simplifiedPoints[0].id);
+
+        // check if the guild is in the guilds list
+        const guild = result.guilds.find((guild) => guild.id === guildID);
+        if (!!guild) {
+          // check if the point is in the guild's points list
+          const point = guild.simplifiedPoints.find((point) => point.id === pointID);
+          if (!point) {
+            if (!!guild.simplifiedPoints[0]) setPointID(guild.simplifiedPoints[0].id);
+            else setPointID(null);
+          } setPointID(guild.simplifiedPoints[0].id);
+        } else {
+          setGuildID(result.guilds[0].id);
+          const point = result.guilds.find((point) => point.id === pointID);
+          // set the new default point if the current one is not valid
+          if (!point) {
+            if (!!result.guilds[0].simplifiedPoints[0]) setPointID(result.guilds[0].simplifiedPoints[0].id);
+            else setPointID(null);
+          }
+        }
       } else if (!!result) {
         // When the player has no guilds, reset the guildID and pointID
         setGuildID(null);
@@ -107,20 +126,7 @@ export default function PlayerProfile() {
   /* Then fetch the player stats on the points and guild (unless they don't exist) */
   const { data: playerStats } = useQuery({
     queryKey: ["player", playerID, "stats", pointID],
-    queryFn: () => {
-      // check if the point match the guild with the guildID
-      const guild = player?.guilds.find((guild) => guild.id === guildID);
-      if (!!guild) {
-        const point = guild.simplifiedPoints.find((point) => point.id === pointID);
-        // set the new default point if the current one is not valid
-        if (!point && !!guild.simplifiedPoints[0]) 
-          setPointID(guild.simplifiedPoints[0].id);
-        else if (!point) 
-          return Promise.reject("No point found");
-      }
-      
-      return fetch(`${import.meta.env.VITE_API_BASE_URL}/player/${playerID}/stats/${pointID}`,).then((res) => res.json()).then(PlayerStatsAPIResponseSchema.parse)
-    },
+    queryFn: () => fetch(`${import.meta.env.VITE_API_BASE_URL}/player/${playerID}/stats/${pointID}`,).then((res) => res.json()).then(PlayerStatsAPIResponseSchema.parse),
     enabled: !!player && !!pointID && player.guilds.length !== 0,
   });
 

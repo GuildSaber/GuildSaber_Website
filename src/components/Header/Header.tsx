@@ -51,9 +51,6 @@ export default function Header() {
                   <Link to="/leaderboards" className="btn text-p">
                     Leaderboards
                   </Link>
-                  <Link to="/maps" className="btn text-p">
-                    Maps
-                  </Link>
                   {session.memberList && session.memberList.length === 0 && (
                     <Link to="/guilds" className="btn text-p">
                       Guilds
@@ -110,9 +107,7 @@ export default function Header() {
             <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
               {extended && session && session.selectedGuild && (
                 <>
-                  <Link to="/me">My Profile</Link>
                   <Link to="/leaderboards">Leaderboards</Link>
-                  <Link to="/maps">Maps</Link>
                   <Link to="/guilds">Guilds</Link>
                 </>
               )}
