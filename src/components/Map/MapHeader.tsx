@@ -36,7 +36,7 @@ export default function MapHeader({
     songDifficultyStats: difficulty,
     difficulty: levelDifficulty,
     gameMode,
-  } = mapData.rankedMapVersions[0].songDifficulty;
+  } = mapData.rankedMapVersions[0]?.songDifficulty;
 
   const rating = mapData.rating.default.stars;
   const songDuration = formatMinSec(song.duration);

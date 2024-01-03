@@ -33,7 +33,8 @@ const API_MAPS_DATA_INCLUDES =
   EIncludeFlags.SongDifficulties |
   EIncludeFlags.Songs |
   EIncludeFlags.GameModes |
-  EIncludeFlags.SongDifficultyStats;
+  EIncludeFlags.SongDifficultyStats |
+  EIncludeFlags.RankedScores;
 
 export default function Guild() {
   const { guildID } = useParams();
@@ -103,6 +104,12 @@ export default function Guild() {
       }/ranked-maps/${guildID}?page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_MAPS_DATA_INCLUDES}&${URLParams}${
         search && "&search=" + search
       }`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      },
     )
       .then((res) => res.json())
       .then(GuildMapsAPIResponseSchema.parse);
@@ -179,65 +186,67 @@ export default function Guild() {
           >
             {maps?.data.map(
               (
-                map: {
-                  guildID: number;
-                  id: number;
-                  requirements: {
-                    doesNeedConfirmation: boolean;
-                    doesNeedFullCombo: boolean;
-                    maxPauseDuration: number;
-                    prohibitedModifiers: number;
-                    mandatoryModifiers: number;
-                    minAccuracy: number;
-                  };
-                  unixCreationTime: number;
-                  rankingState: number;
-                  rating: {
-                    customModifiersRating: number;
-                    default: { stars: { difficulty: number; acc: number } };
-                    modifiers: null;
-                  };
-                  unixEditTime: number;
-                  rankedMapVersions: {
-                    version: number;
-                    songDifficulty: {
-                      id: number;
-                      difficulty: number;
-                      gameMode: { id: number; name: string };
-                      song: {
-                        id: number;
-                        name: string;
-                        hash: string;
-                        beatSaverKey: string;
-                        songName: string;
-                        songSubName: string;
-                        songAuthorName: string;
-                        mapperName: string;
-                        isAutoMapped: boolean;
-                        bpm: number;
-                        duration: number;
-                        unixUploadedTime: number;
-                        coverURL: string;
-                      };
-                      blid: string;
-                      songDifficultyStats: {
-                        id: number;
-                        duration: number;
-                        maxScore: number;
-                        noteJumpSpeed: number;
-                        noteCount: number;
-                        bombCount: number;
-                        obstacleCount: number;
-                        notesPerSecond: number;
-                      };
+                value: {
+                  rankedMap: {
+                    id: number;
+                    guildID: number;
+                    rankingState: number;
+                    requirements: {
+                      doesNeedConfirmation: boolean;
+                      doesNeedFullCombo: boolean;
+                      maxPauseDuration: number;
+                      prohibitedModifiers: number;
+                      mandatoryModifiers: number;
+                      minAccuracy: number;
                     };
-                  }[];
+                    rating: {
+                      customModifiersRating: number;
+                      default: { stars: { difficulty: number; acc: number } };
+                      modifiers: null;
+                    };
+                    unixCreationTime: number;
+                    unixEditTime: number;
+                    rankedMapVersions: {
+                      version: number;
+                      songDifficulty: {
+                        id: number;
+                        difficulty: number;
+                        gameMode: { id: number; name: string };
+                        song: {
+                          id: number;
+                          name: string;
+                          hash: string;
+                          beatSaverKey: string;
+                          songName: string;
+                          songSubName: string;
+                          songAuthorName: string;
+                          mapperName: string;
+                          isAutoMapped: boolean;
+                          bpm: number;
+                          duration: number;
+                          unixUploadedTime: number;
+                          coverURL: string;
+                        };
+                        blid: string;
+                        songDifficultyStats: {
+                          id: number;
+                          duration: number;
+                          maxScore: number;
+                          noteJumpSpeed: number;
+                          noteCount: number;
+                          bombCount: number;
+                          obstacleCount: number;
+                          notesPerSecond: number;
+                        };
+                      };
+                    }[];
+                  };
                 },
                 key: Key | null | undefined,
               ) => (
                 <MapHeader
                   key={key}
-                  mapData={map}
+                  mapData={value.rankedMap}
                   setArcViewer={setArcViewer}
                 />
               ),

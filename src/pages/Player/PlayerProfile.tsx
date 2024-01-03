@@ -13,6 +13,7 @@ import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import {
   faCheck,
   faChevronUp,
@@ -69,13 +70,14 @@ function getTotalMisses(score: PlayerScoresAPIResponse["data"][0]) {
 
 export default function PlayerProfile() {
   const { playerID } = useParams();
-  if (!playerID) {
-    return <p>Error</p>;
-  }
 
   const { session } = useAuthContext();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") as string) || 1);
+  const [guildID, setGuildID] = useState(parseInt(searchParams.get("guild") as string) || null);
+  const [pointID, setPointID] = useState(parseInt(searchParams.get("point") as string) || null);
 
   const [arcViewer, setArcViewer] = useState({
     isOpen: false,
@@ -84,65 +86,53 @@ export default function PlayerProfile() {
     mode: "",
   });
 
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") as string) || 1,
-  );
-
-  const [activeGuild, setActiveGuild] = useState(
-    parseInt(searchParams.get("guild") as string) || 1,
-  );
-
-  const [activePoint, setActivePoint] = useState(
-    parseInt(searchParams.get("point") as string) || 1,
-  );
-
-  const getPlayerScores = async (page: number, pointID?: number) =>
-    fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/ranked-scores?userID=${playerID}&pointID=${
-        pointID ?? activePoint
-      }&page=${page}&pageSize=${PAGE_SIZE}&include=${API_PLAYER_SCORES_DATA_INCLUDES}
-      `,
-    )
-      .then((res) => res.json())
-      .then(PlayerScoresAPIResponseSchema.parse);
-
-  const getPlayer = async (playerID: string) =>
-    fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/player/by-id/${playerID}?include=${
-        EIncludeFlags.Users | EIncludeFlags.Points
-      }`,
-    )
-      .then((res) => res.json())
-      .then(PlayerAPIResponseSchema.parse);
-
-  const getPlayerStats = async (playerID: string, pointID: number) =>
-    fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/player/${playerID}/stats/${
-        pointID ?? 1
-      }`,
-    )
-      .then((res) => res.json())
-      .then(PlayerStatsAPIResponseSchema.parse);
-
-  const { data: player, isError } = useQuery({
-    queryKey: ["player", playerID],
-    queryFn: () => getPlayer(playerID),
+  /* At first Fetch the player */
+  const { data: player, isError: isPlayerError } = useQuery({
+    queryKey: ['playerProfile', playerID],
+    queryFn: async () => {
+      const result = await fetch(`${import.meta.env.VITE_API_BASE_URL}/player/by-id/${playerID}?include=${EIncludeFlags.Users | EIncludeFlags.Points}`).then((res) => res.json()).then(PlayerAPIResponseSchema.parse)
+      if (!!result && !!result?.guilds && result.guilds.length !== 0) {
+        if (!guildID) setGuildID(result.guilds[0].id);
+        if (!pointID) setPointID(result.guilds[0].simplifiedPoints[0].id);
+      } else if (!!result) {
+        // When the player has no guilds, reset the guildID and pointID
+        setGuildID(null);
+        setPointID(null);
+      }
+      return result;
+    },
+    enabled: !!playerID,
   });
 
+  /* Then fetch the player stats on the points and guild (unless they don't exist) */
   const { data: playerStats } = useQuery({
-    queryKey: ["player", playerID, "stats", activePoint],
-    queryFn: () => getPlayerStats(playerID, activePoint),
+    queryKey: ["player", playerID, "stats", pointID],
+    queryFn: () => {
+      // check if the point match the guild with the guildID
+      const guild = player?.guilds.find((guild) => guild.id === guildID);
+      if (!!guild) {
+        const point = guild.simplifiedPoints.find((point) => point.id === pointID);
+        // set the new default point if the current one is not valid
+        if (!point && !!guild.simplifiedPoints[0]) 
+          setPointID(guild.simplifiedPoints[0].id);
+        else if (!point) 
+          return Promise.reject("No point found");
+      }
+      
+      return fetch(`${import.meta.env.VITE_API_BASE_URL}/player/${playerID}/stats/${pointID}`,).then((res) => res.json()).then(PlayerStatsAPIResponseSchema.parse)
+    },
+    enabled: !!player && !!pointID && player.guilds.length !== 0,
   });
 
+  /* Then fetch the player scores on the point (unless it doesn't exist) */
   const {
     data: scores,
     isLoading: isScoresLoading,
     isError: isScoresError,
   } = useQuery({
-    queryKey: ["player", playerID, "scores", activePoint, currentPage],
-    queryFn: () => getPlayerScores(currentPage, activePoint),
+    queryKey: ["player", playerID, "scores", pointID, currentPage],
+    queryFn: async () => fetch(`${import.meta.env.VITE_API_BASE_URL}/ranked-scores?userID=${playerID}&pointID=${pointID}&page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_PLAYER_SCORES_DATA_INCLUDES}`,).then((res) => res.json()).then(PlayerScoresAPIResponseSchema.parse),
+    enabled : !!player && !!pointID
   });
 
   function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {
@@ -155,33 +145,37 @@ export default function PlayerProfile() {
   }
 
   const selectGuild = (guildID: number) => {
-    setActiveGuild(guildID);
-    setActivePoint(
+    setGuildID(guildID);
+    setPointID(
       player?.guilds.find((guild) => guildID === guild.id)?.simplifiedPoints[0]
-        .id || 0,
+        .id || null,
     );
     setCurrentPage(1);
     searchParams.delete("page");
   };
 
   const selectPoint = (pointID: number) => {
-    setActivePoint(pointID);
+    setPointID(pointID);
     setCurrentPage(1);
     searchParams.delete("page");
   };
 
   useEffect(() => {
     console.log(searchParams);
-    searchParams.set("guild", activeGuild.toString());
-    searchParams.set("point", activePoint.toString());
+    if (guildID === null) searchParams.delete("guild");
+    else searchParams.set("guild", guildID?.toString());
+    if (pointID === null) searchParams.delete("point");
+    else searchParams.set("point", pointID?.toString());
     navigate({ search: searchParams.toString() }), { replace: true };
-  }, [activeGuild, activePoint]);
-
-  if (isError) {
-    return <div>Error</div>;
-  }
+  }, [guildID, pointID]);
 
   return (
+    isPlayerError && (
+      <div className="text-center">
+        <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
+        <h3 className="text-h3">Player not found</h3>
+      </div>
+    ) ||
     <>
       <div className="flow-content-2">
         <section className="card md:flex md:gap-4 md:p-4">
@@ -231,9 +225,9 @@ export default function PlayerProfile() {
         </section>
         <section className="card overflow-visible px-2 py-4">
           <div className="flex justify-between gap-2">
-            {player?.guilds && (
+            {((!!player && !!guildID) || (!!player?.guilds && player.guilds.length !== 0)) && (
               <CollapseImage
-                defaultvalue={player?.guilds[0].name}
+                defaultvalue={player?.guilds.find((guild) => guildID === guild.id)?.name || player?.guilds[0]?.name}
                 className="w-full border border-gray-700 sm:w-auto"
                 options={player?.guilds
                   .filter((guild) => guild.simplifiedPoints.length !== 0)
@@ -252,7 +246,7 @@ export default function PlayerProfile() {
                       ]),
                     [],
                   )}
-                selectedOption={activeGuild}
+                selectedOption={guildID ?? player?.guilds[0]?.id}
                 setSelectedOption={(value) => selectGuild(value)}
               />
             )}
@@ -272,12 +266,12 @@ export default function PlayerProfile() {
             <div className="flex gap-2">
               {player?.guilds &&
                 player?.guilds
-                  .find((guild) => activeGuild === guild.id)
+                  .find((guild) => guildID === guild.id)
                   ?.simplifiedPoints.map((point) => (
                     <Button
                       key={point.id}
                       className={clsx("btn bg-tritary bg-gray-900", {
-                        "btn-primary": activePoint === point.id,
+                        "btn-primary": pointID === point.id,
                       })}
                       text={point.name}
                       onClick={() => {
@@ -291,6 +285,13 @@ export default function PlayerProfile() {
 
           {isScoresLoading && <Loader />}
 
+          {isScoresError && (
+            <div className="text-center">
+              <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
+              <h3 className="text-h3">No Scores found</h3>
+            </div>
+          )}
+        
           {scores && !isScoresError && (
             <List
               totalCount={scores.totalCount}
