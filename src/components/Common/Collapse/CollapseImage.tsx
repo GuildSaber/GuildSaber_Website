@@ -36,7 +36,6 @@ export default function CollapseImage({
     label: string;
     image: string;
   }) => {
-    console.log(option);
     setSelectedOption(option.value);
     setIsOpen(false);
   };
@@ -76,7 +75,7 @@ export default function CollapseImage({
                 },
               )}
               key={option.value}
-              onClick={() => handleOptionSelect(option)} // ici
+              onClick={() => handleOptionSelect(option)}
             >
               <img
                 src={option.image}

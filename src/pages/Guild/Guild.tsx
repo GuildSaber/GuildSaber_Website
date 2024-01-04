@@ -1,4 +1,4 @@
-import { Navigate, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import GuildHeader from "../../components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Common/Loader/Loader";
@@ -14,6 +14,14 @@ import List from "../../components/List/List";
 import { EIncludeFlags } from "../../enums/api";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
+import MultiRangeSlider from "../../components/Common/MultiRangeSlider/MultiRangeSlider";
+import {
+  faCircleExclamation,
+  faDrum,
+  faHourglassStart,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
@@ -25,6 +33,12 @@ const FILTER_SORT_BY_VALUES = [
 type FilterType = {
   "sort-by": string;
   "order-by": "Asc" | "Desc";
+  "difficulty-from": number;
+  "difficulty-to": number;
+  "duration-from": number;
+  "duration-to": number;
+  "bpm-from": number;
+  "bpm-to": number;
 };
 
 const PAGE_SIZE = 3;
@@ -44,10 +58,6 @@ export default function Guild() {
 
   const { session } = useAuthContext();
 
-  if (session?.selectedGuild !== guildID) {
-    return <Navigate to={`/guild/${session?.selectedGuild}`} />;
-  }
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
@@ -57,6 +67,12 @@ export default function Guild() {
   const [filter, setFilter] = useState<FilterType>({
     "sort-by": "Difficulty",
     "order-by": "Asc",
+    "difficulty-from": 0,
+    "difficulty-to": 0,
+    "duration-from": 0,
+    "duration-to": 0,
+    "bpm-from": 0,
+    "bpm-to": 0,
   });
 
   const [arcViewer, setArcViewer] = useState({
@@ -93,10 +109,12 @@ export default function Guild() {
     search: string,
   ) => {
     /* Still doing this for when adding more params */
-    const parsefilter = {
-      ...filter,
-    };
-    const URLParams = new URLSearchParams(parsefilter).toString();
+    const parsefilter = Object.fromEntries(
+      Object.entries(filter).filter(([_, v]) => v != 0),
+    );
+    const URLParams = new URLSearchParams(
+      parsefilter as Record<string, string>,
+    ).toString();
 
     return fetch(
       `${
@@ -148,7 +166,12 @@ export default function Guild() {
   }
 
   if (isError || guild == null) {
-    return <p>Error</p>;
+    return (
+      <div className="text-center">
+        <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
+        <h3 className="text-h3">Guild not found</h3>
+      </div>
+    );
   }
 
   return (
@@ -170,6 +193,46 @@ export default function Guild() {
               setFilter({ ...filter, "sort-by": value[0] })
             }
           />
+          <div className="flex justify-center gap-2 sm:contents">
+            <MultiRangeSlider
+              min={guild.filters.minDifficulty}
+              max={guild.filters.maxDifficulty}
+              icon={faStar}
+              color="#FFA41C"
+              onChange={({ min, max }) => {
+                setFilter({
+                  ...filter,
+                  "difficulty-from": min,
+                  "difficulty-to": max,
+                });
+              }}
+            />
+            <MultiRangeSlider
+              min={guild.filters.minDuration}
+              max={guild.filters.maxDuration}
+              icon={faHourglassStart}
+              minutes
+              onChange={({ min, max }) => {
+                setFilter({
+                  ...filter,
+                  "duration-from": min,
+                  "duration-to": max,
+                });
+              }}
+            />
+            <MultiRangeSlider
+              min={guild.filters.minBPM}
+              max={guild.filters.maxBPM}
+              icon={faDrum}
+              onChange={({ min, max }) => {
+                setFilter({
+                  ...filter,
+                  "bpm-from": min,
+                  "bpm-to": max,
+                });
+              }}
+            />
+          </div>
           <SearchBar
             className="ml-auto w-full sm:w-auto"
             onChange={(e) => updateSearch(e.target.value)}
@@ -184,73 +247,13 @@ export default function Guild() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           >
-            {maps?.data.map(
-              (
-                value: {
-                  rankedMap: {
-                    id: number;
-                    guildID: number;
-                    rankingState: number;
-                    requirements: {
-                      doesNeedConfirmation: boolean;
-                      doesNeedFullCombo: boolean;
-                      maxPauseDuration: number;
-                      prohibitedModifiers: number;
-                      mandatoryModifiers: number;
-                      minAccuracy: number;
-                    };
-                    rating: {
-                      customModifiersRating: number;
-                      default: { stars: { difficulty: number; acc: number } };
-                      modifiers: null;
-                    };
-                    unixCreationTime: number;
-                    unixEditTime: number;
-                    rankedMapVersions: {
-                      version: number;
-                      songDifficulty: {
-                        id: number;
-                        difficulty: number;
-                        gameMode: { id: number; name: string };
-                        song: {
-                          id: number;
-                          name: string;
-                          hash: string;
-                          beatSaverKey: string;
-                          songName: string;
-                          songSubName: string;
-                          songAuthorName: string;
-                          mapperName: string;
-                          isAutoMapped: boolean;
-                          bpm: number;
-                          duration: number;
-                          unixUploadedTime: number;
-                          coverURL: string;
-                        };
-                        blid: string;
-                        songDifficultyStats: {
-                          id: number;
-                          duration: number;
-                          maxScore: number;
-                          noteJumpSpeed: number;
-                          noteCount: number;
-                          bombCount: number;
-                          obstacleCount: number;
-                          notesPerSecond: number;
-                        };
-                      };
-                    }[];
-                  };
-                },
-                key: Key | null | undefined,
-              ) => (
-                <MapHeader
-                  key={key}
-                  mapData={value.rankedMap}
-                  setArcViewer={setArcViewer}
-                />
-              ),
-            )}
+            {maps?.data.map((value, key: Key) => (
+              <MapHeader
+                key={key}
+                mapData={value.rankedMap}
+                setArcViewer={setArcViewer}
+              />
+            ))}
           </List>
         )}
       </div>

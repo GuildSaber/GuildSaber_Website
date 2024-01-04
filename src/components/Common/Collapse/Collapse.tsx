@@ -103,7 +103,7 @@ export default function Collapse({
                       : faSquare
                   }
                 />
-              )}{" "}
+              )}
               {option.label}
             </div>
           ))}

@@ -1,21 +1,38 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
-import "./multiRangeSlider.css";
+import "./MultiRangeSilder.scss";
+import clsx from "clsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useClickAway from "../../../hooks/useClickAway";
+import { formatMinSec } from "../../../utils/format";
 
 const MultiRangeSlider = ({
   min,
   max,
+  icon,
+  color = "#fff",
+  minutes,
   onChange,
+  className,
 }: {
   min: number;
   max: number;
-  onChange: (value: { min: number; max: number }) => void;
+  icon: any;
+  color?: string;
+  className?: string;
+  minutes?: boolean;
+  onChange: ({ min, max }: { min: number; max: number }) => void;
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
-  const minValRef = useRef(min);
-  const maxValRef = useRef(max);
-  const range = useRef<HTMLElement>(null);
+  const clickRef = useRef<HTMLDivElement>(null);
+  const minValRef = useRef<HTMLInputElement>(null);
+  const maxValRef = useRef<HTMLInputElement>(null);
+  const range = useRef<HTMLInputElement>(null);
+
+  useClickAway(clickRef, () => {
+    setIsOpen(false);
+  });
 
   // Convert to percentage
   const getPercent = useCallback(
@@ -23,73 +40,93 @@ const MultiRangeSlider = ({
     [min, max],
   );
 
-  // Set width of the range to decrease from the left side
   useEffect(() => {
-    const minPercent = getPercent(minVal);
-    const maxPercent = getPercent(maxValRef.current);
+    if (maxValRef.current) {
+      const minPercent = getPercent(minVal);
+      const maxPercent = getPercent(+maxValRef.current.value);
 
-    if (range.current) {
-      range.current.style.left = `${minPercent}%`;
-      range.current.style.width = `${maxPercent - minPercent}%`;
+      if (range.current) {
+        range.current.style.left = `${minPercent}%`;
+        range.current.style.width = `${maxPercent - minPercent}%`;
+      }
     }
-  }, [minVal, getPercent]);
+  }, [minVal, getPercent, isOpen]);
 
-  // Set width of the range to decrease from the right side
   useEffect(() => {
-    const minPercent = getPercent(minValRef.current);
-    const maxPercent = getPercent(maxVal);
+    if (minValRef.current) {
+      const minPercent = getPercent(+minValRef.current.value);
+      const maxPercent = getPercent(maxVal);
 
-    if (range.current) {
-      range.current.style.width = `${maxPercent - minPercent}%`;
+      if (range.current) {
+        range.current.style.width = `${maxPercent - minPercent}%`;
+      }
     }
-  }, [maxVal, getPercent]);
-
-  // Get min and max values when their state changes
-  useEffect(() => {
-    onChange({ min: minVal, max: maxVal });
-  }, [minVal, maxVal, onChange]);
+  }, [maxVal, getPercent, isOpen]);
 
   return (
-    <div className="container">
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={minVal}
-        onChange={(event) => {
-          const value = Math.min(Number(event.target.value), maxVal - 1);
-          setMinVal(value);
-          minValRef.current = value;
-        }}
-        className="thumb thumb--left"
-      />
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={maxVal}
-        onChange={(event) => {
-          const value = Math.max(Number(event.target.value), minVal + 1);
-          setMaxVal(value);
-          maxValRef.current = value;
-        }}
-        className="thumb thumb--right"
-      />
+    <div ref={clickRef} className="MultiRangeSlider relative select-none">
+      <button
+        className={clsx(
+          "btn inline-flex justify-between !gap-4 !bg-gray-800",
+          className,
+        )}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <p onClick={() => setIsOpen(!isOpen)}>
+          <FontAwesomeIcon className="icon mr-2" fill={color} icon={icon} />
+          {minutes
+            ? `${formatMinSec(minVal)} - ${formatMinSec(maxVal)}`
+            : `${minVal} - ${maxVal}`}
+        </p>
+      </button>
 
-      <div className="slider">
-        <div className="slider__track" />
-        <div ref="range" className="slider__range" />
-        <div className="slider__left-value">{minVal}</div>
-        <div className="slider__right-value">{maxVal}</div>
-      </div>
+      {isOpen && (
+        <div className="absolute z-10 mt-2 h-full transform overflow-hidden rounded border border-gray-700 bg-gray-800 p-5 pb-6 text-btn">
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={minVal}
+            ref={minValRef}
+            onChange={(event) => {
+              const value = Math.min(+event.target.value, maxVal - 1);
+              setMinVal(value);
+              event.target.value = value.toString();
+            }}
+            onMouseUp={() => onChange({ min: minVal, max: maxVal })}
+            className={clsx("thumb thumb--zindex-3", {
+              "thumb--zindex-5": minVal > max - 100,
+            })}
+            style={{ "--color": color } as React.CSSProperties}
+          />
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={maxVal}
+            ref={maxValRef}
+            onChange={(event) => {
+              const value = Math.max(+event.target.value, minVal + 1);
+              setMaxVal(value);
+              event.target.value = value.toString();
+            }}
+            onMouseUp={() => onChange({ min: minVal, max: maxVal })}
+            className="thumb thumb--zindex-4"
+            style={{ "--color": color } as React.CSSProperties}
+          />
+
+          <div className="slider">
+            <div className="slider__track" />
+            <div
+              ref={range}
+              className="slider__range"
+              style={{ backgroundColor: color }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-MultiRangeSlider.propTypes = {
-  min: PropTypes.number.isRequired,
-  max: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
 };
 
 export default MultiRangeSlider;

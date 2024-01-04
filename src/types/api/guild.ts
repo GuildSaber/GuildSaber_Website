@@ -15,8 +15,20 @@ export const GuildAPIResponseSchema = z.object({
     maxPP: z.number(),
     accountAgeUnix: z.number(),
   }),
+  filters: z.object({
+    minDifficulty: z.number(),
+    maxDifficulty: z.number(),
+    difficultyStep: z.number(),
+    minBPM: z.number(),
+    maxBPM: z.number(),
+    bpmStep: z.number(),
+    minDuration: z.number(),
+    maxDuration: z.number(),
+    durationStep: z.number(),
+  }),
+  categories: z.null(),
   unixCreationTime: z.number(),
-  inviteCode: z.string().nullable(),
+  inviteCode: z.null(),
   rankedMapCount: z.number(),
   memberCount: z.number(),
 });
@@ -35,14 +47,14 @@ export const GuildMapsAPIResponseSchema = z.object({
             maxPauseDuration: z.number(),
             prohibitedModifiers: z.number(),
             mandatoryModifiers: z.number(),
-            minAccuracy: z.number()
+            minAccuracy: z.number(),
           }),
           rating: z.object({
             customModifiersRating: z.number(),
             default: z.object({
-              stars: z.object({ difficulty: z.number(), acc: z.number() })
+              stars: z.object({ difficulty: z.number(), acc: z.number() }),
             }),
-            modifiers: z.null()
+            modifiers: z.null(),
           }),
           unixCreationTime: z.number(),
           unixEditTime: z.number(),
@@ -66,7 +78,7 @@ export const GuildMapsAPIResponseSchema = z.object({
                   bpm: z.number(),
                   duration: z.number(),
                   unixUploadedTime: z.number(),
-                  coverURL: z.string()
+                  coverURL: z.string(),
                 }),
                 blid: z.string(),
                 songDifficultyStats: z.object({
@@ -77,11 +89,11 @@ export const GuildMapsAPIResponseSchema = z.object({
                   bombCount: z.number(),
                   obstacleCount: z.number(),
                   notesPerSecond: z.number(),
-                  duration: z.number()
-                })
-              })
-            })
-          )
+                  duration: z.number(),
+                }),
+              }),
+            }),
+          ),
         }),
         rankedScore: z.object({
           id: z.number(),
@@ -99,8 +111,8 @@ export const GuildMapsAPIResponseSchema = z.object({
           modifiedUnixTime: z.number(),
           rank: z.number(),
           weight: z.number(),
-          rowNumber: z.number()
-        })
+          rowNumber: z.number(),
+        }),
       }),
       z.object({
         rankedMap: z.object({
@@ -113,14 +125,14 @@ export const GuildMapsAPIResponseSchema = z.object({
             maxPauseDuration: z.number(),
             prohibitedModifiers: z.number(),
             mandatoryModifiers: z.number(),
-            minAccuracy: z.number()
+            minAccuracy: z.number(),
           }),
           rating: z.object({
             customModifiersRating: z.number(),
             default: z.object({
-              stars: z.object({ difficulty: z.number(), acc: z.number() })
+              stars: z.object({ difficulty: z.number(), acc: z.number() }),
             }),
-            modifiers: z.null()
+            modifiers: z.null(),
           }),
           unixCreationTime: z.number(),
           unixEditTime: z.number(),
@@ -144,7 +156,7 @@ export const GuildMapsAPIResponseSchema = z.object({
                   bpm: z.number(),
                   duration: z.number(),
                   unixUploadedTime: z.number(),
-                  coverURL: z.string()
+                  coverURL: z.string(),
                 }),
                 blid: z.string(),
                 songDifficultyStats: z.object({
@@ -155,22 +167,22 @@ export const GuildMapsAPIResponseSchema = z.object({
                   bombCount: z.number(),
                   obstacleCount: z.number(),
                   notesPerSecond: z.number(),
-                  duration: z.number()
-                })
-              })
-            })
-          )
+                  duration: z.number(),
+                }),
+              }),
+            }),
+          ),
         }),
-        rankedScore: z.null()
-      })
-    ])
+        rankedScore: z.null(),
+      }),
+    ]),
   ),
   page: z.number(),
   pageSize: z.number(),
   totalCount: z.number(),
   totalPages: z.number(),
   hasPreviousPage: z.boolean(),
-  hasNextPage: z.boolean()
+  hasNextPage: z.boolean(),
 });
 
 export const GuildsAPIResponseSchema = z.object({

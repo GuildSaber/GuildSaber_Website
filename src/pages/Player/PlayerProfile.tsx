@@ -75,9 +75,15 @@ export default function PlayerProfile() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") as string) || 1);
-  const [guildID, setGuildID] = useState(parseInt(searchParams.get("guild") as string) || null);
-  const [pointID, setPointID] = useState(parseInt(searchParams.get("point") as string) || null);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") as string) || 1,
+  );
+  const [guildID, setGuildID] = useState(
+    parseInt(searchParams.get("guild") as string) || null,
+  );
+  const [pointID, setPointID] = useState(
+    parseInt(searchParams.get("point") as string) || null,
+  );
 
   const [arcViewer, setArcViewer] = useState({
     isOpen: false,
@@ -88,36 +94,50 @@ export default function PlayerProfile() {
 
   /* At first Fetch the player */
   const { data: player, isError: isPlayerError } = useQuery({
-    queryKey: ['playerProfile', playerID],
+    queryKey: ["playerProfile", playerID],
     queryFn: async () => {
-      let result = await fetch(`${import.meta.env.VITE_API_BASE_URL}/player/by-id/${playerID}?include=${EIncludeFlags.Users | EIncludeFlags.Points}`).then((res) => res.json()).then(PlayerAPIResponseSchema.parse)
-      if (!!result && !!result?.guilds && result.guilds.length !== 0) {
-        if (!guildID) setGuildID(result.guilds[0].id);
-        if (!pointID) setPointID(result.guilds[0].simplifiedPoints[0].id);
+      let result = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/player/by-id/${playerID}?include=${
+          EIncludeFlags.Users | EIncludeFlags.Points
+        }`,
+      )
+        .then((res) => res.json())
+        .then(PlayerAPIResponseSchema.parse);
 
-        // check if the guild is in the guilds list
+      if (result && result.guilds && result.guilds.length > 0) {
+        const defaultGuild = result.guilds[0];
+        const defaultPoint = defaultGuild.simplifiedPoints[0];
+
+        if (!guildID) setGuildID(defaultGuild.id);
+        if (!pointID) setPointID(defaultPoint?.id || null);
+
         const guild = result.guilds.find((guild) => guild.id === guildID);
-        if (!!guild) {
-          // check if the point is in the guild's points list
-          const point = guild.simplifiedPoints.find((point) => point.id === pointID);
+
+        if (guild) {
+          const point = guild.simplifiedPoints.find(
+            (point) => point.id === pointID,
+          );
+
           if (!point) {
-            if (!!guild.simplifiedPoints[0]) setPointID(guild.simplifiedPoints[0].id);
-            else setPointID(null);
-          } setPointID(guild.simplifiedPoints[0].id);
+            setPointID(guild.simplifiedPoints[0]?.id || null);
+          }
         } else {
-          setGuildID(result.guilds[0].id);
+          setGuildID(defaultGuild.id);
+
           const point = result.guilds.find((point) => point.id === pointID);
-          // set the new default point if the current one is not valid
+
           if (!point) {
-            if (!!result.guilds[0].simplifiedPoints[0]) setPointID(result.guilds[0].simplifiedPoints[0].id);
-            else setPointID(null);
+            setPointID(defaultPoint?.id || null);
           }
         }
-      } else if (!!result) {
-        // When the player has no guilds, reset the guildID and pointID
+      } else {
+        // Reset guildID and pointID when the player has no guilds
         setGuildID(null);
         setPointID(null);
       }
+
       return result;
     },
     enabled: !!playerID,
@@ -126,7 +146,14 @@ export default function PlayerProfile() {
   /* Then fetch the player stats on the points and guild (unless they don't exist) */
   const { data: playerStats } = useQuery({
     queryKey: ["player", playerID, "stats", pointID],
-    queryFn: () => fetch(`${import.meta.env.VITE_API_BASE_URL}/player/${playerID}/stats/${pointID}`,).then((res) => res.json()).then(PlayerStatsAPIResponseSchema.parse),
+    queryFn: () =>
+      fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/player/${playerID}/stats/${pointID}`,
+      )
+        .then((res) => res.json())
+        .then(PlayerStatsAPIResponseSchema.parse),
     enabled: !!player && !!pointID && player.guilds.length !== 0,
   });
 
@@ -137,8 +164,15 @@ export default function PlayerProfile() {
     isError: isScoresError,
   } = useQuery({
     queryKey: ["player", playerID, "scores", pointID, currentPage],
-    queryFn: async () => fetch(`${import.meta.env.VITE_API_BASE_URL}/ranked-scores?userID=${playerID}&pointID=${pointID}&page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_PLAYER_SCORES_DATA_INCLUDES}`,).then((res) => res.json()).then(PlayerScoresAPIResponseSchema.parse),
-    enabled : !!player && !!pointID
+    queryFn: async () =>
+      fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/ranked-scores?userID=${playerID}&pointID=${pointID}&page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_PLAYER_SCORES_DATA_INCLUDES}`,
+      )
+        .then((res) => res.json())
+        .then(PlayerScoresAPIResponseSchema.parse),
+    enabled: !!player && !!pointID,
   });
 
   function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {
@@ -167,21 +201,31 @@ export default function PlayerProfile() {
   };
 
   useEffect(() => {
-    console.log(searchParams);
-    if (guildID === null) searchParams.delete("guild");
-    else searchParams.set("guild", guildID?.toString());
-    if (pointID === null) searchParams.delete("point");
-    else searchParams.set("point", pointID?.toString());
+    if (guildID === null) {
+      searchParams.delete("guild");
+    } else {
+      searchParams.set("guild", guildID?.toString());
+    }
+
+    if (pointID === null) {
+      searchParams.delete("point");
+    } else {
+      searchParams.set("point", pointID?.toString());
+    }
+
     navigate({ search: searchParams.toString() }), { replace: true };
   }, [guildID, pointID]);
 
-  return (
-    isPlayerError && (
+  if (isPlayerError) {
+    return (
       <div className="text-center">
         <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
         <h3 className="text-h3">Player not found</h3>
       </div>
-    ) ||
+    );
+  }
+
+  return (
     <>
       <div className="flow-content-2">
         <section className="card md:flex md:gap-4 md:p-4">
@@ -231,9 +275,13 @@ export default function PlayerProfile() {
         </section>
         <section className="card overflow-visible px-2 py-4">
           <div className="flex justify-between gap-2">
-            {((!!player && !!guildID) || (!!player?.guilds && player.guilds.length !== 0)) && (
+            {((!!player && !!guildID) ||
+              (!!player?.guilds && player.guilds.length !== 0)) && (
               <CollapseImage
-                defaultvalue={player?.guilds.find((guild) => guildID === guild.id)?.name || player?.guilds[0]?.name}
+                defaultvalue={
+                  player?.guilds.find((guild) => guildID === guild.id)?.name ||
+                  player?.guilds[0]?.name
+                }
                 className="w-full border border-gray-700 sm:w-auto"
                 options={player?.guilds
                   .filter((guild) => guild.simplifiedPoints.length !== 0)
@@ -257,18 +305,6 @@ export default function PlayerProfile() {
               />
             )}
 
-            {/*player?.guilds.map((guild, key) => (
-              <img
-                key={key}
-                src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.jpg`}
-                onClick={() => {
-                  selectGuild(guild.id);
-                }}
-                className={clsx("h-10 cursor-pointer rounded-full", {
-                  "outline outline-2 outline-primary": guild.id === activeGuild,
-                })}
-              />
-              ))*/}
             <div className="flex gap-2">
               {player?.guilds &&
                 player?.guilds
@@ -293,11 +329,14 @@ export default function PlayerProfile() {
 
           {isScoresError && (
             <div className="text-center">
-              <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                className="mb-4 text-h1"
+              />
               <h3 className="text-h3">No Scores found</h3>
             </div>
           )}
-        
+
           {scores && !isScoresError && (
             <List
               totalCount={scores.totalCount}
