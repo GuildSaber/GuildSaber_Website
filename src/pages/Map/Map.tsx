@@ -17,7 +17,7 @@ import clsx from "clsx";
 import { EIncludeFlags } from "../../enums/api";
 import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 10;
 
 const API_MAP_DATA_INCLUDES =
   EIncludeFlags.Songs |
@@ -191,7 +191,7 @@ export default function Map() {
                     <p>
                       {formatAccuracy(
                         data.rankedScore.score.baseScore,
-                        map.rankedMapVersions[0].songDifficulty
+                        map.rankedMap.rankedMapVersions[0].songDifficulty
                           .songDifficultyStats.maxScore,
                       )}
                     </p>

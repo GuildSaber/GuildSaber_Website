@@ -36,9 +36,9 @@ export default function MapHeader({
     songDifficultyStats: difficulty,
     difficulty: levelDifficulty,
     gameMode,
-  } = mapData.rankedMapVersions[0]?.songDifficulty;
+  } = mapData.rankedMap.rankedMapVersions[0]?.songDifficulty;
 
-  const rating = mapData.rating.default.stars;
+  const rating = mapData.rankedMap.rating.default.stars;
   const songDuration = formatMinSec(song.duration);
   const description = "A map of the best place to play";
 
@@ -59,7 +59,7 @@ export default function MapHeader({
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-4 p-8 text-center md:flex-row md:items-start md:p-0 md:text-start">
           <div>
-            <Link to={`/map/${mapData.id}`}>
+            <Link to={`/map/${mapData.rankedMap.id}`}>
               <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
                 {song.songName}
               </h3>
