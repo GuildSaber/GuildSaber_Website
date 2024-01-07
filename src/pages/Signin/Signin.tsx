@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useSignin } from "../../hooks/useSignin";
+import { useSignin } from "@/hooks/useSignin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import Provider from "../../components/Signin/Provider";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import BeatLeader from "../../components/Icons/BeatLeader";
+import SigninProvider from "@/components/Signin/SigninProvider";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import BeatLeader from "@/components/Icons/BeatLeader";
 
 export default function Signin() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,8 +38,8 @@ export default function Signin() {
           Slash to the Rhythm, Unite in the Beat!
         </p>
         <div className="flex-center gap-4 pt-8">
-          <Provider provider="BeatLeader" logo={BeatLeader} />
-          <Provider
+          <SigninProvider provider="BeatLeader" logo={BeatLeader} />
+          <SigninProvider
             provider="Discord"
             logo={() => <FontAwesomeIcon icon={faDiscord} />}
             token={session?.token}

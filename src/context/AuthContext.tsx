@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useEffect, useReducer } from "react";
-import { AuthState, MemberList } from "../types/api/auth";
+import { AuthState, MemberList } from "@/types/api/auth";
 
 type AuthAction =
   | { type: "LOGIN"; payload: AuthState["session"] }

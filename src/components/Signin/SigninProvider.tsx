@@ -1,4 +1,4 @@
-export default function Provider({
+export default function SigninProvider({
   provider,
   returnURL = window.location.href,
   logo,

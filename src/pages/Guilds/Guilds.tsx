@@ -1,15 +1,15 @@
 import { useSearchParams } from "react-router-dom";
-import Card from "../../components/Guilds/GuildsCard";
+import Card from "@/components/Guilds/GuildsCard";
 import { useEffect, useState } from "react";
-import List from "../../components/List/List";
+import List from "@/components/Common/List/List";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import Loader from "../../components/Common/Loader/Loader";
-import Collapse from "../../components/Common/Collapse/Collapse";
-import SearchBar from "../../components/Common/Search/SearchBar";
+import Loader from "@/components/Common/Loader/Loader";
+import Collapse from "@/components/Common/Collapse/Collapse";
+import SearchBar from "@/components/Common/Search/SearchBar";
 import { GuildsAPIResponseSchema } from "../../types/api/guild";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
-import { EJoinState } from "../../enums/guild";
+import { EJoinState } from "@/enums/guild";
 
 const PAGE_SIZE = 3;
 
@@ -52,7 +52,7 @@ export default function Guilds() {
   const updateSearch = (term: string) => {
     setSearch(term);
     setCurrentPage(1);
-    searchParams.set("page", '1');
+    searchParams.set("page", "1");
     setSearchParams(searchParams);
   };
 

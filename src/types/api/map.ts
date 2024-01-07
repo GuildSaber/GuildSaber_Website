@@ -59,7 +59,64 @@ export const MapAPIResponseSchema = z.object({
       }),
     ),
   }),
-  rankedScore: z.null(),
+  rankedScore: z
+    .object({
+      id: z.number(),
+      pointID: z.number(),
+      playerID: z.number(),
+      score: z
+        .object({
+          id: z.number(),
+          playerID: z.number(),
+          songDifficultyID: z.number(),
+          baseScore: z.number(),
+          modifiers: z.number(),
+          unixTimeSet: z.number(),
+          bL_ScoreID: z.number(),
+          maxCombo: z.number(),
+          fullCombo: z.boolean(),
+          missedNotes: z.number(),
+          badCuts: z.number(),
+          hmd: z.number(),
+          controller: z.number(),
+          hasTrackers: z.boolean(),
+          hitTracker: z.null(),
+          winTracker: z
+            .object({
+              scoreID: z.number(),
+              won: z.boolean(),
+              endTime: z.number(),
+              pauseCount: z.number(),
+              totalPauseDuration: z.number(),
+              jumpDistance: z.number(),
+              averageHeight: z.number(),
+              averageHeadPosition: z.object({
+                x: z.number(),
+                y: z.number(),
+                z: z.number(),
+              }),
+              totalScore: z.number(),
+              maxScore: z.number(),
+            })
+            .nullable(),
+          accuracyTracker: z.null(),
+          graphTracker: z.null(),
+        })
+        .nullable(),
+      prevScore: z.null(),
+      rankedMap: z.null(),
+      point: z.null(),
+      songDifficulty: z.null(),
+      state: z.number(),
+      effectiveScore: z.number(),
+      rawPoints: z.number(),
+      createdUnixTime: z.number(),
+      modifiedUnixTime: z.number(),
+      rank: z.number(),
+      weight: z.number(),
+      rowNumber: z.number(),
+    })
+    .nullable(),
 });
 
 export const MapLeaderboardAPIResponseSchema = z.object({

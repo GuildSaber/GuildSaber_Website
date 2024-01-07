@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import useScreenSize from "../../hooks/useScreenSize";
-import Button from "../Common/Button/Button";
+import useScreenSize from "@/hooks/useScreenSize";
+import Button from "@/components/Common/Button/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,8 +9,8 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import Sparkles from "../Icons/Sparkles";
-import BeatSaver from "../Icons/BeatSaver";
+import Sparkles from "@/components/Icons/Sparkles";
+import BeatSaver from "@/components/Icons/BeatSaver";
 
 export default function GuildMapCard({
   description,

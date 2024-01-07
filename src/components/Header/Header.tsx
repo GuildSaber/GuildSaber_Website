@@ -1,6 +1,6 @@
 import GuildMenu from "./GuildMenu";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";

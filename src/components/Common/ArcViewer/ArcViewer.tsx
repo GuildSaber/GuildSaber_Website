@@ -1,7 +1,7 @@
-import useClickAway from "../../../hooks/useClickAway";
+import useClickAway from "@/hooks/useClickAway";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { formatDifficulty } from "../../../utils/format";
+import { formatDifficulty } from "@/utils/format";
 
 export default function ArcViewer({
   bsrCode,

@@ -1,9 +1,9 @@
-import { decimalToHex } from "../../utils/color";
-import Button from "../Common/Button/Button";
+import { decimalToHex } from "@/utils/color";
+import Button from "@/components/Common/Button/Button";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
-import { GuildAPIResponse } from "../../types/api/guild";
+import { GuildAPIResponse } from "@/types/api/guild";
 import { Link } from "react-router-dom";
 
 export default function GuildHeader({

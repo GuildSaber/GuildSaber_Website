@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import "./MultiRangeSilder.scss";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useClickAway from "../../../hooks/useClickAway";
-import { formatMinSec } from "../../../utils/format";
+import useClickAway from "@/hooks/useClickAway";
+import { formatMinSec } from "@/utils/format";
 
 const MultiRangeSlider = ({
   min,
@@ -94,6 +94,7 @@ const MultiRangeSlider = ({
               event.target.value = value.toString();
             }}
             onMouseUp={() => onChange({ min: minVal, max: maxVal })}
+            onTouchEnd={() => onChange({ min: minVal, max: maxVal })}
             className={clsx("thumb thumb--zindex-3", {
               "thumb--zindex-5": minVal > max - 100,
             })}
@@ -111,6 +112,7 @@ const MultiRangeSlider = ({
               event.target.value = value.toString();
             }}
             onMouseUp={() => onChange({ min: minVal, max: maxVal })}
+            onTouchEnd={() => onChange({ min: minVal, max: maxVal })}
             className="thumb thumb--zindex-4"
             style={{ "--color": color } as React.CSSProperties}
           />

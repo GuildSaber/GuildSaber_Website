@@ -6,11 +6,11 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import clsx from "clsx";
-import BeatSaver from "../../components/Icons/BeatSaver";
-import List from "../../components/List/List";
-import Button from "../../components/Common/Button/Button";
-import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import BeatSaver from "@/components/Icons/BeatSaver";
+import List from "@/components/Common/List/List";
+import Button from "@/components/Common/Button/Button";
+import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
@@ -29,17 +29,17 @@ import {
   formatHMD,
   formatLargeNumber,
   formatModifiers,
-} from "../../utils/format";
+} from "@/utils/format";
 import {
   PlayerAPIResponseSchema,
   PlayerScoresAPIResponse,
   PlayerScoresAPIResponseSchema,
   PlayerStatsAPIResponseSchema,
-} from "../../types/api/player";
-import { EIncludeFlags } from "../../enums/api";
+} from "@/types/api/player";
+import { EIncludeFlags } from "@/enums/api";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "../../components/Common/Loader/Loader";
-import CollapseImage from "../../components/Common/Collapse/CollapseImage";
+import Loader from "@/components/Common/Loader/Loader";
+import CollapseImage from "@/components/Common/Collapse/CollapseImage";
 
 const PAGE_SIZE = 10;
 const API_PLAYER_SCORES_DATA_INCLUDES =

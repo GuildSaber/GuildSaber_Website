@@ -1,14 +1,14 @@
 import "./App.scss";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Header from "./components/Header/Header";
-import Guilds from "./pages/Guilds/Guilds";
-import Guild from "./pages/Guild/Guild";
-import Signin from "./pages/Signin/Signin";
-import Home from "./pages/Home/Home";
-import Map from "./pages/Map/Map";
-import PlayerProfile from "./pages/Player/PlayerProfile";
-import Footer from "./components/Footer/Footer";
+import Header from "@/components/Header/Header";
+import Guilds from "@/pages/Guilds/Guilds";
+import Guild from "@/pages/Guild/Guild";
+import Signin from "@/pages/Signin/Signin";
+import Home from "@/pages/Home/Home";
+import Map from "@/pages/Map/Map";
+import PlayerProfile from "@/pages/Player/PlayerProfile";
+import Footer from "@/components/Footer/Footer";
 
 function App() {
   return (

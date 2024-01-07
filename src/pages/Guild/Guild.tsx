@@ -1,20 +1,20 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import GuildHeader from "../../components/Guild/GuildHeader";
+import GuildHeader from "@/components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "../../components/Common/Loader/Loader";
-import Collapse from "../../components/Common/Collapse/Collapse";
+import Loader from "@/components/Common/Loader/Loader";
+import Collapse from "@/components/Common/Collapse/Collapse";
 import {
   GuildAPIResponseSchema,
   GuildMapsAPIResponseSchema,
-} from "../../types/api/guild";
-import MapHeader from "../../components/Map/MapHeader";
-import SearchBar from "../../components/Common/Search/SearchBar";
+} from "@/types/api/guild";
+import MapHeader from "@/components/Map/MapHeader";
+import SearchBar from "@/components/Common/Search/SearchBar";
 import { Key, useEffect, useState } from "react";
-import List from "../../components/List/List";
-import { EIncludeFlags } from "../../enums/api";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
-import MultiRangeSlider from "../../components/Common/MultiRangeSlider/MultiRangeSlider";
+import List from "@/components/Common/List/List";
+import { EIncludeFlags } from "@/enums/api";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
+import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
 import {
   faCircleExclamation,
   faDrum,
@@ -250,7 +250,7 @@ export default function Guild() {
             {maps?.data.map((value, key: Key) => (
               <MapHeader
                 key={key}
-                mapData={value.rankedMap}
+                mapData={value}
                 setArcViewer={setArcViewer}
               />
             ))}

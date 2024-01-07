@@ -1,21 +1,21 @@
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import MapHeader from "../../components/Map/MapHeader";
-import MapRequirements from "../../components/Map/MapRequirements";
-import List from "../../components/List/List";
+import MapHeader from "@/components/Map/MapHeader";
+import MapRequirements from "@/components/Map/MapRequirements";
+import List from "@/components/Common/List/List";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   MapAPIResponseSchema,
   MapLeaderboardAPIResponseSchema,
-} from "../../types/api/map";
-import Loader from "../../components/Common/Loader/Loader";
+} from "@/types/api/map";
+import Loader from "@/components/Common/Loader/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { formatAccuracy, formatHMD, formatModifiers } from "../../utils/format";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import clsx from "clsx";
-import { EIncludeFlags } from "../../enums/api";
-import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
+import { EIncludeFlags } from "@/enums/api";
+import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
 
 const PAGE_SIZE = 10;
 
@@ -24,7 +24,10 @@ const API_MAP_DATA_INCLUDES =
   EIncludeFlags.SongDifficulties |
   EIncludeFlags.SongDifficultyStats |
   EIncludeFlags.GameModes |
-  EIncludeFlags.RankedMapVersions;
+  EIncludeFlags.RankedMapVersions |
+  EIncludeFlags.RankedScores |
+  EIncludeFlags.Scores |
+  EIncludeFlags.HitTrackers;
 
 const API_LEADERBOARD_DATA_INCLUDES =
   EIncludeFlags.Players |
@@ -53,6 +56,12 @@ export default function Map() {
       `${
         import.meta.env.VITE_API_BASE_URL
       }/ranked-map/by-id/${mapID}?include=${API_MAP_DATA_INCLUDES}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      },
     )
       .then((res) => res.json())
       .then(MapAPIResponseSchema.parse);
@@ -166,9 +175,6 @@ export default function Map() {
                         />
                         <p className="truncate text-[0.80rem]">
                           {data.player.name}
-                        </p>
-                        <p className="inline-block rounded bg-muted px-2 align-middle text-[0.80rem]">
-                          25
                         </p>
                       </div>
                     </Link>

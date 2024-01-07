@@ -1,4 +1,4 @@
-import Button from "../Common/Button/Button";
+import Button from "@/components/Common/Button/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,13 +9,13 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import Sparkles from "../Icons/Sparkles";
-import BeatSaver from "../Icons/BeatSaver";
-import Bpm from "../Icons/Bpm";
-import { MapAPIResponse } from "../../types/api/map";
+import Sparkles from "@/components/Icons/Sparkles";
+import BeatSaver from "@/components/Icons/BeatSaver";
+import Bpm from "@/components/Icons/Bpm";
+import { MapAPIResponse } from "@/types/api/map";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import { formatDifficulty, formatMinSec } from "../../utils/format";
+import { formatDifficulty, formatMinSec } from "@/utils/format";
 
 type arcViewer = {
   isOpen: boolean;

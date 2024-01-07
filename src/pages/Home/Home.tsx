@@ -1,6 +1,6 @@
-import { useAuthContext } from "../../hooks/useAuthContext";
-import Guilds from "../Guilds/Guilds";
-import Signin from "../Signin/Signin";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import Guilds from "@/pages/Guilds/Guilds";
+import Signin from "@/pages/Signin/Signin";
 
 export default function Home() {
   const { session } = useAuthContext();
