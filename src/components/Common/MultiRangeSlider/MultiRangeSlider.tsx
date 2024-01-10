@@ -23,6 +23,7 @@ const MultiRangeSlider = ({
   onChange: ({ min, max }: { min: number; max: number }) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [minVal, setMinVal] = useState(min);
   const [maxVal, setMaxVal] = useState(max);
   const clickRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,21 @@ const MultiRangeSlider = ({
     (value: number) => Math.round(((value - min) / (max - min)) * 100),
     [min, max],
   );
+
+  useEffect(() => {
+    const dropdownElement = dropdownRef.current;
+
+    if (dropdownElement) {
+      const dropdownRect = dropdownElement.getBoundingClientRect();
+      const spaceOnRight = window.innerWidth - dropdownRect.right;
+      const spaceOnLeft = dropdownRect.left;
+
+      if (spaceOnRight < 0 && spaceOnLeft >= 0) {
+        dropdownElement.style.left = "auto";
+        dropdownElement.style.right = "0";
+      }
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (maxValRef.current) {
@@ -81,7 +97,10 @@ const MultiRangeSlider = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 h-full transform overflow-hidden rounded border border-gray-700 bg-gray-800 p-5 pb-6 text-btn">
+        <div
+          ref={dropdownRef}
+          className="absolute z-10 mt-2 h-full transform overflow-hidden rounded border border-gray-700 bg-gray-800 p-5 pb-6 text-btn"
+        >
           <input
             type="range"
             min={min}
