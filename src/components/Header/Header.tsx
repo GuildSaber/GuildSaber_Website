@@ -58,7 +58,7 @@ export default function Header() {
                   )}
                 </div>
               )}
-              {session.memberList && session.memberList.length > 0 ? (
+              {session.memberList && session.memberList.length === 0 ? (
                 <div className="flex gap-4">
                   <Link to="/guilds" className="btn text-p">
                     Discover Guilds
