@@ -58,15 +58,22 @@ export default function Header() {
                   )}
                 </div>
               )}
-
-              <GuildMenu
-                guilds={
-                  session.memberList
-                    ?.sort((a, b) => a.priority - b.priority)
-                    ?.map((memberList) => memberList.guild)
-                    ?.flat() ?? []
-                }
-              />
+              {session.memberList && session.memberList.length > 0 ? (
+                <div className="flex gap-4">
+                  <Link to="/guilds" className="btn text-p">
+                    Discover Guilds
+                  </Link>
+                </div>
+              ) : (
+                <GuildMenu
+                  guilds={
+                    session.memberList
+                      ?.sort((a, b) => a.priority - b.priority)
+                      ?.map((memberList) => memberList.guild)
+                      ?.flat() ?? []
+                  }
+                />
+              )}
               <Link to={`/player/${session.player?.userID}`}>
                 <img
                   alt="avatar"

@@ -44,7 +44,7 @@ export default function MapHeader({
 
   return (
     <>
-      <div className="group relative mb-8 flex w-full flex-col gap-2 overflow-hidden rounded bg-gray-800 md:flex-row md:p-8 md:pr-[14rem]">
+      <div className="group relative flex w-full flex-col gap-2 overflow-hidden rounded bg-gray-800 md:flex-row md:p-8 md:pr-[14rem]">
         <div
           className={clsx(
             "block h-24 w-full overflow-hidden border-b-8 border-primary md:absolute md:right-0 md:top-0 md:h-[340px] md:w-[340px] md:-translate-y-[75px] md:translate-x-[150px] md:rotate-[20deg] md:transform md:overflow-hidden md:border-8 md:border-transparent md:outline md:outline-8",

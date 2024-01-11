@@ -354,7 +354,7 @@ export default function PlayerProfile() {
                   <div className="hidden text-right md:block">
                     <p className="text-h6 font-bold">#{score.rank}</p>
                     <p className="text-btn text-muted">
-                      {formatDurationSince(score.score.unixTimeSet)}
+                      {formatDurationSince(score.modifiedUnixTime)}
                     </p>
                   </div>
                   <div className="flex items-center">
@@ -401,11 +401,6 @@ export default function PlayerProfile() {
                       </span>
                       <span className="badge badge-secondary">
                         {Math.round(100 * score.rawPoints * score.weight) / 100}{" "}
-                        <span className="font-bold tracking-tighter">
-                          {/*guildPoints?.data.find(
-                              (point) => point.id === activePoint,
-                            )?.name*/}
-                        </span>
                       </span>
                       <span
                         className={clsx("badge", {

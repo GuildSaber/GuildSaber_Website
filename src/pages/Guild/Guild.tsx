@@ -41,7 +41,7 @@ type FilterType = {
   "bpm-to": number;
 };
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 8;
 const API_MAPS_DATA_INCLUDES =
   EIncludeFlags.RankedMapVersions |
   EIncludeFlags.SongDifficulties |
@@ -246,6 +246,7 @@ export default function Guild() {
             hasNextPage={maps.hasNextPage}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
+            className="flex flex-col gap-4"
           >
             {maps?.data.map((value, key: Key) => (
               <MapHeader
