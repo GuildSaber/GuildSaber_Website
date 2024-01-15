@@ -16,12 +16,14 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
 import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
 import {
+  faCheck,
   faCircleExclamation,
   faDrum,
   faHourglassStart,
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 
 const FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
@@ -29,6 +31,18 @@ const FILTER_SORT_BY_VALUES = [
   { value: "EditTime", label: "EditTime" },
   { value: "Accuracy", label: "MinAccuracy" },
 ];
+const PAGE_SIZE = 8;
+
+const API_GUILD_DATA_INCLUDES =
+  EIncludeFlags.Categories | EIncludeFlags.Members | EIncludeFlags.RankedMaps;
+
+const API_MAPS_DATA_INCLUDES =
+  EIncludeFlags.RankedMapVersions |
+  EIncludeFlags.SongDifficulties |
+  EIncludeFlags.Songs |
+  EIncludeFlags.GameModes |
+  EIncludeFlags.SongDifficultyStats |
+  EIncludeFlags.RankedScores;
 
 type FilterType = {
   "sort-by": string;
@@ -41,14 +55,10 @@ type FilterType = {
   "bpm-to": number;
 };
 
-const PAGE_SIZE = 8;
-const API_MAPS_DATA_INCLUDES =
-  EIncludeFlags.RankedMapVersions |
-  EIncludeFlags.SongDifficulties |
-  EIncludeFlags.Songs |
-  EIncludeFlags.GameModes |
-  EIncludeFlags.SongDifficultyStats |
-  EIncludeFlags.RankedScores;
+type Categories = {
+  anyMatch: boolean;
+  selected: { name: string; id: number }[];
+};
 
 export default function Guild() {
   const { guildID } = useParams();
@@ -64,6 +74,12 @@ export default function Guild() {
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") as string) || 1,
   );
+
+  const [categories, setCategories] = useState<Categories>({
+    anyMatch: true,
+    selected: [],
+  });
+
   const [filter, setFilter] = useState<FilterType>({
     "sort-by": "Difficulty",
     "order-by": "Asc",
@@ -89,6 +105,20 @@ export default function Guild() {
     setSearchParams(searchParams);
   };
 
+  const updateCategories = (categorie: Categories["selected"][0]) => {
+    if (categories.selected.find((cat) => cat.id === categorie.id)) {
+      setCategories({
+        ...categories,
+        selected: categories.selected.filter((cat) => cat.id !== categorie.id),
+      });
+    } else {
+      setCategories({
+        ...categories,
+        selected: [...categories.selected, categorie],
+      });
+    }
+  };
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setIntermediateSearch(search);
@@ -98,7 +128,11 @@ export default function Guild() {
   }, [search]);
 
   const getGuild = async (guildID: string) =>
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/guild/by-id/${guildID}`)
+    fetch(
+      `${
+        import.meta.env.VITE_API_BASE_URL
+      }/guild/by-id/${guildID}?include=${API_GUILD_DATA_INCLUDES}`,
+    )
       .then((res) => res.json())
       .then(GuildAPIResponseSchema.parse);
 
@@ -116,12 +150,18 @@ export default function Guild() {
       parsefilter as Record<string, string>,
     ).toString();
 
+    let parseCategories = categories.selected.map((categories) => {
+      return `category-ids=${categories.id}`;
+    });
+
+    const categoriesURL = parseCategories.join("&");
+
     return fetch(
       `${
         import.meta.env.VITE_API_BASE_URL
       }/ranked-maps/${guildID}?page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_MAPS_DATA_INCLUDES}&${URLParams}${
         search && "&search=" + search
-      }`,
+      }&${categoriesURL}&anyMatch=${categories.anyMatch}`,
       {
         method: "GET",
         headers: {
@@ -155,6 +195,7 @@ export default function Guild() {
       currentPage,
       filter,
       intermediateSearch,
+      categories,
     ],
     queryFn: () => getMaps(guildID, currentPage, filter, intermediateSearch),
     enabled: !!guildID,
@@ -179,9 +220,51 @@ export default function Guild() {
       <GuildHeader guildData={guild} />
 
       <div className="flow-content-2 md:flow-content-4">
+        <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
+          <h3 className="text-center text-h4 font-bold md:text-left">
+            Categories
+          </h3>
+        </div>
+
+        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-4 md:justify-start">
+          {guild.categories?.map((category) => (
+            <button
+              key={category.id}
+              className={clsx("btn btn-primary md:text-[18px]", {
+                "btn-tritary": categories.selected.find(
+                  (cat) => cat.id === category.id,
+                ),
+              })}
+              onClick={() => updateCategories(category)}
+            >
+              {category.name}
+            </button>
+          ))}
+
+          <div className="flex items-center gap-2">
+            <div
+              className={clsx(
+                "flex aspect-square h-6 cursor-pointer items-center justify-center rounded-sm bg-gray-900",
+                {
+                  "bg-primary": categories.anyMatch,
+                },
+              )}
+              onClick={() =>
+                setCategories({ ...categories, anyMatch: !categories.anyMatch })
+              }
+            >
+              {categories.anyMatch && <FontAwesomeIcon icon={faCheck} />}
+            </div>
+            <p className="text-p">Any</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flow-content-2 md:flow-content-4">
         <h3 className="text-center text-h4 font-bold md:text-left">
           Ranked Maps
         </h3>
+
         <div className="flex flex-col gap-2 sm:flex-row">
           <Collapse
             defaultvalue={FILTER_SORT_BY_VALUES[0].value}

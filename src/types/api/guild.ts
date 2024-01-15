@@ -26,11 +26,22 @@ export const GuildAPIResponseSchema = z.object({
     maxDuration: z.number(),
     durationStep: z.number(),
   }),
-  categories: z.null(),
+  categories: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        description: z.string(),
+        guildID: z.number(),
+        rankedMaps: z.null(),
+        categoryLevels: z.null(),
+      }),
+    )
+    .nullable(),
   unixCreationTime: z.number(),
   inviteCode: z.null(),
-  rankedMapCount: z.number(),
-  memberCount: z.number(),
+  rankedMapCount: z.number().nullable(),
+  memberCount: z.number().nullable(),
 });
 
 export const GuildMapsAPIResponseSchema = z.object({
