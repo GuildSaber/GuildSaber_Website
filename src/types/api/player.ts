@@ -143,7 +143,7 @@ export const PlayerAPIResponseSchema = z.object({
       description: z.string(),
       color: z.number(),
       type: z.number(),
-      simplifiedPoints: z.array(
+      simplePoints: z.array(
         z.object({ id: z.number(), guildID: z.number(), name: z.string() }),
       ),
       joinRequirements: z.object({
@@ -169,6 +169,8 @@ export const PlayerStatsAPIResponseSchema = z.object({
   validPassCount: z.number(),
   pointValue: z.number(),
 });
+
+export type PlayerAPIResponse = z.infer<typeof PlayerAPIResponseSchema>;
 
 export type PlayerScoresAPIResponse = z.infer<
   typeof PlayerScoresAPIResponseSchema

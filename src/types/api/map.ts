@@ -59,6 +59,9 @@ export const MapAPIResponseSchema = z.object({
       }),
     ),
   }),
+  simplePoints: z
+    .array(z.object({ id: z.number(), guildID: z.number(), name: z.string() }))
+    .optional(),
   rankedScore: z
     .object({
       id: z.number(),

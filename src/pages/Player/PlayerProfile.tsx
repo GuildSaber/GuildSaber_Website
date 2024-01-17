@@ -31,15 +31,18 @@ import {
   formatModifiers,
 } from "@/utils/format";
 import {
+  PlayerAPIResponse,
   PlayerAPIResponseSchema,
   PlayerScoresAPIResponse,
   PlayerScoresAPIResponseSchema,
+  PlayerStatsAPIResponse,
   PlayerStatsAPIResponseSchema,
 } from "@/types/api/player";
 import { EIncludeFlags } from "@/enums/api";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader/Loader";
 import CollapseImage from "@/components/Common/Collapse/CollapseImage";
+import { fetchAPI } from "@/utils/fetch";
 
 const PAGE_SIZE = 10;
 const API_PLAYER_SCORES_DATA_INCLUDES =
@@ -96,19 +99,17 @@ export default function PlayerProfile() {
   const { data: player, isError: isPlayerError } = useQuery({
     queryKey: ["playerProfile", playerID],
     queryFn: async () => {
-      let result = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/player/by-id/${playerID}?include=${
-          EIncludeFlags.Users | EIncludeFlags.Points
-        }`,
-      )
-        .then((res) => res.json())
-        .then(PlayerAPIResponseSchema.parse);
+      let result = await fetchAPI<PlayerAPIResponse>({
+        path: `/player/by-id/${playerID}`,
+        queryParams: {
+          include: EIncludeFlags.Users | EIncludeFlags.Points,
+        },
+        schema: PlayerAPIResponseSchema,
+      });
 
       if (result && result.guilds && result.guilds.length > 0) {
         const defaultGuild = result.guilds[0];
-        const defaultPoint = defaultGuild.simplifiedPoints[0];
+        const defaultPoint = defaultGuild.simplePoints[0];
 
         if (!guildID) setGuildID(defaultGuild.id);
         if (!pointID) setPointID(defaultPoint?.id || null);
@@ -116,12 +117,12 @@ export default function PlayerProfile() {
         const guild = result.guilds.find((guild) => guild.id === guildID);
 
         if (guild) {
-          const point = guild.simplifiedPoints.find(
+          const point = guild.simplePoints.find(
             (point) => point.id === pointID,
           );
 
           if (!point) {
-            setPointID(guild.simplifiedPoints[0]?.id || null);
+            setPointID(guild.simplePoints[0]?.id || null);
           }
         } else {
           setGuildID(defaultGuild.id);
@@ -147,13 +148,10 @@ export default function PlayerProfile() {
   const { data: playerStats } = useQuery({
     queryKey: ["player", playerID, "stats", pointID],
     queryFn: () =>
-      fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/player/${playerID}/stats/${pointID}`,
-      )
-        .then((res) => res.json())
-        .then(PlayerStatsAPIResponseSchema.parse),
+      fetchAPI<PlayerStatsAPIResponse>({
+        path: `/player/${playerID}/stats/${pointID}`,
+        schema: PlayerStatsAPIResponseSchema,
+      }),
     enabled: !!player && !!pointID && player.guilds.length !== 0,
   });
 
@@ -164,14 +162,18 @@ export default function PlayerProfile() {
     isError: isScoresError,
   } = useQuery({
     queryKey: ["player", playerID, "scores", pointID, currentPage],
-    queryFn: async () =>
-      fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/ranked-scores?userID=${playerID}&pointID=${pointID}&page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_PLAYER_SCORES_DATA_INCLUDES}`,
-      )
-        .then((res) => res.json())
-        .then(PlayerScoresAPIResponseSchema.parse),
+    queryFn: () =>
+      fetchAPI<PlayerScoresAPIResponse>({
+        path: "/ranked-scores",
+        queryParams: {
+          page: currentPage,
+          pageSize: PAGE_SIZE,
+          userID: playerID,
+          pointID: pointID,
+          include: API_PLAYER_SCORES_DATA_INCLUDES,
+        },
+        schema: PlayerScoresAPIResponseSchema,
+      }),
     enabled: !!player && !!pointID,
   });
 
@@ -187,7 +189,7 @@ export default function PlayerProfile() {
   const selectGuild = (guildID: number) => {
     setGuildID(guildID);
     setPointID(
-      player?.guilds.find((guild) => guildID === guild.id)?.simplifiedPoints[0]
+      player?.guilds.find((guild) => guildID === guild.id)?.simplePoints[0]
         .id || null,
     );
     setCurrentPage(1);
@@ -213,7 +215,7 @@ export default function PlayerProfile() {
       searchParams.set("point", pointID?.toString());
     }
 
-    navigate({ search: searchParams.toString() }), { replace: true };
+    navigate({ search: searchParams.toString() }, { replace: true });
   }, [guildID, pointID]);
 
   if (isPlayerError) {
@@ -284,7 +286,7 @@ export default function PlayerProfile() {
                 }
                 className="w-full border border-gray-700 sm:w-auto"
                 options={player?.guilds
-                  .filter((guild) => guild.simplifiedPoints.length !== 0)
+                  .filter((guild) => guild.simplePoints.length !== 0)
                   .reduce(
                     (
                       acc: { value: number; label: string; image: string }[],
@@ -309,7 +311,7 @@ export default function PlayerProfile() {
               {player?.guilds &&
                 player?.guilds
                   .find((guild) => guildID === guild.id)
-                  ?.simplifiedPoints.map((point) => (
+                  ?.simplePoints.map((point) => (
                     <Button
                       key={point.id}
                       className={clsx("btn bg-tritary bg-gray-900", {

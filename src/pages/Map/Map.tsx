@@ -2,10 +2,12 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import MapHeader from "@/components/Map/MapHeader";
 import MapRequirements from "@/components/Map/MapRequirements";
 import List from "@/components/Common/List/List";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+  MapAPIResponse,
   MapAPIResponseSchema,
+  MapLeaderboardAPIResponse,
   MapLeaderboardAPIResponseSchema,
 } from "@/types/api/map";
 import Loader from "@/components/Common/Loader/Loader";
@@ -16,6 +18,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import clsx from "clsx";
 import { EIncludeFlags } from "@/enums/api";
 import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
+import { fetchAPI } from "@/utils/fetch";
 
 const PAGE_SIZE = 10;
 
@@ -27,7 +30,8 @@ const API_MAP_DATA_INCLUDES =
   EIncludeFlags.RankedMapVersions |
   EIncludeFlags.RankedScores |
   EIncludeFlags.Scores |
-  EIncludeFlags.HitTrackers;
+  EIncludeFlags.HitTrackers |
+  EIncludeFlags.Points;
 
 const API_LEADERBOARD_DATA_INCLUDES =
   EIncludeFlags.Players |
@@ -51,29 +55,29 @@ export default function Map() {
     parseInt(searchParams.get("page") as string) || 1,
   );
 
+  const [pointID, setPointID] = useState(0);
+
   const getMap = async () =>
-    fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/ranked-map/by-id/${mapID}?include=${API_MAP_DATA_INCLUDES}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
+    fetchAPI<MapAPIResponse>({
+      path: `/ranked-map/by-id/${mapID}`,
+      queryParams: {
+        include: API_MAP_DATA_INCLUDES,
       },
-    )
-      .then((res) => res.json())
-      .then(MapAPIResponseSchema.parse);
+      authenticated: true,
+      schema: MapAPIResponseSchema,
+    });
 
   const getMapLeaderboard = async (page: number) =>
-    fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/leaderboard/ranked-map/${mapID}?pointID=2&page=${page}&pageSize=${PAGE_SIZE}&include=${API_LEADERBOARD_DATA_INCLUDES}`,
-    )
-      .then((res) => res.json())
-      .then(MapLeaderboardAPIResponseSchema.parse);
+    fetchAPI<MapLeaderboardAPIResponse>({
+      path: `/leaderboard/ranked-map/${mapID}`,
+      queryParams: {
+        page: page,
+        pageSize: PAGE_SIZE,
+        include: API_LEADERBOARD_DATA_INCLUDES,
+        pointID: pointID,
+      },
+      schema: MapLeaderboardAPIResponseSchema,
+    });
 
   const {
     data: map,
@@ -85,15 +89,22 @@ export default function Map() {
     enabled: !!mapID,
   });
 
-  const {
-    data: leaderboard,
-    isLoading: isLeaderboardLoading,
-    isError: isLeaderboardError,
-  } = useQuery({
-    queryKey: ["leaderboard", mapID, currentPage],
+  const { data: leaderboard } = useQuery({
+    queryKey: ["leaderboard", mapID, pointID, currentPage],
     queryFn: () => getMapLeaderboard(currentPage),
-    enabled: !!mapID,
+    enabled: !!map && !!pointID,
   });
+
+  useEffect(() => {
+    if (
+      !!map &&
+      map.simplePoints &&
+      map.simplePoints.length > 0 &&
+      pointID === 0
+    ) {
+      setPointID(map.simplePoints[0].id);
+    }
+  }, [map]);
 
   if (isLoading) {
     return <Loader />;
@@ -114,8 +125,8 @@ export default function Map() {
         <MapHeader mapData={map} setArcViewer={setArcViewer} />
 
         <MapRequirements />
-        <div className="flex w-full rounded bg-gray-800 p-4 lg:p-8">
-          {leaderboard && !isLeaderboardLoading && !isLeaderboardError && (
+        <div className="flex w-full justify-center rounded bg-gray-800 p-4 lg:p-8">
+          {leaderboard && (
             <List
               totalCount={leaderboard.totalCount}
               pageSize={PAGE_SIZE}
@@ -125,16 +136,26 @@ export default function Map() {
               setCurrentPage={setCurrentPage}
             >
               <div className="flex gap-2">
-                <button className="badge" disabled>
-                  CPP
-                </button>
-                <button className="badge">CAP</button>
+                {map.simplePoints?.map((point) => (
+                  <button
+                    key={point.id}
+                    className={clsx("badge", {
+                      "border-primary": point.id === pointID,
+                    })}
+                    onClick={() => setPointID(point.id)}
+                  >
+                    {point.name}
+                  </button>
+                ))}
               </div>
 
               <div className="grid w-full grid-cols-[2fr_10fr_repeat(2,_4fr)] gap-2 px-1 py-2 text-btn md:grid-cols-[2fr_10fr_6fr_repeat(5,_4fr)]">
                 <p>Rank</p>
                 <p></p>
-                <p>CAP</p>
+                <p>
+                  {map.simplePoints &&
+                    map.simplePoints.find((p) => p.id === pointID)?.name}
+                </p>
                 <p className="hidden md:block">Modifiers</p>
                 <p className="hidden md:block">Headset</p>
                 <p className="hidden md:block">Pause</p>
@@ -182,7 +203,9 @@ export default function Map() {
                       2,
                     )}`}</p>
                     <p className="hidden md:block">
-                      {formatModifiers(data.rankedScore.score.modifiers)}
+                      {formatModifiers(
+                        data.rankedScore.score.modifiers,
+                      ).toString()}
                     </p>
                     <p className="hidden overflow-hidden whitespace-nowrap md:block">
                       <span className="inline-flex text-ellipsis">

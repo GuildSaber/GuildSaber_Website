@@ -183,5 +183,17 @@ export const GuildsAPIResponseSchema = z.object({
   hasNextPage: z.boolean(),
 });
 
+export const GuildPointsAPIResponseSchema = z.array(
+  z.object({
+    id: z.number(),
+    guildID: z.number(),
+    name: z.string(),
+  }),
+);
+
 export type GuildsAPIResponse = z.infer<typeof GuildsAPIResponseSchema>;
 export type GuildAPIResponse = z.infer<typeof GuildAPIResponseSchema>;
+export type GuildMapAPIResponse = z.infer<typeof GuildMapsAPIResponseSchema>;
+export type GuildPointsAPIResponse = z.infer<
+  typeof GuildPointsAPIResponseSchema
+>;

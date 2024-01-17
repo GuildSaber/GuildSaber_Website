@@ -4,7 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
 import {
+  GuildAPIResponse,
   GuildAPIResponseSchema,
+  GuildMapAPIResponse,
   GuildMapsAPIResponseSchema,
 } from "@/types/api/guild";
 import MapHeader from "@/components/Map/MapHeader";
@@ -12,7 +14,6 @@ import SearchBar from "@/components/Common/Search/SearchBar";
 import { Key, useEffect, useState } from "react";
 import List from "@/components/Common/List/List";
 import { EIncludeFlags } from "@/enums/api";
-import { useAuthContext } from "@/hooks/useAuthContext";
 import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
 import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
 import {
@@ -24,6 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { fetchAPI } from "@/utils/fetch";
 
 const FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
@@ -66,8 +68,6 @@ export default function Guild() {
     return <p>Error</p>;
   }
 
-  const { session } = useAuthContext();
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
@@ -76,7 +76,7 @@ export default function Guild() {
   );
 
   const [categories, setCategories] = useState<Categories>({
-    anyMatch: true,
+    anyMatch: false,
     selected: [],
   });
 
@@ -128,13 +128,13 @@ export default function Guild() {
   }, [search]);
 
   const getGuild = async (guildID: string) =>
-    fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/guild/by-id/${guildID}?include=${API_GUILD_DATA_INCLUDES}`,
-    )
-      .then((res) => res.json())
-      .then(GuildAPIResponseSchema.parse);
+    fetchAPI<GuildAPIResponse>({
+      path: `/guild/by-id/${guildID}`,
+      queryParams: {
+        include: API_GUILD_DATA_INCLUDES,
+      },
+      schema: GuildAPIResponseSchema,
+    });
 
   const getMaps = async (
     guildID: string,
@@ -146,31 +146,25 @@ export default function Guild() {
     const parsefilter = Object.fromEntries(
       Object.entries(filter).filter(([_, v]) => v != 0),
     );
-    const URLParams = new URLSearchParams(
-      parsefilter as Record<string, string>,
-    ).toString();
 
     let parseCategories = categories.selected.map((categories) => {
       return `category-ids=${categories.id}`;
     });
 
-    const categoriesURL = parseCategories.join("&");
-
-    return fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/ranked-maps/${guildID}?page=${currentPage}&pageSize=${PAGE_SIZE}&include=${API_MAPS_DATA_INCLUDES}&${URLParams}${
-        search && "&search=" + search
-      }&${categoriesURL}&anyMatch=${categories.anyMatch}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
+    return fetchAPI<GuildMapAPIResponse>({
+      path: `/ranked-maps/${guildID}`,
+      queryParams: {
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+        include: API_MAPS_DATA_INCLUDES,
+        ...(search && { search: search }),
+        ...parsefilter,
+        anyMatch: categories.anyMatch,
       },
-    )
-      .then((res) => res.json())
-      .then(GuildMapsAPIResponseSchema.parse);
+      rawQueryParams: parseCategories.join("&"),
+      authenticated: true,
+      schema: GuildMapsAPIResponseSchema,
+    });
   };
 
   const {
@@ -226,15 +220,15 @@ export default function Guild() {
           </h3>
         </div>
 
-        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-4 md:justify-start">
+        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-8 md:justify-start">
           {guild.categories?.map((category) => (
             <button
               key={category.id}
-              className={clsx("btn btn-primary md:text-[18px]", {
-                "btn-tritary": categories.selected.find(
-                  (cat) => cat.id === category.id,
-                ),
-              })}
+              className={`btn md:text-h6 ${
+                categories.selected.find((cat) => cat.id === category.id)
+                  ? "btn-primary"
+                  : "btn-tritary"
+              }`}
               onClick={() => updateCategories(category)}
             >
               {category.name}

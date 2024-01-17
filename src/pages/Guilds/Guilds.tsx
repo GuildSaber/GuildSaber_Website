@@ -6,10 +6,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
 import SearchBar from "@/components/Common/Search/SearchBar";
-import { GuildsAPIResponseSchema } from "../../types/api/guild";
+import {
+  GuildsAPIResponse,
+  GuildsAPIResponseSchema,
+} from "../../types/api/guild";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "@/enums/guild";
+import { fetchAPI } from "@/utils/fetch";
 
 const PAGE_SIZE = 3;
 
@@ -104,18 +108,17 @@ export default function Guilds() {
       ...filter,
       guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
     };
-    const URLParams = new URLSearchParams(parsefilter).toString();
 
-    const res = await fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/guilds?page=${page}&pageSize=${PAGE_SIZE}&${URLParams}${
-        search && "&search=" + search
-      }
-      `,
-    )
-      .then((res) => res.json())
-      .then(GuildsAPIResponseSchema.parse);
+    const res = await fetchAPI<GuildsAPIResponse>({
+      path: "/guilds",
+      queryParams: {
+        page: page,
+        pageSize: PAGE_SIZE,
+        ...parsefilter,
+        ...(search && { search: search }),
+      },
+      schema: GuildsAPIResponseSchema,
+    });
 
     return res;
   };
