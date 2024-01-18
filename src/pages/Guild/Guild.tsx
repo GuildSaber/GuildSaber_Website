@@ -26,6 +26,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { fetchAPI } from "@/utils/fetch";
+import useArcViewer from "@/hooks/useArcViewer";
 
 const FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
@@ -91,12 +92,7 @@ export default function Guild() {
     "bpm-to": 0,
   });
 
-  const [arcViewer, setArcViewer] = useState({
-    isOpen: false,
-    bsrCode: "",
-    difficulty: 0,
-    mode: "",
-  });
+  const arcViewer = useArcViewer();
 
   const updateSearch = (term: string) => {
     setSearch(term);
@@ -326,23 +322,12 @@ export default function Guild() {
             className="flex flex-col gap-4"
           >
             {maps?.data.map((value, key: Key) => (
-              <MapHeader
-                key={key}
-                mapData={value}
-                setArcViewer={setArcViewer}
-              />
+              <MapHeader key={key} mapData={value} arcViewer={arcViewer.open} />
             ))}
           </List>
         )}
       </div>
-      {arcViewer.isOpen && (
-        <ArcViewer
-          bsrCode={arcViewer.bsrCode}
-          difficulty={arcViewer.difficulty}
-          mode={arcViewer.mode}
-          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
-        />
-      )}
+      <ArcViewer settings={arcViewer} />
     </div>
   );
 }

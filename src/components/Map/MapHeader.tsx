@@ -18,7 +18,6 @@ import clsx from "clsx";
 import { formatDifficulty, formatMinSec } from "@/utils/format";
 
 type arcViewer = {
-  isOpen: boolean;
   bsrCode: string;
   difficulty: number;
   mode: string;
@@ -26,10 +25,10 @@ type arcViewer = {
 
 export default function MapHeader({
   mapData,
-  setArcViewer,
+  arcViewer,
 }: {
   mapData: MapAPIResponse;
-  setArcViewer: (arg0: arcViewer) => void;
+  arcViewer: (arg0: arcViewer) => void;
 }) {
   const {
     song,
@@ -121,11 +120,10 @@ export default function MapHeader({
               <Button
                 className="btn-tritary"
                 onClick={() => {
-                  setArcViewer({
+                  arcViewer({
                     bsrCode: song.beatSaverKey,
                     difficulty: levelDifficulty,
                     mode: gameMode.name,
-                    isOpen: true,
                   });
                 }}
                 icon={faPlay}

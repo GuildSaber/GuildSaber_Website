@@ -19,6 +19,7 @@ import clsx from "clsx";
 import { EIncludeFlags } from "@/enums/api";
 import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
 import { fetchAPI } from "@/utils/fetch";
+import useArcViewer from "@/hooks/useArcViewer";
 
 const PAGE_SIZE = 10;
 
@@ -44,12 +45,7 @@ export default function Map() {
   const { session } = useAuthContext();
   const [searchParams] = useSearchParams();
 
-  const [arcViewer, setArcViewer] = useState({
-    isOpen: false,
-    bsrCode: "",
-    difficulty: 0,
-    mode: "",
-  });
+  const arcViewer = useArcViewer();
 
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") as string) || 1,
@@ -96,12 +92,7 @@ export default function Map() {
   });
 
   useEffect(() => {
-    if (
-      !!map &&
-      map.simplePoints &&
-      map.simplePoints.length > 0 &&
-      pointID === 0
-    ) {
+    if (!!map && map.simplePoints) {
       setPointID(map.simplePoints[0].id);
     }
   }, [map]);
@@ -122,7 +113,7 @@ export default function Map() {
   return (
     <div className="mx-auto max-w-screen-lg">
       <>
-        <MapHeader mapData={map} setArcViewer={setArcViewer} />
+        <MapHeader mapData={map} arcViewer={arcViewer.open} />
 
         <MapRequirements />
         <div className="flex w-full justify-center rounded bg-gray-800 p-4 lg:p-8">
@@ -236,14 +227,7 @@ export default function Map() {
           )}
         </div>
       </>
-      {arcViewer.isOpen && (
-        <ArcViewer
-          bsrCode={arcViewer.bsrCode}
-          difficulty={arcViewer.difficulty}
-          mode={arcViewer.mode}
-          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
-        />
-      )}
+      <ArcViewer settings={arcViewer} />
     </div>
   );
 }

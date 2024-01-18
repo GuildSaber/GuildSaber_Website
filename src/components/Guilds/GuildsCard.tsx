@@ -3,9 +3,9 @@ import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import useScreenSize from "@/hooks/useScreenSize";
-import { GuildAPIResponse } from "@/types/api/guild";
 import clsx from "clsx";
 import { EJoinState } from "@/enums/guild";
+import { Guild } from "@/api/types/models/guild";
 
 const GUILD_STATES: { [key: string]: string } = {
   [EJoinState.None]: "None",
@@ -20,7 +20,7 @@ export default function Card({
   guildState,
   onJoin,
 }: {
-  guildData: GuildAPIResponse;
+  guildData: Guild;
   guildState: number | undefined;
   onJoin: () => void;
 }) {

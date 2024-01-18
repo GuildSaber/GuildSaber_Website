@@ -43,6 +43,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader/Loader";
 import CollapseImage from "@/components/Common/Collapse/CollapseImage";
 import { fetchAPI } from "@/utils/fetch";
+import useArcViewer from "@/hooks/useArcViewer";
 
 const PAGE_SIZE = 10;
 const API_PLAYER_SCORES_DATA_INCLUDES =
@@ -88,12 +89,7 @@ export default function PlayerProfile() {
     parseInt(searchParams.get("point") as string) || null,
   );
 
-  const [arcViewer, setArcViewer] = useState({
-    isOpen: false,
-    bsrCode: "",
-    difficulty: 0,
-    mode: "",
-  });
+  const arcViewer = useArcViewer();
 
   /* At first Fetch the player */
   const { data: player, isError: isPlayerError } = useQuery({
@@ -178,8 +174,7 @@ export default function PlayerProfile() {
   });
 
   function onPlayClick(score: PlayerScoresAPIResponse["data"][0]) {
-    setArcViewer({
-      isOpen: true,
+    arcViewer.open({
       bsrCode: score.songDifficulty.song.beatSaverKey,
       difficulty: score.songDifficulty.difficulty,
       mode: score.songDifficulty.gameMode.name,
@@ -339,7 +334,7 @@ export default function PlayerProfile() {
             </div>
           )}
 
-          {scores && !isScoresError && (
+          {scores && (
             <List
               totalCount={scores.totalCount}
               pageSize={scores.pageSize}
@@ -473,14 +468,7 @@ export default function PlayerProfile() {
           )}
         </section>
       </div>
-      {arcViewer.isOpen && (
-        <ArcViewer
-          bsrCode={arcViewer.bsrCode}
-          difficulty={arcViewer.difficulty}
-          mode={arcViewer.mode}
-          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
-        />
-      )}
+      <ArcViewer settings={arcViewer} />
     </>
   );
 }
