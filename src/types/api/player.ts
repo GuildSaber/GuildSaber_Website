@@ -18,6 +18,20 @@ export const PlayerScoresAPIResponseSchema = z.object({
         badCuts: z.number(),
         hasTrackers: z.boolean(),
       }),
+      prevScore: z
+        .object({
+          id: z.number(),
+          playerID: z.number(),
+          songDifficultyID: z.number(),
+          baseScore: z.number(),
+          modifiers: z.number(),
+          unixTimeSet: z.number(),
+          controller: z.number(),
+          missedNotes: z.number(),
+          badCuts: z.number(),
+          hasTrackers: z.boolean(),
+        })
+        .nullable(),
       rankedMap: z.object({
         id: z.number(),
         guildID: z.number(),
@@ -59,6 +73,8 @@ export const PlayerScoresAPIResponseSchema = z.object({
       rank: z.number(),
       weight: z.number(),
       rowNumber: z.number(),
+      createdUnixTime: z.number(),
+      modifiedUnixTime: z.number(),
     }),
   ),
   page: z.number(),
@@ -97,7 +113,7 @@ export const PointsAPIResponseSchema = z.object({
       accuracyScale: z.number(),
       slopeMultiplier: z.number(),
       isSlopeEnabled: z.boolean(),
-      isCurveEnabled: z.boolean(),
+      isAccCurveEnabled: z.boolean(),
       defaultAverageAccForPointCalculation: z.number(),
       diffCurve: z.string(),
       accCurve: z.string(),
@@ -111,7 +127,50 @@ export const PointsAPIResponseSchema = z.object({
   hasNextPage: z.boolean(),
 });
 
-export const PlayerStatsAPIResponseSchema = z.any();
+export const PlayerAPIResponseSchema = z.object({
+  player: z.object({
+    userID: z.number(),
+    name: z.string(),
+    platform: z.number(),
+    hmd: z.number(),
+    user_AvatarUrl: z.string(),
+  }),
+  guilds: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      smallName: z.string(),
+      description: z.string(),
+      color: z.number(),
+      type: z.number(),
+      simplePoints: z.array(
+        z.object({ id: z.number(), guildID: z.number(), name: z.string() }),
+      ),
+      joinRequirements: z.object({
+        requirements: z.number(),
+        minRank: z.number(),
+        maxRank: z.number(),
+        minPP: z.number(),
+        maxPP: z.number(),
+        accountAgeUnix: z.number(),
+      }),
+      unixCreationTime: z.number(),
+      inviteCode: z.null(),
+      rankedMapCount: z.null(),
+      memberCount: z.null(),
+    }),
+  ),
+});
+
+export const PlayerStatsAPIResponseSchema = z.object({
+  playerID: z.number(),
+  pointID: z.number(),
+  rank: z.number(),
+  validPassCount: z.number(),
+  pointValue: z.number(),
+});
+
+export type PlayerAPIResponse = z.infer<typeof PlayerAPIResponseSchema>;
 
 export type PlayerScoresAPIResponse = z.infer<
   typeof PlayerScoresAPIResponseSchema

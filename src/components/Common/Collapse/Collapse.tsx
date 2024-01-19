@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import clsx from "clsx";
-import useClickAway from "../../../hooks/useClickAway";
+import useClickAway from "@/hooks/useClickAway";
 import {
   faChevronDown,
   faChevronUp,
@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Collapse({
   label,
+  image,
   defaultvalue,
   options,
   multiple,
@@ -20,6 +21,7 @@ export default function Collapse({
   ...otherProps
 }: {
   label?: string;
+  image?: string;
   defaultvalue: string;
   options: { value: string; label: string }[];
   multiple: boolean;
@@ -66,6 +68,7 @@ export default function Collapse({
         )}
         onClick={handleToggle}
       >
+        {image && <img src={image} />}
         <span>{multiple ? label : displayLabel}</span>
         <span>
           <FontAwesomeIcon
@@ -100,7 +103,7 @@ export default function Collapse({
                       : faSquare
                   }
                 />
-              )}{" "}
+              )}
               {option.label}
             </div>
           ))}

@@ -1,4 +1,4 @@
-import Button from "../Common/Button/Button";
+import Button from "@/components/Common/Button/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,39 +9,41 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import Sparkles from "../Icons/Sparkles";
-import BeatSaver from "../Icons/BeatSaver";
-import Bpm from "../Icons/Bpm";
-import { MapAPIResponse } from "../../types/api/map";
+import Sparkles from "@/components/Icons/Sparkles";
+import BeatSaver from "@/components/Icons/BeatSaver";
+import Bpm from "@/components/Icons/Bpm";
+import { MapAPIResponse } from "@/types/api/map";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import { formatDifficulty, formatMinSec } from "../../utils/format";
-import { useState } from "react";
-import ArcViewer from "../../components/Common/ArcViewer/ArcViewer";
+import { formatDifficulty, formatMinSec } from "@/utils/format";
 
-export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
+type arcViewer = {
+  bsrCode: string;
+  difficulty: number;
+  mode: string;
+};
+
+export default function MapHeader({
+  mapData,
+  arcViewer,
+}: {
+  mapData: MapAPIResponse;
+  arcViewer: (arg0: arcViewer) => void;
+}) {
   const {
     song,
     songDifficultyStats: difficulty,
     difficulty: levelDifficulty,
     gameMode,
-  } = mapData.rankedMapVersions[0].songDifficulty;
-  const [arcViewer, setArcViewer] = useState({
-    isOpen: false,
-    bsrCode: song.beatSaverKey,
-    difficulty: levelDifficulty,
-    mode: gameMode.name,
-  });
+  } = mapData.rankedMap.rankedMapVersions[0]?.songDifficulty;
 
-  const rating = mapData.rating.default.stars;
-
+  const rating = mapData.rankedMap.rating.default.stars;
   const songDuration = formatMinSec(song.duration);
-
   const description = "A map of the best place to play";
 
   return (
     <>
-      <div className="group relative mb-8 flex w-full flex-col gap-2 overflow-hidden rounded bg-gray-800 md:flex-row md:p-8 md:pr-[14rem]">
+      <div className="group relative flex w-full flex-col gap-2 overflow-hidden rounded bg-gray-800 md:flex-row md:p-8 md:pr-[14rem]">
         <div
           className={clsx(
             "block h-24 w-full overflow-hidden border-b-8 border-primary md:absolute md:right-0 md:top-0 md:h-[340px] md:w-[340px] md:-translate-y-[75px] md:translate-x-[150px] md:rotate-[20deg] md:transform md:overflow-hidden md:border-8 md:border-transparent md:outline md:outline-8",
@@ -56,7 +58,7 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-4 p-8 text-center md:flex-row md:items-start md:p-0 md:text-start">
           <div>
-            <Link to={`/map/${mapData.id}`}>
+            <Link to={`/map/${mapData.rankedMap.id}`}>
               <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
                 {song.songName}
               </h3>
@@ -117,7 +119,13 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
               />
               <Button
                 className="btn-tritary"
-                onClick={() => setArcViewer({ ...arcViewer, isOpen: true })}
+                onClick={() => {
+                  arcViewer({
+                    bsrCode: song.beatSaverKey,
+                    difficulty: levelDifficulty,
+                    mode: gameMode.name,
+                  });
+                }}
                 icon={faPlay}
               />
               <Link
@@ -133,15 +141,6 @@ export default function MapHeader({ mapData }: { mapData: MapAPIResponse }) {
           </div>
         </div>
       </div>
-
-      {arcViewer.isOpen && (
-        <ArcViewer
-          bsrCode={arcViewer.bsrCode}
-          difficulty={arcViewer.difficulty}
-          mode={arcViewer.mode}
-          onClose={() => setArcViewer({ ...arcViewer, isOpen: false })}
-        />
-      )}
     </>
   );
 }

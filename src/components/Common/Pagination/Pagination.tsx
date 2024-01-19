@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { usePagination, DOTS } from "../../hooks/usePagination";
+import { usePagination, DOTS } from "@/hooks/usePagination";
 import {
   faChevronLeft,
   faChevronRight,

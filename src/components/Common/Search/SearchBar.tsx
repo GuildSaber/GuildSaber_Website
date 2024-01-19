@@ -4,9 +4,11 @@ import clsx from "clsx";
 
 export default function SearchBar({
   className,
+  onChange,
   ...otherProps
 }: {
   className?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
     <div
@@ -17,6 +19,7 @@ export default function SearchBar({
         type="text"
         placeholder="Search..."
         className="input w-full bg-gray-800"
+        onChange={onChange}
       />
       <FontAwesomeIcon className="pr-3" icon={faMagnifyingGlass} />
     </div>

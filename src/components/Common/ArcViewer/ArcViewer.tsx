@@ -1,29 +1,36 @@
-import useClickAway from "../../../hooks/useClickAway";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { formatDifficulty } from "../../../utils/format";
 
-export default function ArcViewer({
-  bsrCode,
-  difficulty,
-  mode,
-  onClose,
-}: {
-  bsrCode: string;
-  difficulty: number;
-  mode: string;
-  onClose: () => void;
-}) {
+import { ArcViewe0SettingsrProps } from "@/hooks/useArcViewer";
+import useClickAway from "@/hooks/useClickAway";
+import { formatDifficulty } from "@/utils/format";
+
+type ArcViewerProps = {
+  isOpen: boolean;
+  data: ArcViewe0SettingsrProps;
+  open: (settings: ArcViewe0SettingsrProps) => void;
+  close: () => void;
+};
+
+export default function ArcViewer({ settings }: { settings: ArcViewerProps }) {
   const [iframeSrc, setIframeSrc] = useState("");
   const clickRef = useRef(null);
 
   useEffect(() => {
     setIframeSrc(
-      `https://allpoland.github.io/ArcViewer/?id=${bsrCode}&difficulty=${formatDifficulty[difficulty]}&mode=${mode}`,
+      `https://allpoland.github.io/ArcViewer/?id=${
+        settings.data.bsrCode
+      }&difficulty=${formatDifficulty[settings.data.difficulty]}&mode=${
+        settings.data.mode
+      }`,
     );
-  }, [bsrCode, difficulty, mode]);
+  }, [settings.data.bsrCode, settings.data.difficulty, settings.data.mode]);
 
-  useClickAway(clickRef, () => onClose());
+  useClickAway(clickRef, () => settings.close());
+
+  if (!settings.isOpen) {
+    return;
+  }
 
   return createPortal(
     <div className="flex-center fixed inset-0 z-20 min-h-screen select-none bg-[#000000b0] backdrop-blur-md">

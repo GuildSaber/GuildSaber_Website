@@ -1,6 +1,6 @@
 import GuildMenu from "./GuildMenu";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
@@ -51,9 +51,6 @@ export default function Header() {
                   <Link to="/leaderboards" className="btn text-p">
                     Leaderboards
                   </Link>
-                  <Link to="/maps" className="btn text-p">
-                    Maps
-                  </Link>
                   {session.memberList && session.memberList.length === 0 && (
                     <Link to="/guilds" className="btn text-p">
                       Guilds
@@ -61,16 +58,23 @@ export default function Header() {
                   )}
                 </div>
               )}
-
-              <GuildMenu
-                guilds={
-                  session.memberList
-                    ?.sort((a, b) => a.priority - b.priority)
-                    ?.map((memberList) => memberList.guild)
-                    ?.flat() ?? []
-                }
-              />
-              <Link to="/me">
+              {session.memberList && session.memberList.length === 0 ? (
+                <div className="flex gap-4">
+                  <Link to="/guilds" className="btn text-p">
+                    Discover Guilds
+                  </Link>
+                </div>
+              ) : (
+                <GuildMenu
+                  guilds={
+                    session.memberList
+                      ?.sort((a, b) => a.priority - b.priority)
+                      ?.map((memberList) => memberList.guild)
+                      ?.flat() ?? []
+                  }
+                />
+              )}
+              <Link to={`/player/${session.player?.userID}`}>
                 <img
                   alt="avatar"
                   className="rounded-full"
@@ -110,9 +114,7 @@ export default function Header() {
             <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
               {extended && session && session.selectedGuild && (
                 <>
-                  <Link to="/me">My Profile</Link>
                   <Link to="/leaderboards">Leaderboards</Link>
-                  <Link to="/maps">Maps</Link>
                   <Link to="/guilds">Guilds</Link>
                 </>
               )}

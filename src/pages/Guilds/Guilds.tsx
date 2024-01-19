@@ -1,19 +1,19 @@
-import Card from "../../components/Guilds/GuildsCard";
-import { useState } from "react";
-import List from "../../components/List/List";
+import { useSearchParams } from "react-router-dom";
+import Card from "@/components/Guilds/GuildsCard";
+import { useEffect, useState } from "react";
+import List from "@/components/Common/List/List";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Loader from "@/components/Common/Loader/Loader";
+import Collapse from "@/components/Common/Collapse/Collapse";
+import SearchBar from "@/components/Common/Search/SearchBar";
 import {
-  useQuery,
-  keepPreviousData,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import Loader from "../../components/Common/Loader/Loader";
-import Collapse from "../../components/Common/Collapse/Collapse";
-import SearchBar from "../../components/Common/Search/SearchBar";
-import { GuildsAPIResponseSchema } from "../../types/api/guild";
-import { useAuthContext } from "../../hooks/useAuthContext";
+  GuildsAPIResponse,
+  GuildsAPIResponseSchema,
+} from "../../types/api/guild";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
-import { EJoinState } from "../../enums/guild";
+import { EJoinState } from "@/enums/guild";
+import { fetchAPI } from "@/utils/fetch";
 
 const PAGE_SIZE = 3;
 
@@ -34,21 +34,31 @@ const FILTER_SORT_BY_VALUES = [
 
 type FilterType = {
   guildTypes: string[];
-  "sort-By": string;
-  order: "Asc" | "Desc";
+  "sort-by": string;
+  "order-by": "Asc" | "Desc";
 };
 
 export default function Guilds() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [intermediateSearch, setIntermediateSearch] = useState("");
   const [filter, setFilter] = useState<FilterType>({
     guildTypes: ["0", "1", "2", "4"],
-    "sort-By": "Popularity",
-    order: "Desc",
+    "sort-by": "Popularity",
+    "order-by": "Desc",
   });
 
   const { session, dispatch } = useAuthContext();
 
   const queryClient = useQueryClient();
+
+  const updateSearch = (term: string) => {
+    setSearch(term);
+    setCurrentPage(1);
+    searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  };
 
   const joinGuild = (guildID: number) =>
     fetch(
@@ -85,69 +95,49 @@ export default function Guilds() {
   });
 
   const tryJoin = async (guildID: number) => {
-    mutation.mutate(guildID);
-    /*if (!session?.token) {
+    if (!session?.token) {
       toast.error("You need to be logged in to join");
       return;
     }
 
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/members/join-guild/${guildID}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      },
-    );
-
-    const data = await res.json();
-    if (!res.ok) {
-      if (data.detail) {
-        toast.error(data.detail);
-        return;
-      }
-
-      toast.error("Unknown error");
-      return;
-    }
-
-    if (data.state === EJoinState.Requested) {
-      toast.success("Successfully requested");
-    }
-
-    if (data.state === EJoinState.Joined) {
-      toast.success("Successfully joined the guild");
-    }*/
+    mutation.mutate(guildID);
   };
 
-  const getGuilds = async (page = 1, filter: FilterType) => {
+  const getGuilds = async (page = 1, filter: FilterType, search: string) => {
     const parsefilter = {
       ...filter,
       guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
     };
-    const URLParams = new URLSearchParams(parsefilter).toString();
 
-    const res = await fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL
-      }/guilds?page=${page}&pageSize=${PAGE_SIZE}&${URLParams}`,
-    )
-      .then((res) => res.json())
-      .then(GuildsAPIResponseSchema.parse);
+    const res = await fetchAPI<GuildsAPIResponse>({
+      path: "/guilds",
+      queryParams: {
+        page: page,
+        pageSize: PAGE_SIZE,
+        ...parsefilter,
+        ...(search && { search: search }),
+      },
+      schema: GuildsAPIResponseSchema,
+    });
 
     return res;
   };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setIntermediateSearch(search);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
 
   const {
     data: guilds,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["guilds", currentPage, filter],
-    queryFn: () => getGuilds(currentPage, filter),
-    staleTime: 60_000,
-    placeholderData: keepPreviousData,
+    queryKey: ["guilds", currentPage, filter, intermediateSearch],
+    queryFn: () => getGuilds(currentPage, filter, intermediateSearch),
   });
 
   if (isLoading) {
@@ -175,10 +165,10 @@ export default function Guilds() {
                 defaultvalue={FILTER_SORT_BY_VALUES[0].value}
                 className="w-full sm:w-auto"
                 options={FILTER_SORT_BY_VALUES}
-                selectedOptions={[filter["sort-By"]]}
+                selectedOptions={[filter["sort-by"]]}
                 multiple={false}
                 setSelectedOptions={(value) =>
-                  setFilter({ ...filter, "sort-By": value[0] })
+                  setFilter({ ...filter, "sort-by": value[0] })
                 }
               />
               <Collapse
@@ -192,7 +182,10 @@ export default function Guilds() {
                   setFilter({ ...filter, guildTypes: value })
                 }
               />
-              <SearchBar className="ml-auto w-full sm:w-auto" />
+              <SearchBar
+                className="ml-auto w-full sm:w-auto"
+                onChange={(e) => updateSearch(e.target.value)}
+              />
             </div>
 
             {guilds?.data.map((guild, key) => (

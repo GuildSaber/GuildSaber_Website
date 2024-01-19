@@ -4,9 +4,9 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
-import useClickAway from "../../hooks/useClickAway";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { GuildAPIResponse } from "../../types/api/guild";
+import useClickAway from "@/hooks/useClickAway";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { GuildAPIResponse } from "@/types/api/guild";
 
 const MAX_GUILD_NAME_LENGTH = 16;
 const MAX_VISIBLE_GUILD_COUNT = 3;
@@ -47,7 +47,10 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
       <div
         className={clsx(
           "flex h-full items-stretch gap-2 bg-gray-800 py-2 pl-3",
-          { "rounded-t": isOpen, rounded: !isOpen },
+          {
+            "rounded-t outline outline-1 outline-gray-700": isOpen,
+            rounded: !isOpen,
+          },
         )}
       >
         {session && session.selectedGuild && (
@@ -100,7 +103,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
 
       <ul
         className={clsx(
-          "absolute flex w-full select-none flex-col rounded-b bg-gray-800 pb-2",
+          "absolute right-0 flex w-full min-w-[180px] select-none flex-col rounded-b bg-gray-800 pb-2 outline outline-1 outline-gray-700",
           { hidden: !isOpen },
         )}
       >

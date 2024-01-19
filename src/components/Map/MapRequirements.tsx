@@ -1,6 +1,6 @@
 export default function MapRequirements() {
   return (
-    <div className="mb-8 w-full overflow-hidden rounded bg-gray-800 p-8">
+    <div className="mb-8 mt-8 w-full overflow-hidden rounded bg-gray-800 p-8">
       <h3 className="mb-4 line-clamp-1 text-center text-h4 font-bold md:text-left">
         Requirements
       </h3>

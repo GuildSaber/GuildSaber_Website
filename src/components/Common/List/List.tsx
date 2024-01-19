@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Pagination from "../Pagination/Pagination";
+import Pagination from "@/components/Common/Pagination/Pagination";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function List<C extends React.ReactNode>({
