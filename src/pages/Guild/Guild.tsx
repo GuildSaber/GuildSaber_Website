@@ -77,7 +77,7 @@ export default function Guild() {
   );
 
   const [categories, setCategories] = useState<Categories>({
-    anyMatch: false,
+    anyMatch: true,
     selected: [],
   });
 
