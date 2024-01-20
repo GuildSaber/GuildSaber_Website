@@ -14,8 +14,9 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "@/enums/guild";
 import { fetchAPI } from "@/utils/fetch";
+import { EIncludeFlags } from "@/enums/api";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 4;
 
 const FILTER_GUILD_TYPES = [
   { value: "1", label: "Unverified" },
@@ -116,6 +117,7 @@ export default function Guilds() {
         pageSize: PAGE_SIZE,
         ...parsefilter,
         ...(search && { search: search }),
+        include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
       },
       schema: GuildsAPIResponseSchema,
     });
