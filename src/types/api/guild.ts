@@ -60,7 +60,7 @@ export const GuildMapsAPIResponseSchema = z.object({
           minAccuracy: z.number(),
         }),
         rating: z.object({
-          customModifiersRating: z.number(),
+          enabledCustomModRatingFlag: z.number(),
           default: z.object({
             stars: z.object({ difficulty: z.number(), acc: z.number() }),
           }),

@@ -77,7 +77,7 @@ export default function Guild() {
   );
 
   const [categories, setCategories] = useState<Categories>({
-    anyMatch: false,
+    anyMatch: true,
     selected: [],
   });
 
@@ -216,7 +216,7 @@ export default function Guild() {
           </h3>
         </div>
 
-        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-8 md:justify-start">
+        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-8">
           {guild.categories?.map((category) => (
             <button
               key={category.id}
