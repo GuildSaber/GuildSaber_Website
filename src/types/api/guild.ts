@@ -64,7 +64,6 @@ export const GuildMapsAPIResponseSchema = z.object({
           default: z.object({
             stars: z.object({ difficulty: z.number(), acc: z.number() }),
           }),
-          modifiers: z.null(),
         }),
         unixCreationTime: z.number(),
         unixEditTime: z.number(),
