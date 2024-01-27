@@ -12,10 +12,10 @@ import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import Sparkles from "@/components/Icons/Sparkles";
 import BeatSaver from "@/components/Icons/BeatSaver";
 import Bpm from "@/components/Icons/Bpm";
-import { MapAPIResponse } from "@/types/api/map";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { formatDifficulty, formatMinSec } from "@/utils/format";
+import { MapData } from "@/types/api/models/rankedMap";
 
 type arcViewer = {
   bsrCode: string;
@@ -27,7 +27,7 @@ export default function MapHeader({
   mapData,
   arcViewer,
 }: {
-  mapData: MapAPIResponse;
+  mapData: MapData;
   arcViewer: (arg0: arcViewer) => void;
 }) {
   const {

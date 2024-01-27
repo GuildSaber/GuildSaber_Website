@@ -6,15 +6,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
 import SearchBar from "@/components/Common/Search/SearchBar";
-import {
-  GuildsAPIResponse,
-  GuildsAPIResponseSchema,
-} from "../../types/api/guild";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "@/enums/guild";
-import { fetchAPI } from "@/utils/fetch";
 import { EIncludeFlags } from "@/enums/api";
+import { getAllGuilds } from "@/api/fetch/guilds";
 
 const PAGE_SIZE = 4;
 
@@ -104,7 +100,7 @@ export default function Guilds() {
     mutation.mutate(guildID);
   };
 
-  const getGuilds = async (page = 1, filter: FilterType, search: string) => {
+  /*const getGuilds = async (page = 1, filter: FilterType, search: string) => {
     const parsefilter = {
       ...filter,
       guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
@@ -123,7 +119,7 @@ export default function Guilds() {
     });
 
     return res;
-  };
+  };*/
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -139,7 +135,14 @@ export default function Guilds() {
     isError,
   } = useQuery({
     queryKey: ["guilds", currentPage, filter, intermediateSearch],
-    queryFn: () => getGuilds(currentPage, filter, intermediateSearch),
+    queryFn: () =>
+      getAllGuilds({
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+        include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
+        search: intermediateSearch,
+        filters: filter,
+      }),
   });
 
   if (isLoading) {

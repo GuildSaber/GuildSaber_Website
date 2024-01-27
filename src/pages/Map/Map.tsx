@@ -5,8 +5,6 @@ import List from "@/components/Common/List/List";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  MapAPIResponse,
-  MapAPIResponseSchema,
   MapLeaderboardAPIResponse,
   MapLeaderboardAPIResponseSchema,
 } from "@/types/api/map";
@@ -20,6 +18,7 @@ import { EIncludeFlags } from "@/enums/api";
 import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
 import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
+import { MapData, MapDataSchema } from "@/types/api/models/rankedMap";
 
 const PAGE_SIZE = 10;
 
@@ -54,13 +53,13 @@ export default function Map() {
   const [pointID, setPointID] = useState(0);
 
   const getMap = async () =>
-    fetchAPI<MapAPIResponse>({
+    fetchAPI<MapData>({
       path: `/ranked-map/by-id/${mapID}`,
       queryParams: {
         include: API_MAP_DATA_INCLUDES,
       },
       authenticated: true,
-      schema: MapAPIResponseSchema,
+      schema: MapDataSchema,
     });
 
   const getMapLeaderboard = async (page: number) =>

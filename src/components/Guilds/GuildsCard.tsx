@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import clsx from "clsx";
 import { EJoinState } from "@/enums/guild";
-import { GuildAPIResponse } from "@/types/api/guild";
+import { Guild } from "@/types/api/models/guild";
 
 const GUILD_STATES: { [key: string]: string } = {
   [EJoinState.None]: "None",
@@ -19,7 +19,7 @@ export default function Card({
   guildState,
   onJoin,
 }: {
-  guildData: GuildAPIResponse;
+  guildData: Guild;
   guildState: number | undefined;
   onJoin: () => void;
 }) {

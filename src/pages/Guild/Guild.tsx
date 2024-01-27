@@ -3,12 +3,6 @@ import GuildHeader from "@/components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
-import {
-  GuildAPIResponse,
-  GuildAPIResponseSchema,
-  GuildMapAPIResponse,
-  GuildMapsAPIResponseSchema,
-} from "@/types/api/guild";
 import MapHeader from "@/components/Map/MapHeader";
 import SearchBar from "@/components/Common/Search/SearchBar";
 import { Key, useEffect, useState } from "react";
@@ -25,8 +19,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
+import { getGuild, getGuildMaps } from "@/api/fetch/guilds";
 
 const FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
@@ -123,53 +117,14 @@ export default function Guild() {
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
 
-  const getGuild = async (guildID: string) =>
-    fetchAPI<GuildAPIResponse>({
-      path: `/guild/by-id/${guildID}`,
-      queryParams: {
-        include: API_GUILD_DATA_INCLUDES,
-      },
-      schema: GuildAPIResponseSchema,
-    });
-
-  const getMaps = async (
-    guildID: string,
-    currentPage: number,
-    filter: FilterType,
-    search: string,
-  ) => {
-    /* Still doing this for when adding more params */
-    const parsefilter = Object.fromEntries(
-      Object.entries(filter).filter(([_, v]) => v != 0),
-    );
-
-    let parseCategories = categories.selected.map((categories) => {
-      return `category-ids=${categories.id}`;
-    });
-
-    return fetchAPI<GuildMapAPIResponse>({
-      path: `/ranked-maps/${guildID}`,
-      queryParams: {
-        page: currentPage,
-        pageSize: PAGE_SIZE,
-        include: API_MAPS_DATA_INCLUDES,
-        ...(search && { search: search }),
-        ...parsefilter,
-        anyMatch: categories.anyMatch,
-      },
-      rawQueryParams: parseCategories.join("&"),
-      authenticated: true,
-      schema: GuildMapsAPIResponseSchema,
-    });
-  };
-
   const {
     data: guild,
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["guilds", guildID],
-    queryFn: () => getGuild(guildID),
+    queryFn: () =>
+      getGuild({ id: parseInt(guildID), include: API_GUILD_DATA_INCLUDES }),
     retry: 2,
   });
 
@@ -187,7 +142,16 @@ export default function Guild() {
       intermediateSearch,
       categories,
     ],
-    queryFn: () => getMaps(guildID, currentPage, filter, intermediateSearch),
+    queryFn: () =>
+      getGuildMaps({
+        guildID: parseInt(guildID),
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+        include: API_MAPS_DATA_INCLUDES,
+        categories,
+        filters: filter,
+        search: intermediateSearch,
+      }),
     enabled: !!guildID,
     retry: 2,
   });
