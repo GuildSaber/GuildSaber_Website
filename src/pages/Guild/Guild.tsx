@@ -143,15 +143,16 @@ export default function Guild() {
       intermediateSearch,
       categories,
     ],
-    queryFn: () => ({
-      guildID: parseInt(guildID),
-      page: currentPage,
-      pageSize: PAGE_SIZE,
-      include: API_MAPS_DATA_INCLUDES,
-      categories,
-      filters: filter,
-      search: intermediateSearch,
-    }),
+    queryFn: () =>
+      getMaps({
+        guildID: parseInt(guildID),
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+        include: API_MAPS_DATA_INCLUDES,
+        categories,
+        filters: filter,
+        search: intermediateSearch,
+      }),
     enabled: !!guildID,
     retry: 2,
   });
@@ -285,7 +286,7 @@ export default function Guild() {
             setCurrentPage={setCurrentPage}
             className="flex flex-col gap-4"
           >
-            {maps?.data.map((value, key: Key) => (
+            {maps?.data?.map((value, key: Key) => (
               <MapHeader key={key} mapData={value} arcViewer={arcViewer.open} />
             ))}
           </List>
