@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RankedMapSchema } from "./rankedMap";
+import { RankedMapSchema } from "./rankedTypes";
 
 export const TagSchema = z.object({
   ID: z.number(),

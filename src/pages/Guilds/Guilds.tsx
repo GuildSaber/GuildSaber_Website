@@ -10,7 +10,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "@/enums/guild";
 import { EIncludeFlags } from "@/enums/api";
-import { getAllGuilds } from "@/api/fetch/guilds";
+import { getGuilds } from "@/api/fetch/guilds";
 
 const PAGE_SIZE = 4;
 
@@ -136,7 +136,7 @@ export default function Guilds() {
   } = useQuery({
     queryKey: ["guilds", currentPage, filter, intermediateSearch],
     queryFn: () =>
-      getAllGuilds({
+      getGuilds({
         page: currentPage,
         pageSize: PAGE_SIZE,
         include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,

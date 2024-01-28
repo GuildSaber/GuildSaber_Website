@@ -18,7 +18,10 @@ import { EIncludeFlags } from "@/enums/api";
 import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
 import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
-import { MapData, MapDataSchema } from "@/types/api/models/rankedMap";
+import {
+  RankedMapResponseSchema,
+  RankedMapResponse,
+} from "@/types/api/responses/rankedMapApiStruct";
 
 const PAGE_SIZE = 10;
 
@@ -53,13 +56,13 @@ export default function Map() {
   const [pointID, setPointID] = useState(0);
 
   const getMap = async () =>
-    fetchAPI<MapData>({
+    fetchAPI<RankedMapResponse>({
       path: `/ranked-map/by-id/${mapID}`,
       queryParams: {
         include: API_MAP_DATA_INCLUDES,
       },
       authenticated: true,
-      schema: MapDataSchema,
+      schema: RankedMapResponseSchema,
     });
 
   const getMapLeaderboard = async (page: number) =>
@@ -210,8 +213,8 @@ export default function Map() {
                     <p>
                       {formatAccuracy(
                         data.rankedScore.score.baseScore,
-                        map.rankedMap.rankedMapVersions[0].songDifficulty
-                          .songDifficultyStats.maxScore,
+                        map.rankedMap.rankedMapVersions[0]?.songDifficulty
+                          ?.songDifficultyStats?.maxScore || 0,
                       )}
                     </p>
                     <p className="hidden md:block">

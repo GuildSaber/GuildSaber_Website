@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export type ArcViewe0SettingsrProps = {
+export type ArcViewerSettingsProps = {
   bsrCode: string;
   difficulty: number;
   mode: string;
@@ -9,10 +9,10 @@ export type ArcViewe0SettingsrProps = {
 const useArcViewer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [settingsArcViewer, setSettingsArcViewer] = useState(
-    {} as ArcViewe0SettingsrProps,
+    {} as ArcViewerSettingsProps,
   );
 
-  const open = (data: ArcViewe0SettingsrProps) => {
+  const open = (data: ArcViewerSettingsProps) => {
     setSettingsArcViewer({
       ...data,
     });
@@ -21,7 +21,7 @@ const useArcViewer = () => {
 
   const close = () => {
     setIsOpen(false);
-    setSettingsArcViewer({} as ArcViewe0SettingsrProps);
+    setSettingsArcViewer({} as ArcViewerSettingsProps);
   };
 
   return {

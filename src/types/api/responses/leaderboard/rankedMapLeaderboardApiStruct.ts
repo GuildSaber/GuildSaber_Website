@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { PlayerSchema } from "../../../../types/api/models/player";
-import { RankedScoreSchema } from "../../../../types/api/models/rankedscore";
+import { RankedScoreSchema } from "../../models/rankedTypes";
 
 export const RankedMapLeaderboardApiStructSchema = z.object({
-  Player: PlayerSchema,
-  RankedScore: RankedScoreSchema,
+  player: PlayerSchema,
+  rankedScore: RankedScoreSchema,
 });
 
 export type RankedMapLeaderboardApiStruct = z.infer<

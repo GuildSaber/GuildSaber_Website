@@ -15,27 +15,26 @@ import Bpm from "@/components/Icons/Bpm";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { formatDifficulty, formatMinSec } from "@/utils/format";
-import { MapData } from "@/types/api/models/rankedMap";
-
-type arcViewer = {
-  bsrCode: string;
-  difficulty: number;
-  mode: string;
-};
+import { RankedMapResponse } from "@/types/api/responses/rankedMapApiStruct";
+import { ArcViewerSettingsProps } from "@/hooks/useArcViewer";
 
 export default function MapHeader({
   mapData,
   arcViewer,
 }: {
-  mapData: MapData;
-  arcViewer: (arg0: arcViewer) => void;
+  mapData: RankedMapResponse;
+  arcViewer: (arg0: ArcViewerSettingsProps) => void;
 }) {
   const {
     song,
     songDifficultyStats: difficulty,
     difficulty: levelDifficulty,
     gameMode,
-  } = mapData.rankedMap.rankedMapVersions[0]?.songDifficulty;
+  } = mapData.rankedMap.rankedMapVersions[0]?.songDifficulty || {};
+
+  if (!song || !difficulty || !levelDifficulty || !gameMode) {
+    return <></>;
+  }
 
   const rating = mapData.rankedMap.rating.default.stars;
   const songDuration = formatMinSec(song.duration);
@@ -120,6 +119,8 @@ export default function MapHeader({
               <Button
                 className="btn-tritary"
                 onClick={() => {
+                  if (!song.beatSaverKey) return;
+
                   arcViewer({
                     bsrCode: song.beatSaverKey,
                     difficulty: levelDifficulty,

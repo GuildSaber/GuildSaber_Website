@@ -20,7 +20,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import useArcViewer from "@/hooks/useArcViewer";
-import { getGuild, getGuildMaps } from "@/api/fetch/guilds";
+import { getGuild } from "@/api/fetch/guilds";
+import { getMaps } from "@/api/fetch/rankedMaps";
 
 const FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
@@ -142,16 +143,15 @@ export default function Guild() {
       intermediateSearch,
       categories,
     ],
-    queryFn: () =>
-      getGuildMaps({
-        guildID: parseInt(guildID),
-        page: currentPage,
-        pageSize: PAGE_SIZE,
-        include: API_MAPS_DATA_INCLUDES,
-        categories,
-        filters: filter,
-        search: intermediateSearch,
-      }),
+    queryFn: () => ({
+      guildID: parseInt(guildID),
+      page: currentPage,
+      pageSize: PAGE_SIZE,
+      include: API_MAPS_DATA_INCLUDES,
+      categories,
+      filters: filter,
+      search: intermediateSearch,
+    }),
     enabled: !!guildID,
     retry: 2,
   });

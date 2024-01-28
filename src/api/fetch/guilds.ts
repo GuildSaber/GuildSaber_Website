@@ -2,11 +2,10 @@ import { EIncludeFlags } from "@/enums/api/fetch/include";
 import { EGuildType } from "@/enums/api/models/guildType";
 import { EPermission } from "@/enums/api/models/permission";
 import { Guild, GuildSchema } from "@/types/api/models/guild";
-import { MapData, MapDataSchema } from "@/types/api/models/rankedMap";
 import { PagedList, PagedListSchema } from "@/types/api/responses/pagedList";
 import { fetchAPI } from "@/utils/fetch";
 
-type getAllGuildParams = {
+type getAllGuildParamsType = {
   page: number;
   pageSize: number;
   include?: EIncludeFlags;
@@ -20,13 +19,13 @@ type getAllGuildParams = {
   permissionFlag?: EPermission;
 };
 
-type getGuild = {
+type getGuildType = {
   id: number;
   userID?: number;
   include?: EIncludeFlags;
 };
 
-export const getAllGuilds = async ({
+export const getGuilds = async ({
   page,
   pageSize,
   include,
@@ -34,7 +33,7 @@ export const getAllGuilds = async ({
   search,
   userID,
   permissionFlag,
-}: getAllGuildParams) => {
+}: getAllGuildParamsType) => {
   let parsefilter;
 
   if (filters) {
@@ -60,7 +59,7 @@ export const getAllGuilds = async ({
   });
 };
 
-export const getGuild = async ({ id, include, userID }: getGuild) => {
+export const getGuild = async ({ id, include, userID }: getGuildType) => {
   //remove all object key with 0 value in filters
 
   return fetchAPI<Guild>({
@@ -72,52 +71,5 @@ export const getGuild = async ({ id, include, userID }: getGuild) => {
     },
     authenticated: false,
     schema: GuildSchema,
-  });
-};
-
-type getGuildMaps = {
-  guildID: number;
-  page: number;
-  pageSize: number;
-  include?: EIncludeFlags;
-  search?: string;
-  filters?: { [key: string]: string | number };
-  categories: {
-    anyMatch: boolean;
-    selected: { name: string; id: number }[];
-  };
-  anyMatch?: boolean;
-};
-
-export const getGuildMaps = async ({
-  guildID,
-  page,
-  pageSize,
-  include,
-  search,
-  filters,
-  categories,
-}: getGuildMaps) => {
-  const cleanNullFilter = Object.fromEntries(
-    Object.entries(filters).filter(([_, v]) => v != 0),
-  );
-
-  const parseCategories = categories.selected.map((categorie) => {
-    return `category-ids=${categorie.id}`;
-  });
-
-  return fetchAPI<PagedList<MapData>>({
-    path: `/ranked-maps/${guildID}`,
-    queryParams: {
-      page,
-      pageSize,
-      include: include,
-      ...(search && { search: search }),
-      ...(!!filters && cleanNullFilter),
-      categories: parseCategories.join("&"),
-      anyMatch: categories.anyMatch,
-    },
-    authenticated: true,
-    schema: PagedListSchema(MapDataSchema),
   });
 };

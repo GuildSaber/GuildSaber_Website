@@ -7,6 +7,7 @@ export const PlayerSchema = z.object({
   name: z.string().max(32),
   platform: z.nativeEnum(EPlatform),
   hmd: z.nativeEnum(EHMD),
+  country: z.string(),
   user_AvatarUrl: z.string().nullable(),
 });
 
