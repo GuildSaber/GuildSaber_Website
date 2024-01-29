@@ -5,6 +5,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useClickAway from "@/hooks/useClickAway";
 import { formatMinSec } from "@/utils/format";
 
+type MultiRangeSliderProps = {
+  min: number;
+  max: number;
+  icon: any;
+  color?: string;
+  className?: string;
+  minutes?: boolean;
+  onChange: ({ min, max }: { min: number; max: number }) => void;
+};
+
 const MultiRangeSlider = ({
   min,
   max,
@@ -13,15 +23,7 @@ const MultiRangeSlider = ({
   minutes,
   onChange,
   className,
-}: {
-  min: number;
-  max: number;
-  icon: any;
-  color?: string;
-  className?: string;
-  minutes?: boolean;
-  onChange: ({ min, max }: { min: number; max: number }) => void;
-}) => {
+}: MultiRangeSliderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [minVal, setMinVal] = useState(min);

@@ -1,4 +1,4 @@
-import Button from "@/components/Common/Button/Button";
+import Button from "@/components/Common/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -132,7 +132,9 @@ export default function MapHeader({
                 to={`https://beatsaver.com/maps/${song.beatSaverKey}`}
                 target="_blank"
               >
-                <Button className="btn-tritary" component={BeatSaver} />
+                <Button className="btn-tritary">
+                  <BeatSaver />
+                </Button>
               </Link>
               <Link to={`beatsaver://${song.beatSaverKey}`}>
                 <Button className="btn-primary" icon={faCloudArrowDown} />

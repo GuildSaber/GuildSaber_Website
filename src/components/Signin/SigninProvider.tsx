@@ -1,14 +1,20 @@
+import { PropsWithChildren } from "react";
+import Button from "../Common/Button";
+
+type SigninProviderProps = {
+  provider: string;
+  returnURL?: string;
+  logo?: any;
+  token?: string;
+};
+
 export default function SigninProvider({
   provider,
   returnURL = window.location.href,
+  children,
   logo,
   token,
-}: {
-  provider: string;
-  returnURL?: string;
-  logo: any;
-  token?: string;
-}) {
+}: PropsWithChildren<SigninProviderProps>) {
   return (
     <form
       className={`provider ${provider}`}
@@ -17,11 +23,13 @@ export default function SigninProvider({
     >
       <input type="hidden" name="Provider" value={provider} />
       <input type="hidden" name="ReturnUrl" value={returnURL} />
+
       {token && <input type="hidden" name="Bearer" value={token} />}
-      <button type="submit" className="btn btn-primary bg-gray-800">
-        {logo()}
+
+      <Button type="submit" className="btn-primary bg-gray-800" icon={logo}>
+        {children}
         Sign up with {provider}
-      </button>
+      </Button>
     </form>
   );
 }

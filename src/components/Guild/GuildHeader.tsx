@@ -1,5 +1,5 @@
 import { decimalToHex } from "@/utils/color";
-import Button from "@/components/Common/Button/Button";
+import Button from "@/components/Common/Button";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";

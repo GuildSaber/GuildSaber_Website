@@ -9,6 +9,17 @@ import {
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+type CollapseProps = {
+  label?: string;
+  image?: string;
+  defaultvalue: string;
+  options: { value: string; label: string }[];
+  multiple: boolean;
+  selectedOptions: string[];
+  setSelectedOptions: (options: string[]) => void;
+  className?: string;
+};
+
 export default function Collapse({
   label,
   image,
@@ -19,16 +30,7 @@ export default function Collapse({
   setSelectedOptions,
   className,
   ...otherProps
-}: {
-  label?: string;
-  image?: string;
-  defaultvalue: string;
-  options: { value: string; label: string }[];
-  multiple: boolean;
-  selectedOptions: string[];
-  setSelectedOptions: (options: string[]) => void;
-  className?: string;
-}) {
+}: CollapseProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [displayLabel, setDisplayLabel] = useState(defaultvalue);
   const clickRef = useRef<HTMLDivElement>(null);

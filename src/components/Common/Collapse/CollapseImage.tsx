@@ -4,6 +4,15 @@ import useClickAway from "@/hooks/useClickAway";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+type CollapseImageProps = {
+  label?: string;
+  defaultvalue: string | number;
+  options: { value: number; label: string; image: string }[];
+  selectedOption: number;
+  setSelectedOption: (guildID: number) => void;
+  className?: string;
+};
+
 export default function CollapseImage({
   label,
   defaultvalue,
@@ -12,14 +21,7 @@ export default function CollapseImage({
   setSelectedOption,
   className,
   ...otherProps
-}: {
-  label?: string;
-  defaultvalue: string | number;
-  options: { value: number; label: string; image: string }[];
-  selectedOption: number;
-  setSelectedOption: (guildID: number) => void;
-  className?: string;
-}) {
+}: CollapseImageProps) {
   const [isOpen, setIsOpen] = useState(false);
   const clickRef = useRef<HTMLDivElement>(null);
 

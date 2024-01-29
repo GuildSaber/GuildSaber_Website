@@ -1,28 +1,33 @@
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PropsWithChildren } from "react";
+
+type ButtonProps = {
+  className?: string;
+  text?: string;
+  icon?: any;
+  type?: "button" | "submit" | "reset";
+  onClick?: () => void;
+};
 
 export default function Button({
   className,
   text,
   icon,
-  component,
+  type,
+  children,
   onClick,
   ...otherProps
-}: {
-  className?: string;
-  text?: string;
-  icon?: any;
-  component?: () => JSX.Element;
-  onClick?: () => void;
-}) {
+}: PropsWithChildren<ButtonProps>) {
   return (
     <button
+      type={type || "button"}
       className={clsx(["btn", className])}
       onClick={onClick}
       {...otherProps}
     >
       {icon && <FontAwesomeIcon icon={icon} />}
-      {component && component()}
+      {children}
       {text}
     </button>
   );

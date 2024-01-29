@@ -1,7 +1,7 @@
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import MapHeader from "@/components/Map/MapHeader";
 import MapRequirements from "@/components/Map/MapRequirements";
-import List from "@/components/Common/List/List";
+import List from "@/components/Common/List";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -10,35 +10,21 @@ import {
   MapLeaderboardAPIResponse,
   MapLeaderboardAPIResponseSchema,
 } from "@/types/api/map";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/Common/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { formatAccuracy, formatHMD, formatModifiers } from "../../utils/format";
+import { formatAccuracy, formatHMD, formatModifiers } from "@/utils/format";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import clsx from "clsx";
-import { EIncludeFlags } from "@/enums/api";
-import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
+import ArcViewer from "@/components/Common/ArcViewer";
 import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
-
-const PAGE_SIZE = 10;
-
-const API_MAP_DATA_INCLUDES =
-  EIncludeFlags.Songs |
-  EIncludeFlags.SongDifficulties |
-  EIncludeFlags.SongDifficultyStats |
-  EIncludeFlags.GameModes |
-  EIncludeFlags.RankedMapVersions |
-  EIncludeFlags.RankedScores |
-  EIncludeFlags.Scores |
-  EIncludeFlags.HitTrackers |
-  EIncludeFlags.Points;
-
-const API_LEADERBOARD_DATA_INCLUDES =
-  EIncludeFlags.Players |
-  EIncludeFlags.Users |
-  EIncludeFlags.Scores |
-  EIncludeFlags.WinTrackers;
+import {
+  MAP_API_LEADERBOARD_DATA_INCLUDES,
+  MAP_API_DATA_INCLUDES,
+  MAP_PAGE_SIZE,
+} from "@/constants";
+import Button from "@/components/Common/Button";
 
 export default function Map() {
   const { mapID } = useParams();
@@ -57,7 +43,7 @@ export default function Map() {
     fetchAPI<MapAPIResponse>({
       path: `/ranked-map/by-id/${mapID}`,
       queryParams: {
-        include: API_MAP_DATA_INCLUDES,
+        include: MAP_API_DATA_INCLUDES,
       },
       authenticated: true,
       schema: MapAPIResponseSchema,
@@ -68,8 +54,8 @@ export default function Map() {
       path: `/leaderboard/ranked-map/${mapID}`,
       queryParams: {
         page: page,
-        pageSize: PAGE_SIZE,
-        include: API_LEADERBOARD_DATA_INCLUDES,
+        pageSize: MAP_PAGE_SIZE,
+        include: MAP_API_LEADERBOARD_DATA_INCLUDES,
         pointID: pointID,
       },
       schema: MapLeaderboardAPIResponseSchema,
@@ -120,7 +106,7 @@ export default function Map() {
           {leaderboard && (
             <List
               totalCount={leaderboard.totalCount}
-              pageSize={PAGE_SIZE}
+              pageSize={MAP_PAGE_SIZE}
               hasPreviousPage={leaderboard.hasPreviousPage}
               hasNextPage={leaderboard.hasNextPage}
               currentPage={currentPage}
@@ -128,7 +114,7 @@ export default function Map() {
             >
               <div className="flex gap-2">
                 {map.simplePoints?.map((point) => (
-                  <button
+                  <Button
                     key={point.id}
                     className={clsx("badge", {
                       "border-primary": point.id === pointID,
@@ -136,7 +122,7 @@ export default function Map() {
                     onClick={() => setPointID(point.id)}
                   >
                     {point.name}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
@@ -176,7 +162,7 @@ export default function Map() {
                       },
                     )}
                   >
-                    <p>{`#${(currentPage - 1) * PAGE_SIZE + key + 1}`}</p>
+                    <p>{`#${(currentPage - 1) * MAP_PAGE_SIZE + key + 1}`}</p>
                     <Link to={`/player/${data.player.userID}`}>
                       <div className="inline-flex items-center gap-2 overflow-hidden">
                         <img

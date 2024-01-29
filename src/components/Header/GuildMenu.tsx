@@ -7,10 +7,11 @@ import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useClickAway from "@/hooks/useClickAway";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { GuildAPIResponse } from "@/types/api/guild";
-
-const MAX_GUILD_NAME_LENGTH = 16;
-const MAX_VISIBLE_GUILD_COUNT = 3;
-const MAX_COLLAPSED_GUILD_COUNT = 5;
+import {
+  GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT,
+  GUILD_MENU_MAX_GUILD_NAME_LENGTH,
+  GUILD_MENU_MAX_VISIBLE_GUILD_COUNT,
+} from "@/constants";
 
 export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +80,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
                 session.selectedGuild == null ||
                 guild.id.toString() !== session.selectedGuild,
             )*/
-            .slice(0, MAX_VISIBLE_GUILD_COUNT)
+            .slice(0, GUILD_MENU_MAX_VISIBLE_GUILD_COUNT)
             .map((guild) => (
               <img
                 key={guild.id}
@@ -110,8 +111,9 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
         {guilds &&
           guilds
             .slice(
-              MAX_VISIBLE_GUILD_COUNT,
-              MAX_VISIBLE_GUILD_COUNT + MAX_COLLAPSED_GUILD_COUNT,
+              GUILD_MENU_MAX_VISIBLE_GUILD_COUNT,
+              GUILD_MENU_MAX_VISIBLE_GUILD_COUNT +
+                GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT,
             )
             .map((guild, key) => (
               <li
@@ -125,7 +127,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
                   alt="logo"
                 />
                 <span className="line-clamp-1">
-                  {guild.name.length <= MAX_GUILD_NAME_LENGTH
+                  {guild.name.length <= GUILD_MENU_MAX_GUILD_NAME_LENGTH
                     ? guild.name
                     : guild.smallName}
                 </span>

@@ -1,8 +1,19 @@
 import clsx from "clsx";
-import Pagination from "@/components/Common/Pagination/Pagination";
+import Pagination from "@/components/Common/Pagination";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { PropsWithChildren } from "react";
 
-export default function List<C extends React.ReactNode>({
+type ListProps = {
+  totalCount: number;
+  pageSize: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  className?: string;
+};
+
+export default function List({
   totalCount,
   pageSize,
   hasPreviousPage,
@@ -11,16 +22,7 @@ export default function List<C extends React.ReactNode>({
   setCurrentPage,
   children,
   className,
-}: {
-  totalCount: number;
-  pageSize: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-  children: C;
-  className?: string;
-}) {
+}: PropsWithChildren<ListProps>) {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -30,14 +32,6 @@ export default function List<C extends React.ReactNode>({
     navigate({ search: searchParams.toString() }, { replace: true });
     setCurrentPage(page);
   };
-
-  /*useEffect(() => {
-    const getPageParam = searchParams.get("page");
-
-    if (getPageParam) {
-      setCurrentPage(parseInt(getPageParam));
-    }
-  }, []);*/
 
   return (
     <div className={clsx("flex w-full flex-col gap-2", className)}>

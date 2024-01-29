@@ -1,29 +1,6 @@
+import { FOOTER_LINKS } from "@/constants";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-
-interface FooterLink {
-  name: string;
-  href: string;
-}
-
-const FOOTER_LINKS: FooterLink[] = [
-  {
-    name: "Team",
-    href: "/team",
-  },
-  {
-    name: "Github",
-    href: "https://github.com/GuildSaber/GuildSaber_Website",
-  },
-  {
-    name: "Api",
-    href: "/api",
-  },
-  {
-    name: "Privacy",
-    href: "/terms-of-use",
-  },
-];
 
 export default function Footer({
   className,

@@ -17,10 +17,11 @@ export function useSignin() {
       if (message != null) setError(message);
     }
 
-    if (status === 200) {
-      if (token != null) localStorage.setItem("token", token);
-      setLoading(false);
+    if (token != null) {
+      localStorage.setItem("token", token);
     }
+
+    setLoading(false);
   };
 
   return { signin, loading, error };

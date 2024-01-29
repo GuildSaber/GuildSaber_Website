@@ -7,9 +7,9 @@ import {
 } from "react-router-dom";
 import clsx from "clsx";
 import BeatSaver from "@/components/Icons/BeatSaver";
-import List from "@/components/Common/List/List";
-import Button from "@/components/Common/Button/Button";
-import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
+import List from "@/components/Common/List";
+import Button from "@/components/Common/Button";
+import ArcViewer from "@/components/Common/ArcViewer";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,19 +40,11 @@ import {
 } from "@/types/api/player";
 import { EIncludeFlags } from "@/enums/api";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/Common/Loader";
 import CollapseImage from "@/components/Common/Collapse/CollapseImage";
 import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
-
-const PAGE_SIZE = 10;
-const API_PLAYER_SCORES_DATA_INCLUDES =
-  EIncludeFlags.RankedMapVersions |
-  EIncludeFlags.Scores |
-  EIncludeFlags.Songs |
-  EIncludeFlags.GameModes |
-  EIncludeFlags.SongDifficulties |
-  EIncludeFlags.SongDifficultyStats;
+import { PLAYER_API_SCORES_DATA_INCLUDES, PLAYER_PAGE_SIZE } from "@/constants";
 
 function getDiffShort(score: PlayerScoresAPIResponse["data"][0]) {
   if (score.songDifficulty.gameMode.name === "Standard") {
@@ -163,10 +155,10 @@ export default function PlayerProfile() {
         path: "/ranked-scores",
         queryParams: {
           page: currentPage,
-          pageSize: PAGE_SIZE,
+          pageSize: PLAYER_PAGE_SIZE,
           userID: playerID,
           pointID: pointID,
-          include: API_PLAYER_SCORES_DATA_INCLUDES,
+          include: PLAYER_API_SCORES_DATA_INCLUDES,
         },
         schema: PlayerScoresAPIResponseSchema,
       }),
@@ -446,10 +438,9 @@ export default function PlayerProfile() {
                         to={`https://beatsaver.com/maps/${score.songDifficulty.song.beatSaverKey}`}
                         target="_blank"
                       >
-                        <Button
-                          className="btn btn-tritary"
-                          component={() => <BeatSaver />}
-                        ></Button>
+                        <Button className="btn-tritary">
+                          <BeatSaver />
+                        </Button>
                       </Link>
                       <Button
                         className="btn btn-tritary"

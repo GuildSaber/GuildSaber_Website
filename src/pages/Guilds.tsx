@@ -1,37 +1,22 @@
 import { useSearchParams } from "react-router-dom";
-import Card from "@/components/Guilds/GuildsCard";
+import GuildCard from "@/components/Guild/GuildCard";
 import { useEffect, useState } from "react";
-import List from "@/components/Common/List/List";
+import List from "@/components/Common/List";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/Common/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
-import SearchBar from "@/components/Common/Search/SearchBar";
-import {
-  GuildsAPIResponse,
-  GuildsAPIResponseSchema,
-} from "../../types/api/guild";
+import SearchBar from "@/components/Common/SearchBar";
+import { GuildsAPIResponse, GuildsAPIResponseSchema } from "@/types/api/guild";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "@/enums/guild";
 import { fetchAPI } from "@/utils/fetch";
 import { EIncludeFlags } from "@/enums/api";
-
-const PAGE_SIZE = 4;
-
-const FILTER_GUILD_TYPES = [
-  { value: "1", label: "Unverified" },
-  { value: "2", label: "Verified" },
-  { value: "4", label: "Featured" },
-  { value: "8", label: "Private" },
-];
-
-const FILTER_SORT_BY_VALUES = [
-  { value: "Popularity", label: "Popularity" },
-  { value: "Name", label: "Name" },
-  { value: "CreationDate", label: "Creation Date" },
-  { value: "MapCount", label: "Map Count" },
-  { value: "MemberCount", label: "Member Count" },
-];
+import {
+  GUILDS_FILTER_GUILD_TYPES,
+  GUILDS_FILTER_SORT_BY_VALUES,
+  GUILDS_PAGE_SIZE,
+} from "@/constants";
 
 type FilterType = {
   guildTypes: string[];
@@ -114,7 +99,7 @@ export default function Guilds() {
       path: "/guilds",
       queryParams: {
         page: page,
-        pageSize: PAGE_SIZE,
+        pageSize: GUILDS_PAGE_SIZE,
         ...parsefilter,
         ...(search && { search: search }),
         include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
@@ -156,7 +141,7 @@ export default function Guilds() {
         <div className="flex h-full gap-2">
           <List
             totalCount={guilds.totalCount}
-            pageSize={PAGE_SIZE}
+            pageSize={GUILDS_PAGE_SIZE}
             hasPreviousPage={guilds.hasPreviousPage}
             hasNextPage={guilds.hasNextPage}
             currentPage={currentPage}
@@ -164,9 +149,9 @@ export default function Guilds() {
           >
             <div className="flex flex-col gap-2 sm:flex-row">
               <Collapse
-                defaultvalue={FILTER_SORT_BY_VALUES[0].value}
+                defaultvalue={GUILDS_FILTER_SORT_BY_VALUES[0].value}
                 className="w-full sm:w-auto"
-                options={FILTER_SORT_BY_VALUES}
+                options={GUILDS_FILTER_SORT_BY_VALUES}
                 selectedOptions={[filter["sort-by"]]}
                 multiple={false}
                 setSelectedOptions={(value) =>
@@ -177,8 +162,8 @@ export default function Guilds() {
                 label="Guild Type"
                 className="w-full sm:w-auto"
                 multiple={true}
-                defaultvalue={FILTER_GUILD_TYPES[0].value}
-                options={FILTER_GUILD_TYPES}
+                defaultvalue={GUILDS_FILTER_GUILD_TYPES[0].value}
+                options={GUILDS_FILTER_GUILD_TYPES}
                 selectedOptions={filter.guildTypes}
                 setSelectedOptions={(value) =>
                   setFilter({ ...filter, guildTypes: value })
@@ -191,7 +176,7 @@ export default function Guilds() {
             </div>
 
             {guilds?.data.map((guild, key) => (
-              <Card
+              <GuildCard
                 key={key}
                 guildData={guild}
                 guildState={

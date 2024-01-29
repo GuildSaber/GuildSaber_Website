@@ -6,6 +6,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+type PaginationProps = {
+  onPageChange: (page: number) => void;
+  totalCount: number;
+  siblingCount?: number;
+  currentPage: number;
+  pageSize: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
 const Pagination = ({
   onPageChange,
   totalCount,
@@ -14,15 +24,7 @@ const Pagination = ({
   pageSize,
   hasPreviousPage,
   hasNextPage,
-}: {
-  onPageChange: (page: number) => void;
-  totalCount: number;
-  siblingCount?: number;
-  currentPage: number;
-  pageSize: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
-}) => {
+}: PaginationProps) => {
   const paginationRange = usePagination({
     currentPage,
     totalCount,

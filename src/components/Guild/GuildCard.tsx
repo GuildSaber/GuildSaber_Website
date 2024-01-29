@@ -1,28 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import Button from "../Common/Button/Button";
+import Button from "../Common/Button";
 import clsx from "clsx";
-import { EJoinState } from "@/enums/guild";
 import { GuildAPIResponse } from "@/types/api/guild";
+import { GUILD_CARD_STATES } from "@/constants";
 
-const GUILD_STATES: { [key: string]: string } = {
-  [EJoinState.None]: "None",
-  [EJoinState.Requested]: "Requested",
-  [EJoinState.Joined]: "Joined",
-  [EJoinState.Refused]: "Refused",
-  [EJoinState.Banned]: "Banned",
-};
-
-export default function Card({
-  guildData,
-  guildState,
-  onJoin,
-}: {
+type GuildCardProps = {
   guildData: GuildAPIResponse;
   guildState: number | undefined;
   onJoin: () => void;
-}) {
+};
+
+export default function GuildCard({
+  guildData,
+  guildState,
+  onJoin,
+}: GuildCardProps) {
   const { id, name, description, memberCount, rankedMapCount } = guildData;
 
   return (
@@ -67,7 +61,7 @@ export default function Card({
             className={clsx("btn-primary md:mx-auto md:mr-8", {
               "btn-tritary pointer-events-none": guildState,
             })}
-            text={(guildState && GUILD_STATES[guildState]) || "Join"}
+            text={(guildState && GUILD_CARD_STATES[guildState]) || "Join"}
             onClick={() => !guildState && onJoin()}
           />
         </div>

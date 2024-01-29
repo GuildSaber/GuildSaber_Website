@@ -1,7 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import GuildHeader from "@/components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/Common/Loader/Loader";
+import Loader from "@/components/Common/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
 import {
   GuildAPIResponse,
@@ -10,11 +10,10 @@ import {
   GuildMapsAPIResponseSchema,
 } from "@/types/api/guild";
 import MapHeader from "@/components/Map/MapHeader";
-import SearchBar from "@/components/Common/Search/SearchBar";
+import SearchBar from "@/components/Common/SearchBar";
 import { Key, useEffect, useState } from "react";
-import List from "@/components/Common/List/List";
-import { EIncludeFlags } from "@/enums/api";
-import ArcViewer from "@/components/Common/ArcViewer/ArcViewer";
+import List from "@/components/Common/List";
+import ArcViewer from "@/components/Common/ArcViewer";
 import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
 import {
   faCheck,
@@ -27,25 +26,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
-
-const FILTER_SORT_BY_VALUES = [
-  { value: "Difficulty", label: "Difficulty" },
-  { value: "Time", label: "RankTime" },
-  { value: "EditTime", label: "EditTime" },
-  { value: "Accuracy", label: "MinAccuracy" },
-];
-const PAGE_SIZE = 8;
-
-const API_GUILD_DATA_INCLUDES =
-  EIncludeFlags.Categories | EIncludeFlags.Members | EIncludeFlags.RankedMaps;
-
-const API_MAPS_DATA_INCLUDES =
-  EIncludeFlags.RankedMapVersions |
-  EIncludeFlags.SongDifficulties |
-  EIncludeFlags.Songs |
-  EIncludeFlags.GameModes |
-  EIncludeFlags.SongDifficultyStats |
-  EIncludeFlags.RankedScores;
+import {
+  GUILDS_FILTER_SORT_BY_VALUES,
+  GUILD_API_DATA_INCLUDES,
+  GUILD_API_MAPS_DATA_INCLUDES,
+  GUILD_PAGE_SIZE,
+} from "@/constants";
+import Button from "@/components/Common/Button";
 
 type FilterType = {
   "sort-by": string;
@@ -127,7 +114,7 @@ export default function Guild() {
     fetchAPI<GuildAPIResponse>({
       path: `/guild/by-id/${guildID}`,
       queryParams: {
-        include: API_GUILD_DATA_INCLUDES,
+        include: GUILD_API_DATA_INCLUDES,
       },
       schema: GuildAPIResponseSchema,
     });
@@ -151,8 +138,8 @@ export default function Guild() {
       path: `/ranked-maps/${guildID}`,
       queryParams: {
         page: currentPage,
-        pageSize: PAGE_SIZE,
-        include: API_MAPS_DATA_INCLUDES,
+        pageSize: GUILD_PAGE_SIZE,
+        include: GUILD_API_MAPS_DATA_INCLUDES,
         ...(search && { search: search }),
         ...parsefilter,
         anyMatch: categories.anyMatch,
@@ -216,11 +203,11 @@ export default function Guild() {
           </h3>
         </div>
 
-        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-8">
+        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-8 md:justify-start">
           {guild.categories?.map((category) => (
-            <button
+            <Button
               key={category.id}
-              className={`btn md:text-h6 ${
+              className={`md:text-h6 ${
                 categories.selected.find((cat) => cat.id === category.id)
                   ? "btn-primary"
                   : "btn-tritary"
@@ -228,7 +215,7 @@ export default function Guild() {
               onClick={() => updateCategories(category)}
             >
               {category.name}
-            </button>
+            </Button>
           ))}
 
           <div className="flex items-center gap-2">
@@ -257,9 +244,9 @@ export default function Guild() {
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <Collapse
-            defaultvalue={FILTER_SORT_BY_VALUES[0].value}
+            defaultvalue={GUILDS_FILTER_SORT_BY_VALUES[0].value}
             className="w-full sm:w-auto"
-            options={FILTER_SORT_BY_VALUES}
+            options={GUILDS_FILTER_SORT_BY_VALUES}
             selectedOptions={[filter["sort-by"]]}
             multiple={false}
             setSelectedOptions={(value) =>
@@ -314,7 +301,7 @@ export default function Guild() {
         {maps && !isMapsLoading && !isMapsError && (
           <List
             totalCount={maps.totalCount}
-            pageSize={PAGE_SIZE}
+            pageSize={GUILD_PAGE_SIZE}
             hasPreviousPage={maps.hasPreviousPage}
             hasNextPage={maps.hasNextPage}
             currentPage={currentPage}

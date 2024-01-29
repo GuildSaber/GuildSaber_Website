@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 export const DOTS = "...";
 
 const range = (start: number, end: number) => {
@@ -18,49 +16,42 @@ export const usePagination = ({
   siblingCount?: number;
   currentPage: number;
 }) => {
-  const paginationRange = useMemo(() => {
-    const totalPageCount = Math.ceil(totalCount / pageSize);
-    const totalPageNumbers = siblingCount + 5;
+  const totalPageCount = Math.ceil(totalCount / pageSize);
+  const totalPageNumbers = siblingCount + 5;
 
-    if (totalPageNumbers >= totalPageCount) {
-      return range(1, totalPageCount);
-    }
+  if (totalPageNumbers >= totalPageCount) {
+    return range(1, totalPageCount);
+  }
 
-    const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
-    const rightSiblingIndex = Math.min(
-      currentPage + siblingCount,
-      totalPageCount,
-    );
+  const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+  const rightSiblingIndex = Math.min(
+    currentPage + siblingCount,
+    totalPageCount,
+  );
 
-    const shouldShowLeftDots = leftSiblingIndex > 2;
-    const shouldShowRightDots = rightSiblingIndex < totalPageCount - 2;
+  const shouldShowLeftDots = leftSiblingIndex > 2;
+  const shouldShowRightDots = rightSiblingIndex < totalPageCount - 2;
 
-    const firstPageIndex = 1;
-    const lastPageIndex = totalPageCount;
+  const firstPageIndex = 1;
+  const lastPageIndex = totalPageCount;
 
-    if (!shouldShowLeftDots && shouldShowRightDots) {
-      let leftItemCount = 3 + 2 * siblingCount;
-      let leftRange = range(1, leftItemCount);
+  if (!shouldShowLeftDots && shouldShowRightDots) {
+    let leftItemCount = 3 + 2 * siblingCount;
+    let leftRange = range(1, leftItemCount);
 
-      return [...leftRange, DOTS, totalPageCount];
-    }
+    return [...leftRange, DOTS, totalPageCount];
+  }
 
-    if (shouldShowLeftDots && !shouldShowRightDots) {
-      let rightItemCount = 3 + 2 * siblingCount;
-      let rightRange = range(
-        totalPageCount - rightItemCount + 1,
-        totalPageCount,
-      );
-      return [firstPageIndex, DOTS, ...rightRange];
-    }
+  if (shouldShowLeftDots && !shouldShowRightDots) {
+    let rightItemCount = 3 + 2 * siblingCount;
+    let rightRange = range(totalPageCount - rightItemCount + 1, totalPageCount);
+    return [firstPageIndex, DOTS, ...rightRange];
+  }
 
-    if (shouldShowLeftDots && shouldShowRightDots) {
-      let middleRange = range(leftSiblingIndex, rightSiblingIndex);
-      return [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
-    }
+  if (shouldShowLeftDots && shouldShowRightDots) {
+    let middleRange = range(leftSiblingIndex, rightSiblingIndex);
+    return [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
+  }
 
-    return [];
-  }, [totalCount, pageSize, siblingCount, currentPage]);
-
-  return paginationRange;
+  return [totalCount, pageSize, siblingCount, currentPage];
 };
