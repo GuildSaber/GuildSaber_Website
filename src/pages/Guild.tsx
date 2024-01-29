@@ -3,12 +3,6 @@ import GuildHeader from "@/components/Guild/GuildHeader";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
-import {
-  GuildAPIResponse,
-  GuildAPIResponseSchema,
-  GuildMapAPIResponse,
-  GuildMapsAPIResponseSchema,
-} from "@/types/api/guild";
 import MapHeader from "@/components/Map/MapHeader";
 import SearchBar from "@/components/Common/SearchBar";
 import { Key, useEffect, useState } from "react";
@@ -24,15 +18,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { fetchAPI } from "@/utils/fetch";
 import useArcViewer from "@/hooks/useArcViewer";
+
 import {
   GUILDS_FILTER_SORT_BY_VALUES,
   GUILD_API_DATA_INCLUDES,
   GUILD_API_MAPS_DATA_INCLUDES,
   GUILD_PAGE_SIZE,
+  MAP_PAGE_SIZE,
 } from "@/constants";
 import Button from "@/components/Common/Button";
+import { getGuild } from "@/api/fetch/guilds";
+import { getMaps } from "@/api/fetch/rankedMaps";
 
 type FilterType = {
   "sort-by": string;
@@ -110,53 +107,14 @@ export default function Guild() {
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
 
-  const getGuild = async (guildID: string) =>
-    fetchAPI<GuildAPIResponse>({
-      path: `/guild/by-id/${guildID}`,
-      queryParams: {
-        include: GUILD_API_DATA_INCLUDES,
-      },
-      schema: GuildAPIResponseSchema,
-    });
-
-  const getMaps = async (
-    guildID: string,
-    currentPage: number,
-    filter: FilterType,
-    search: string,
-  ) => {
-    /* Still doing this for when adding more params */
-    const parsefilter = Object.fromEntries(
-      Object.entries(filter).filter(([_, v]) => v != 0),
-    );
-
-    let parseCategories = categories.selected.map((categories) => {
-      return `category-ids=${categories.id}`;
-    });
-
-    return fetchAPI<GuildMapAPIResponse>({
-      path: `/ranked-maps/${guildID}`,
-      queryParams: {
-        page: currentPage,
-        pageSize: GUILD_PAGE_SIZE,
-        include: GUILD_API_MAPS_DATA_INCLUDES,
-        ...(search && { search: search }),
-        ...parsefilter,
-        anyMatch: categories.anyMatch,
-      },
-      rawQueryParams: parseCategories.join("&"),
-      authenticated: true,
-      schema: GuildMapsAPIResponseSchema,
-    });
-  };
-
   const {
     data: guild,
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["guilds", guildID],
-    queryFn: () => getGuild(guildID),
+    queryFn: () =>
+      getGuild({ id: parseInt(guildID), include: GUILD_API_DATA_INCLUDES }),
     retry: 2,
   });
 
@@ -174,7 +132,16 @@ export default function Guild() {
       intermediateSearch,
       categories,
     ],
-    queryFn: () => getMaps(guildID, currentPage, filter, intermediateSearch),
+    queryFn: () =>
+      getMaps({
+        guildID: parseInt(guildID),
+        page: currentPage,
+        pageSize: MAP_PAGE_SIZE,
+        include: GUILD_API_MAPS_DATA_INCLUDES,
+        categories,
+        filters: filter,
+        search: intermediateSearch,
+      }),
     enabled: !!guildID,
     retry: 2,
   });
@@ -308,7 +275,7 @@ export default function Guild() {
             setCurrentPage={setCurrentPage}
             className="flex flex-col gap-4"
           >
-            {maps?.data.map((value, key: Key) => (
+            {maps?.data?.map((value, key: Key) => (
               <MapHeader key={key} mapData={value} arcViewer={arcViewer.open} />
             ))}
           </List>

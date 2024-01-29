@@ -6,17 +6,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loader from "@/components/Common/Loader";
 import Collapse from "@/components/Common/Collapse/Collapse";
 import SearchBar from "@/components/Common/SearchBar";
-import { GuildsAPIResponse, GuildsAPIResponseSchema } from "@/types/api/guild";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "react-hot-toast";
 import { EJoinState } from "@/enums/guild";
-import { fetchAPI } from "@/utils/fetch";
 import { EIncludeFlags } from "@/enums/api";
 import {
   GUILDS_FILTER_GUILD_TYPES,
   GUILDS_FILTER_SORT_BY_VALUES,
   GUILDS_PAGE_SIZE,
 } from "@/constants";
+import { getGuilds } from "@/api/fetch/guilds";
 
 type FilterType = {
   guildTypes: string[];
@@ -89,27 +88,6 @@ export default function Guilds() {
     mutation.mutate(guildID);
   };
 
-  const getGuilds = async (page = 1, filter: FilterType, search: string) => {
-    const parsefilter = {
-      ...filter,
-      guildTypes: filter.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
-    };
-
-    const res = await fetchAPI<GuildsAPIResponse>({
-      path: "/guilds",
-      queryParams: {
-        page: page,
-        pageSize: GUILDS_PAGE_SIZE,
-        ...parsefilter,
-        ...(search && { search: search }),
-        include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
-      },
-      schema: GuildsAPIResponseSchema,
-    });
-
-    return res;
-  };
-
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setIntermediateSearch(search);
@@ -124,7 +102,14 @@ export default function Guilds() {
     isError,
   } = useQuery({
     queryKey: ["guilds", currentPage, filter, intermediateSearch],
-    queryFn: () => getGuilds(currentPage, filter, intermediateSearch),
+    queryFn: () =>
+      getGuilds({
+        page: currentPage,
+        pageSize: GUILDS_PAGE_SIZE,
+        include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
+        search: intermediateSearch,
+        filters: filter,
+      }),
   });
 
   if (isLoading) {

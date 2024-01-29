@@ -3,11 +3,11 @@ import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Button from "../Common/Button";
 import clsx from "clsx";
-import { GuildAPIResponse } from "@/types/api/guild";
 import { GUILD_CARD_STATES } from "@/constants";
+import { Guild } from "@/types/api/models/guild";
 
 type GuildCardProps = {
-  guildData: GuildAPIResponse;
+  guildData: Guild;
   guildState: number | undefined;
   onJoin: () => void;
 };

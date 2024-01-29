@@ -3,14 +3,10 @@ import Button from "@/components/Common/Button";
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
-import { GuildAPIResponse } from "@/types/api/guild";
 import { Link } from "react-router-dom";
+import { Guild } from "@/types/api/models/guild";
 
-export default function GuildHeader({
-  guildData,
-}: {
-  guildData: GuildAPIResponse;
-}) {
+export default function GuildHeader({ guildData }: { guildData: Guild }) {
   return (
     <div className="relative mb-8 overflow-hidden rounded bg-gray-800 p-8 text-center md:text-left">
       <object

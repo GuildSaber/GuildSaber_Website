@@ -5,8 +5,6 @@ import List from "@/components/Common/List";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  MapAPIResponse,
-  MapAPIResponseSchema,
   MapLeaderboardAPIResponse,
   MapLeaderboardAPIResponseSchema,
 } from "@/types/api/map";
@@ -26,6 +24,11 @@ import {
 } from "@/constants";
 import Button from "@/components/Common/Button";
 
+import {
+  RankedMapResponseSchema,
+  RankedMapResponse,
+} from "@/types/api/responses/rankedMapApiStruct";
+
 export default function Map() {
   const { mapID } = useParams();
   const { session } = useAuthContext();
@@ -40,13 +43,13 @@ export default function Map() {
   const [pointID, setPointID] = useState(0);
 
   const getMap = async () =>
-    fetchAPI<MapAPIResponse>({
+    fetchAPI<RankedMapResponse>({
       path: `/ranked-map/by-id/${mapID}`,
       queryParams: {
         include: MAP_API_DATA_INCLUDES,
       },
       authenticated: true,
-      schema: MapAPIResponseSchema,
+      schema: RankedMapResponseSchema,
     });
 
   const getMapLeaderboard = async (page: number) =>
@@ -197,8 +200,8 @@ export default function Map() {
                     <p>
                       {formatAccuracy(
                         data.rankedScore.score.baseScore,
-                        map.rankedMap.rankedMapVersions[0].songDifficulty
-                          .songDifficultyStats.maxScore,
+                        map.rankedMap.rankedMapVersions[0]?.songDifficulty
+                          ?.songDifficultyStats?.maxScore || 0,
                       )}
                     </p>
                     <p className="hidden md:block">

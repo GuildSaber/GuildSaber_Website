@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { ArcViewe0SettingsrProps } from "@/hooks/useArcViewer";
+import { ArcViewerSettingsProps } from "@/hooks/useArcViewer";
 import useClickAway from "@/hooks/useClickAway";
 import { formatDifficulty } from "@/utils/format";
 
 type ArcViewerProps = {
   isOpen: boolean;
-  data: ArcViewe0SettingsrProps;
-  open: (settings: ArcViewe0SettingsrProps) => void;
+  data: ArcViewerSettingsProps;
+  open: (settings: ArcViewerSettingsProps) => void;
   close: () => void;
 };
 
