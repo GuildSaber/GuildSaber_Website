@@ -12,8 +12,10 @@ import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSli
 import {
   faCheck,
   faCircleExclamation,
+  faCubes,
   faDrum,
   faHourglassStart,
+  faLayerGroup,
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -153,7 +155,7 @@ export default function Guild() {
   if (isError || guild == null) {
     return (
       <div className="text-center">
-        <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
+        <FontAwesomeIcon icon={faCircleExclamation} className="text-h1" />
         <h3 className="text-h3">Guild not found</h3>
       </div>
     );
@@ -163,14 +165,13 @@ export default function Guild() {
     <div className="mx-auto max-w-screen-lg">
       <GuildHeader guildData={guild} />
 
-      <div className="flow-content-2 md:flow-content-4">
-        <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
-          <h3 className="text-center text-h4 font-bold md:text-left">
-            Categories
-          </h3>
-        </div>
+      <div className="flex flex-col items-center md:mb-2 md:block">
+        <h3 className="my-4 flex items-center gap-3 text-center text-h6 font-bold md:text-left md:text-h4">
+          <FontAwesomeIcon icon={faCubes} className="h-5" />
+          Categories
+        </h3>
 
-        <div className="mb-8 flex w-full flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-8 md:justify-start">
+        <div className="inline-flex w-auto flex-wrap items-center justify-center gap-3 overflow-hidden rounded bg-gray-800 p-2 md:justify-start">
           {guild.categories?.map((category) => (
             <Button
               key={category.id}
@@ -185,7 +186,7 @@ export default function Guild() {
             </Button>
           ))}
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-1">
             <div
               className={clsx(
                 "flex aspect-square h-6 cursor-pointer items-center justify-center rounded-sm bg-gray-900",
@@ -205,7 +206,8 @@ export default function Guild() {
       </div>
 
       <div className="flow-content-2 md:flow-content-4">
-        <h3 className="text-center text-h4 font-bold md:text-left">
+        <h3 className="my-4 flex items-center justify-center gap-3 text-center text-h6 font-bold md:justify-start md:text-left md:text-h4">
+          <FontAwesomeIcon icon={faLayerGroup} className="h-5" />
           Ranked Maps
         </h3>
 

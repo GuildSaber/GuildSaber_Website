@@ -8,7 +8,7 @@ import { Guild } from "@/types/api/models/guild";
 
 export default function GuildHeader({ guildData }: { guildData: Guild }) {
   return (
-    <div className="relative mb-8 overflow-hidden rounded bg-gray-800 p-8 text-center md:text-left">
+    <div className="relative mb-2 overflow-hidden rounded bg-gray-800 p-8 text-center md:mb-8 md:text-left">
       <object
         className="absolute left-0 top-0 mb-4 h-32 w-full object-cover"
         data={`https://cdn.guildsaber.com/Guild/${guildData.id}/Banner.jpg`}

@@ -48,9 +48,9 @@ export const getMaps = async ({
       include: include,
       ...(search && { search: search }),
       ...(!!filters && cleanNullFilter),
-      categories: parseCategories.join("&"),
       anyMatch: categories.anyMatch,
     },
+    rawQueryParams: parseCategories.join("&"),
     authenticated: true,
     schema: PagedListSchema(RankedMapResponseSchema),
   });
