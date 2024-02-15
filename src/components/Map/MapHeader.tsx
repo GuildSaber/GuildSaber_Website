@@ -45,18 +45,16 @@ export default function MapHeader({
       <div className="group relative flex w-full flex-col gap-2 overflow-hidden rounded bg-gray-800 md:flex-row md:p-8 md:pr-[14rem]">
         <div
           className={clsx(
-            "block h-24 w-full overflow-hidden border-b-8 border-primary md:absolute md:right-0 md:top-0 md:h-[340px] md:w-[340px] md:-translate-y-[75px] md:translate-x-[150px] md:rotate-[20deg] md:transform md:overflow-hidden md:border-8 md:border-transparent md:outline md:outline-8",
+            "relative block h-64 w-full overflow-hidden border-b-8 border-primary md:absolute md:right-0 md:top-0 md:h-[340px] md:w-[340px] md:-translate-y-[75px] md:translate-x-[150px] md:rotate-[20deg] md:transform md:overflow-hidden md:border-8 md:border-transparent md:outline md:outline-8",
             "outline-" + formatDifficulty[levelDifficulty],
             "lg:translate-x-[150px]",
           )}
         >
           <img
-            className="h-24 w-full object-cover transition-[filter,transform] md:h-[340px] md:w-[340px] md:translate-x-[-80px] md:transform"
+            className="h-full w-full object-cover transition-[filter,transform] md:h-[340px] md:w-[340px] md:translate-x-[-80px] md:transform"
             src={song.coverURL}
           />
-        </div>
-        <div className="flex w-full flex-col items-center justify-between gap-4 p-8 text-center md:flex-row md:items-start md:p-0 md:text-start">
-          <div>
+          <div className="absolute bottom-0 flex w-full flex-col items-center bg-gray-700/50 p-2 text-center md:hidden">
             <Link to={`/map/${mapData.rankedMap.id}`}>
               <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
                 {song.songName}
@@ -66,7 +64,21 @@ export default function MapHeader({
               by {song.songAuthorName} [{song.mapperName}]
             </p>
 
-            <p className="line-clamp-2">{description}</p>
+            <p className="line-clamp-1">{description}</p>
+          </div>
+        </div>
+        <div className="flex w-full flex-col items-center justify-between gap-4 p-8 text-center md:flex-row md:items-start md:p-0 md:text-start">
+          <div className="hidden md:block">
+            <Link to={`/map/${mapData.rankedMap.id}`}>
+              <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
+                {song.songName}
+              </h3>
+            </Link>
+            <p className="mb-2 text-p font-normal text-secondary">
+              by {song.songAuthorName} [{song.mapperName}]
+            </p>
+
+            <p className="line-clamp-1">{description}</p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2 text-right md:items-end">
