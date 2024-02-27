@@ -1,21 +1,23 @@
-import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useSignin } from "@/hooks/useSignin";
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import BeatLeader from "@/components/Icons/BeatLeader";
 import SigninProvider from "@/components/Signin/SigninProvider";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import BeatLeader from "@/components/Icons/BeatLeader";
+import { useSignin } from "@/hooks/useSignin";
+import { faDiscord } from "@fortawesome/free-brands-svg-icons";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Signin() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { signin, error } = useSignin();
   const { session } = useAuthContext();
   const navigate = useNavigate();
+  const token = searchParams.get("token");
+  const statusCode = searchParams.get("status");
+  const message = searchParams.get("message");
 
   useEffect(() => {
-    const token = searchParams.get("token");
-    const statusCode = searchParams.get("status");
-    const message = searchParams.get("message");
     if (!statusCode || !token) {
       if (session) navigate("/");
       return;
@@ -46,7 +48,12 @@ export default function Signin() {
             token={session?.token}
           />
         </div>
-        <p>{error}</p>
+        {(error || message) && (
+          <p className="font-bold text-error">
+            <FontAwesomeIcon icon={faXmarkCircle} className="mr-1" />
+            {error || message}
+          </p>
+        )}
       </div>
     </>
   );

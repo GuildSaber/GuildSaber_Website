@@ -1,3 +1,8 @@
+import {
+  faCheckCircle,
+  faLock,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { EIncludeFlags } from "./enums/api";
 import { EJoinState } from "./enums/guild";
 
@@ -29,10 +34,10 @@ export const GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT = 5;
 
 export const GUILDS_PAGE_SIZE = 4;
 export const GUILDS_FILTER_GUILD_TYPES = [
-  { value: "1", label: "Unverified" },
-  { value: "2", label: "Verified" },
-  { value: "4", label: "Featured" },
-  { value: "8", label: "Private" },
+  { value: "1", label: "Unverified", icon: null },
+  { value: "2", label: "Verified", icon: faCheckCircle },
+  { value: "4", label: "Featured", icon: faStar },
+  { value: "8", label: "Private", icon: faLock },
 ];
 
 export const GUILDS_FILTER_SORT_BY_VALUES = [

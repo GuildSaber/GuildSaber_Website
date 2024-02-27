@@ -1,6 +1,12 @@
 import Button from "@/components/Common/Button";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BeatSaver from "@/components/Icons/BeatSaver";
+import Bpm from "@/components/Icons/Bpm";
+import Sparkles from "@/components/Icons/Sparkles";
+import { ArcViewerSettingsProps } from "@/hooks/useArcViewer";
+import { RankedMapResponse } from "@/types/api/responses/rankedMapApiStruct";
+import { formatDifficulty, formatMinSec } from "@/utils/format";
+import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import {
   faCloudArrowDown,
   faHourglassStart,
@@ -8,23 +14,16 @@ import {
   faSkull,
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
-import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import Sparkles from "@/components/Icons/Sparkles";
-import BeatSaver from "@/components/Icons/BeatSaver";
-import Bpm from "@/components/Icons/Bpm";
-import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { formatDifficulty, formatMinSec } from "@/utils/format";
-import { RankedMapResponse } from "@/types/api/responses/rankedMapApiStruct";
-import { ArcViewerSettingsProps } from "@/hooks/useArcViewer";
+import { Link } from "react-router-dom";
 
-export default function MapHeader({
-  mapData,
-  arcViewer,
-}: {
+type MapHeaderProps = {
   mapData: RankedMapResponse;
   arcViewer: (arg0: ArcViewerSettingsProps) => void;
-}) {
+};
+
+export default function MapHeader({ mapData, arcViewer }: MapHeaderProps) {
   const {
     song,
     songDifficultyStats: difficulty,
@@ -38,7 +37,6 @@ export default function MapHeader({
 
   const rating = mapData.rankedMap.rating.default.stars;
   const songDuration = formatMinSec(song.duration);
-  const description = "A map of the best place to play";
 
   return (
     <>
@@ -63,8 +61,6 @@ export default function MapHeader({
             <p className="mb-2 text-p font-normal text-secondary">
               by {song.songAuthorName} [{song.mapperName}]
             </p>
-
-            <p className="line-clamp-1">{description}</p>
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-4 p-8 text-center md:flex-row md:items-start md:p-0 md:text-start">
@@ -77,8 +73,6 @@ export default function MapHeader({
             <p className="mb-2 text-p font-normal text-secondary">
               by {song.songAuthorName} [{song.mapperName}]
             </p>
-
-            <p className="line-clamp-1">{description}</p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2 text-right md:items-end">

@@ -1,14 +1,15 @@
+import { GUILDS_FILTER_GUILD_TYPES, GUILD_CARD_STATES } from "@/constants";
+import { Guild } from "@/types/api/models/guild";
+import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import clsx from "clsx";
 import { Link } from "react-router-dom";
 import Button from "../Common/Button";
-import clsx from "clsx";
-import { GUILD_CARD_STATES } from "@/constants";
-import { Guild } from "@/types/api/models/guild";
 
 type GuildCardProps = {
   guildData: Guild;
   guildState: number | undefined;
+  guildType?: number;
   onJoin: () => void;
 };
 
@@ -18,6 +19,9 @@ export default function GuildCard({
   onJoin,
 }: GuildCardProps) {
   const { id, name, description, memberCount, rankedMapCount } = guildData;
+  const guildType = GUILDS_FILTER_GUILD_TYPES.find(
+    (g) => parseInt(g.value, 10) === guildData.type && guildData.type !== 1,
+  );
 
   return (
     <div className="group relative flex w-full flex-col gap-2 overflow-hidden rounded bg-gray-800 md:flex-row md:pr-48">
@@ -30,10 +34,28 @@ export default function GuildCard({
 
       <div className="flex w-full flex-col items-center justify-between gap-4 p-4 text-center md:flex-row md:items-start md:p-8 md:text-start">
         <div className="w-full">
-          <Link to={`/guild/${id}`}>
-            <h3 className="mb-2 text-h4 font-bold hover:underline">{name}</h3>
-          </Link>
+          <h3 className="mb-2 flex items-center justify-center gap-4 text-h4 font-bold md:justify-start">
+            <Link
+              className="line-clamp-2 hover:underline"
+              title={name}
+              to={`/guild/${id}`}
+            >
+              {name}
+            </Link>
+            {guildType && (
+              <p className="badge hidden items-center md:flex">
+                {guildType.icon && <FontAwesomeIcon icon={guildType.icon} />}
+                {guildType.label}
+              </p>
+            )}
+          </h3>
           <div className="flex !justify-center gap-2 md:hidden">
+            {guildType && (
+              <span className="badge md:hidden">
+                {guildType.icon && <FontAwesomeIcon icon={guildType.icon} />}
+                {guildType.label}
+              </span>
+            )}
             <span className="badge">
               {memberCount}
               <FontAwesomeIcon icon={faUser} />
@@ -43,7 +65,7 @@ export default function GuildCard({
               <FontAwesomeIcon icon={faLayerGroup} />
             </span>
           </div>
-          <p className="line-clamp-3 text-muted">{description}</p>
+          <p className="line-clamp-2 text-muted">{description}</p>
         </div>
 
         <div className="flex items-center justify-center gap-2 text-right md:flex-col md:items-end">

@@ -1,10 +1,10 @@
-import clsx from "clsx";
-import { usePagination, DOTS } from "@/hooks/usePagination";
+import { DOTS, usePagination } from "@/hooks/usePagination";
 import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 
 type PaginationProps = {
   onPageChange: (page: number) => void;
@@ -45,59 +45,62 @@ const Pagination = ({
   };
 
   return (
-    <ul className="flex-center select-none gap-2 p-0">
-      <li
-        className={clsx(
-          "btn mr-auto bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",
-          {
-            "!bg-transparant pointer-events-none opacity-20": !hasPreviousPage,
-          },
-        )}
-        onClick={onPrevious}
-      >
-        <span>
-          <FontAwesomeIcon icon={faChevronLeft} size="sm" />
-        </span>
-      </li>
-      {paginationRange.map((pageNumber, key) => {
-        if (pageNumber === DOTS) {
+    <div className="sticky bottom-2 flex justify-center">
+      <ul className="flex-center flex select-none gap-2 rounded-lg bg-gray-900 p-2">
+        <li
+          className={clsx(
+            "btn bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",
+            {
+              "!bg-transparant pointer-events-none opacity-20":
+                !hasPreviousPage,
+            },
+          )}
+          onClick={onPrevious}
+        >
+          <span>
+            <FontAwesomeIcon icon={faChevronLeft} size="sm" />
+          </span>
+        </li>
+        {paginationRange.map((pageNumber, key) => {
+          if (pageNumber === DOTS) {
+            return (
+              <li key={key} className="flex-center px-1">
+                &#8230;
+              </li>
+            );
+          }
+
           return (
-            <li key={key} className="flex-center px-1">
-              &#8230;
+            <li
+              key={key}
+              className={clsx(
+                "flex-center btn bg-gray-700/50 px-4 py-1.5 hover:opacity-80",
+                {
+                  "!bg-primary": pageNumber === currentPage,
+                  "hover:bg-gray-700/30": pageNumber !== currentPage,
+                },
+              )}
+              onClick={() => onPageChange(+pageNumber)}
+            >
+              {pageNumber}
             </li>
           );
-        }
-
-        return (
-          <li
-            key={key}
-            className={clsx(
-              "flex-center btn bg-gray-700/50 px-4 py-1.5 hover:opacity-80",
-              {
-                "!bg-primary": pageNumber === currentPage,
-                "hover:bg-gray-700/30": pageNumber !== currentPage,
-              },
-            )}
-            onClick={() => onPageChange(+pageNumber)}
-          >
-            {pageNumber}
-          </li>
-        );
-      })}
-      <li
-        className={clsx(
-          "btn ml-auto bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",
-          {
-            "!bg-transparant pointer-events-none opacity-20": !hasNextPage,
-          },
-        )}
-        onClick={onNext}
-      >
-        <span>
-          <FontAwesomeIcon icon={faChevronRight} size="sm" />
-        </span>
-      </li>
-    </ul>
+        })}
+        <li
+          className={clsx(
+            "btn bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",
+            {
+              "!bg-transparant pointer-events-none opacity-20": !hasNextPage,
+            },
+          )}
+          onClick={onNext}
+        >
+          <span>
+            <FontAwesomeIcon icon={faChevronRight} size="sm" />
+          </span>
+        </li>
+      </ul>
+    </div>
   );
 };
 
