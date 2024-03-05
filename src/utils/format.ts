@@ -31,11 +31,22 @@ export function formatMinSec(seconds: number) {
   );
 }
 
-export function formatAccuracy(baseScore: number, maxScore: number) {
+export function formatAccuracy(
+  baseScore: number | undefined,
+  maxScore: number | undefined,
+) {
+  if (!baseScore || !maxScore) {
+    return "N/A";
+  }
+
   return ((baseScore / maxScore) * 100).toFixed(2) + "%";
 }
 
-export function formatHMD(hmd: number): string {
+export function formatHMD(hmd: number | undefined): string {
+  if (!hmd) {
+    return "Unknown";
+  }
+
   return (
     {
       1: "Rift CV1",

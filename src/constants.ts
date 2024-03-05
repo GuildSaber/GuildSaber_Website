@@ -51,9 +51,9 @@ export const GUILDS_FILTER_SORT_BY_VALUES = [
 export const GUILD_PAGE_SIZE = 8;
 export const GUILD_FILTER_SORT_BY_VALUES = [
   { value: "Difficulty", label: "Difficulty" },
-  { value: "Time", label: "RankTime" },
-  { value: "EditTime", label: "EditTime" },
-  { value: "Accuracy", label: "MinAccuracy" },
+  { value: "Time", label: "Time" },
+  { value: "EditTime", label: "Edit Time" },
+  { value: "Accuracy", label: "Accuracy" },
 ];
 
 export const GUILD_API_DATA_INCLUDES =

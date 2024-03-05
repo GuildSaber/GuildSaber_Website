@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { EModifiers } from "@/enums/api/models/modifiers";
-import { EHMD } from "@/enums/api/models/hmd";
 import { EController } from "@/enums/api/models/controller";
+import { EHMD } from "@/enums/api/models/hmd";
+import { EModifiers } from "@/enums/api/models/modifiers";
+import { z } from "zod";
 import {
-  HitTrackerSchema,
-  WinTrackerSchema,
   AccuracyTrackerSchema,
+  HitTrackerSchema,
   ScoreGraphTrackerSchema,
+  WinTrackerSchema,
 } from "./trackers";
 
 export const ScoreSchema = z.object({
@@ -16,7 +16,7 @@ export const ScoreSchema = z.object({
   baseScore: z.number(),
   modifiers: z.nativeEnum(EModifiers),
   unixTimeSet: z.number(),
-  bL_ScoreID: z.optional(z.number()),
+  bL_ScoreID: z.number().nullable(),
   maxCombo: z.number(),
   fullCombo: z.boolean(),
   missedNotes: z.number(),
@@ -24,10 +24,10 @@ export const ScoreSchema = z.object({
   hmd: z.nativeEnum(EHMD),
   controller: z.nativeEnum(EController),
   hasTrackers: z.boolean(),
-  hitTracker: z.optional(HitTrackerSchema),
-  winTracker: z.optional(WinTrackerSchema),
-  accuracyTracker: z.optional(AccuracyTrackerSchema),
-  graphTracker: z.optional(ScoreGraphTrackerSchema),
+  hitTracker: z.optional(HitTrackerSchema).nullable(),
+  winTracker: z.optional(WinTrackerSchema).nullable(),
+  accuracyTracker: z.optional(AccuracyTrackerSchema).nullable(),
+  graphTracker: z.optional(ScoreGraphTrackerSchema).nullable(),
 });
 
 export type Score = z.infer<typeof ScoreSchema>;

@@ -1,11 +1,10 @@
-import { z } from "zod";
-import { EState } from "@/enums/api/models/state";
-import { PointSchema } from "./point";
-import { SongDifficultySchema } from "./songTypes";
-import { ScoreSchema } from "./score";
-import { RankedMapVersionSchema } from "./songTypes";
 import { ECustomModifierRating as ECustomModRatingFlag } from "@/enums/api/models//customModifierRating";
 import { ERankingState } from "@/enums/api/models//rankingState";
+import { EState } from "@/enums/api/models/state";
+import { z } from "zod";
+import { PointSchema } from "./point";
+import { ScoreSchema } from "./score";
+import { RankedMapVersionSchema, SongDifficultySchema } from "./songTypes";
 
 export const StarsSchema = z.object({
   difficulty: z.number().nullable(),
@@ -51,13 +50,9 @@ export type RankedMap = z.infer<typeof RankedMapSchema>;
 
 export const RankedScoreBaseSchema = z.object({
   id: z.number(),
-  scoreID: z.number(),
   prevScoreID: z.optional(z.number()),
-  rankedMapID: z.number(),
   pointID: z.number(),
   playerID: z.number(),
-  songDifficultyID: z.number(),
-  guildID: z.number(),
   point: z.optional(PointSchema),
   state: z.nativeEnum(EState),
   effectiveScore: z.number(),

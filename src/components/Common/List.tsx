@@ -1,6 +1,5 @@
-import clsx from "clsx";
 import Pagination from "@/components/Common/Pagination";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import clsx from "clsx";
 import { PropsWithChildren } from "react";
 
 type ListProps = {
@@ -23,13 +22,7 @@ export default function List({
   children,
   className,
 }: PropsWithChildren<ListProps>) {
-  const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-
   const onPageChangeHandler = (page: number) => {
-    searchParams.set("page", page.toString());
-    navigate({ search: searchParams.toString() }, { replace: true });
     setCurrentPage(page);
   };
 

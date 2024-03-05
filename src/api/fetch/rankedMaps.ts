@@ -1,11 +1,14 @@
 import { EIncludeFlags } from "@/enums/api/fetch/include";
 import {
-  RankedMapResponseSchema,
-  RankedMapResponse,
-} from "@/types/api/responses/rankedMapApiStruct";
+  RankedMapLeaderboardApiStruct,
+  RankedMapLeaderboardApiStructSchema,
+} from "@/types/api/responses/leaderboard/rankedMapLeaderboardApiStruct";
 import { PagedList, PagedListSchema } from "@/types/api/responses/pagedList";
+import {
+  RankedMapResponse,
+  RankedMapResponseSchema,
+} from "@/types/api/responses/rankedMapApiStruct";
 import { fetchAPI } from "@/utils/fetch";
-import { RankedMap, RankedMapSchema } from "@/types/api/models/rankedTypes";
 
 type getMapsType = {
   guildID: number;
@@ -19,6 +22,14 @@ type getMapsType = {
     selected: { name: string; id: number }[];
   };
   anyMatch?: boolean;
+};
+
+type getMapsLeaderboardType = {
+  id: number | string;
+  pointID: number;
+  page: number;
+  pageSize: number;
+  include?: EIncludeFlags;
 };
 
 export const getMaps = async ({
@@ -57,11 +68,29 @@ export const getMaps = async ({
 };
 
 export const getMap = async (id: number, include: EIncludeFlags) =>
-  fetchAPI<RankedMap>({
+  fetchAPI<RankedMapResponse>({
     path: `/ranked-map/by-id/${id}`,
     queryParams: {
       include: include,
     },
     authenticated: true,
-    schema: RankedMapSchema,
+    schema: RankedMapResponseSchema,
+  });
+
+export const getMapLeaderboard = async ({
+  id,
+  pointID,
+  page,
+  pageSize,
+  include,
+}: getMapsLeaderboardType) =>
+  fetchAPI<PagedList<RankedMapLeaderboardApiStruct>>({
+    path: `/leaderboard/ranked-map/${id}`,
+    queryParams: {
+      page: page,
+      pageSize: pageSize,
+      include: include,
+      pointID: pointID,
+    },
+    schema: PagedListSchema(RankedMapLeaderboardApiStructSchema),
   });

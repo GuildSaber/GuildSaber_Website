@@ -1,18 +1,18 @@
-import { useRef, useState } from "react";
-import clsx from "clsx";
 import useClickAway from "@/hooks/useClickAway";
+import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,
   faChevronUp,
   faSquareCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import { useRef, useState } from "react";
 
 type CollapseProps = {
   label?: string;
   image?: string;
-  defaultvalue: string;
+  defaultvalue?: string;
   options: { value: string; label: string }[];
   multiple: boolean;
   selectedOptions: string[];
@@ -32,7 +32,9 @@ export default function Collapse({
   ...otherProps
 }: CollapseProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [displayLabel, setDisplayLabel] = useState(defaultvalue);
+  const [displayLabel, setDisplayLabel] = useState(
+    defaultvalue || options[0].value,
+  );
   const clickRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = () => {
@@ -44,7 +46,6 @@ export default function Collapse({
   });
 
   const handleOptionSelect = (optionValue: string, optionLabel: string) => {
-    console.log(optionValue, optionLabel);
     if (multiple !== true) {
       setSelectedOptions([optionValue]);
       setIsOpen(false);

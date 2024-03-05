@@ -1,38 +1,32 @@
-import { useSearchParams } from "react-router-dom";
-import GuildCard from "@/components/Guild/GuildCard";
-import { useEffect, useState } from "react";
-import List from "@/components/Common/List";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import Loader from "@/components/Common/Loader";
+import { getGuilds } from "@/api/fetch/guilds";
 import Collapse from "@/components/Common/Collapse/Collapse";
+import List from "@/components/Common/List";
+import Loader from "@/components/Common/Loader";
 import SearchBar from "@/components/Common/SearchBar";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { toast } from "react-hot-toast";
-import { EJoinState } from "@/enums/guild";
-import { EIncludeFlags } from "@/enums/api";
+import GuildCard from "@/components/Guild/GuildCard";
 import {
   GUILDS_FILTER_GUILD_TYPES,
   GUILDS_FILTER_SORT_BY_VALUES,
   GUILDS_PAGE_SIZE,
 } from "@/constants";
-import { getGuilds } from "@/api/fetch/guilds";
-
-type FilterType = {
-  guildTypes: string[];
-  "sort-by": string;
-  "order-by": "Asc" | "Desc";
-};
+import { EIncludeFlags } from "@/enums/api";
+import { EJoinState } from "@/enums/guild";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useSearchParamsState } from "react-use-search-params-state";
 
 export default function Guilds() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useSearchParamsState({
+    page: { type: "number", default: 1 },
+    "sort-by": { type: "string", default: "Popularity" },
+    "order-by": { type: "string", default: "Desc" },
+    guildTypes: { type: "string", default: "0,1,2,4" },
+  });
+
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
-  const [filter, setFilter] = useState<FilterType>({
-    guildTypes: ["0", "1", "2", "4"],
-    "sort-by": "Popularity",
-    "order-by": "Desc",
-  });
 
   const { session, dispatch } = useAuthContext();
 
@@ -40,9 +34,7 @@ export default function Guilds() {
 
   const updateSearch = (term: string) => {
     setSearch(term);
-    setCurrentPage(1);
-    searchParams.set("page", "1");
-    setSearchParams(searchParams);
+    setFilter({ page: 1 });
   };
 
   const joinGuild = (guildID: number) =>
@@ -71,7 +63,7 @@ export default function Guilds() {
 
       dispatch({ type: "GUILD_ADD", payload: data });
       queryClient.invalidateQueries({
-        queryKey: ["guilds", currentPage, filter],
+        queryKey: ["guilds", filter],
       });
     },
     onError: () => {
@@ -101,10 +93,10 @@ export default function Guilds() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["guilds", currentPage, filter, intermediateSearch],
+    queryKey: ["guilds", filter, intermediateSearch],
     queryFn: () =>
       getGuilds({
-        page: currentPage,
+        page: filter.page,
         pageSize: GUILDS_PAGE_SIZE,
         include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
         search: intermediateSearch,
@@ -129,18 +121,22 @@ export default function Guilds() {
             pageSize={GUILDS_PAGE_SIZE}
             hasPreviousPage={guilds.hasPreviousPage}
             hasNextPage={guilds.hasNextPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
+            currentPage={filter.page}
+            setCurrentPage={(page) => setFilter({ page })}
           >
             <div className="flex flex-col gap-2 sm:flex-row">
               <Collapse
-                defaultvalue={GUILDS_FILTER_SORT_BY_VALUES[0].value}
+                defaultvalue={
+                  GUILDS_FILTER_SORT_BY_VALUES.find(
+                    ({ value }) => value === filter["sort-by"],
+                  )?.label
+                }
                 className="w-full sm:w-auto"
                 options={GUILDS_FILTER_SORT_BY_VALUES}
                 selectedOptions={[filter["sort-by"]]}
                 multiple={false}
                 setSelectedOptions={(value) =>
-                  setFilter({ ...filter, "sort-by": value[0] })
+                  setFilter({ "sort-by": value[0] })
                 }
               />
               <Collapse
@@ -149,9 +145,9 @@ export default function Guilds() {
                 multiple={true}
                 defaultvalue={GUILDS_FILTER_GUILD_TYPES[0].value}
                 options={GUILDS_FILTER_GUILD_TYPES}
-                selectedOptions={filter.guildTypes}
+                selectedOptions={filter.guildTypes.split(",")}
                 setSelectedOptions={(value) =>
-                  setFilter({ ...filter, guildTypes: value })
+                  setFilter({ guildTypes: value.toString() })
                 }
               />
               <SearchBar

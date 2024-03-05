@@ -1,3 +1,9 @@
+import ArcViewer from "@/components/Common/ArcViewer";
+import Button from "@/components/Common/Button";
+import List from "@/components/Common/List";
+import BeatSaver from "@/components/Icons/BeatSaver";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import {
   Link,
@@ -5,31 +11,12 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import clsx from "clsx";
-import BeatSaver from "@/components/Icons/BeatSaver";
-import List from "@/components/Common/List";
-import Button from "@/components/Common/Button";
-import ArcViewer from "@/components/Common/ArcViewer";
-import { useAuthContext } from "@/hooks/useAuthContext";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import {
-  faCheck,
-  faChevronUp,
-  faPlay,
-  faRankingStar,
-  faSkull,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { faTwitch } from "@fortawesome/free-brands-svg-icons";
-import {
-  formatDifficulty,
-  formatDurationSince,
-  formatHMD,
-  formatLargeNumber,
-  formatModifiers,
-} from "@/utils/format";
+import CollapseImage from "@/components/Common/Collapse/CollapseImage";
+import Loader from "@/components/Common/Loader";
+import { PLAYER_API_SCORES_DATA_INCLUDES, PLAYER_PAGE_SIZE } from "@/constants";
+import { EIncludeFlags } from "@/enums/api";
+import useArcViewer from "@/hooks/useArcViewer";
 import {
   PlayerAPIResponse,
   PlayerAPIResponseSchema,
@@ -38,13 +25,26 @@ import {
   PlayerStatsAPIResponse,
   PlayerStatsAPIResponseSchema,
 } from "@/types/api/player";
-import { EIncludeFlags } from "@/enums/api";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/Common/Loader";
-import CollapseImage from "@/components/Common/Collapse/CollapseImage";
 import { fetchAPI } from "@/utils/fetch";
-import useArcViewer from "@/hooks/useArcViewer";
-import { PLAYER_API_SCORES_DATA_INCLUDES, PLAYER_PAGE_SIZE } from "@/constants";
+import {
+  formatDifficulty,
+  formatDurationSince,
+  formatHMD,
+  formatLargeNumber,
+  formatModifiers,
+} from "@/utils/format";
+import { faTwitch } from "@fortawesome/free-brands-svg-icons";
+import {
+  faCheck,
+  faChevronUp,
+  faCircleExclamation,
+  faPlay,
+  faRankingStar,
+  faSkull,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "@tanstack/react-query";
 
 function getDiffShort(score: PlayerScoresAPIResponse["data"][0]) {
   if (score.songDifficulty.gameMode.name === "Standard") {

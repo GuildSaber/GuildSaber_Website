@@ -34,15 +34,6 @@ export const getGuilds = async ({
   userID,
   permissionFlag,
 }: getAllGuildParamsType) => {
-  let parsefilter;
-
-  if (filters) {
-    parsefilter = {
-      ...filters,
-      guildTypes: filters.guildTypes.reduce((acc, v) => acc + +v, 0).toString(),
-    };
-  }
-
   return fetchAPI<PagedList<Guild>>({
     path: `/guilds`,
     queryParams: {
@@ -51,7 +42,7 @@ export const getGuilds = async ({
       ...(permissionFlag && { permissionFlag: permissionFlag }),
       ...(userID && { userID: userID }),
       include,
-      ...(!!filters && parsefilter),
+      ...(!!filters && filters),
       ...(!!search && { search }),
     },
     authenticated: false,

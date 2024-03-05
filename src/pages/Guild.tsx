@@ -1,14 +1,12 @@
-import { useParams, useSearchParams } from "react-router-dom";
-import GuildHeader from "@/components/Guild/GuildHeader";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/Common/Loader";
-import Collapse from "@/components/Common/Collapse/Collapse";
-import MapHeader from "@/components/Map/MapHeader";
-import SearchBar from "@/components/Common/SearchBar";
-import { Key, useEffect, useState } from "react";
-import List from "@/components/Common/List";
 import ArcViewer from "@/components/Common/ArcViewer";
+import Collapse from "@/components/Common/Collapse/Collapse";
+import List from "@/components/Common/List";
+import Loader from "@/components/Common/Loader";
 import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
+import SearchBar from "@/components/Common/SearchBar";
+import GuildHeader from "@/components/Guild/GuildHeader";
+import MapHeader from "@/components/Map/MapHeader";
+import useArcViewer from "@/hooks/useArcViewer";
 import {
   faCheck,
   faCircleExclamation,
@@ -19,30 +17,21 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import useArcViewer from "@/hooks/useArcViewer";
+import { Key, useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 
-import {
-  GUILDS_FILTER_SORT_BY_VALUES,
-  GUILD_API_DATA_INCLUDES,
-  GUILD_API_MAPS_DATA_INCLUDES,
-  GUILD_PAGE_SIZE,
-  MAP_PAGE_SIZE,
-} from "@/constants";
-import Button from "@/components/Common/Button";
 import { getGuild } from "@/api/fetch/guilds";
 import { getMaps } from "@/api/fetch/rankedMaps";
-
-type FilterType = {
-  "sort-by": string;
-  "order-by": "Asc" | "Desc";
-  "difficulty-from": number;
-  "difficulty-to": number;
-  "duration-from": number;
-  "duration-to": number;
-  "bpm-from": number;
-  "bpm-to": number;
-};
+import Button from "@/components/Common/Button";
+import {
+  GUILD_API_DATA_INCLUDES,
+  GUILD_API_MAPS_DATA_INCLUDES,
+  GUILD_FILTER_SORT_BY_VALUES,
+  MAP_PAGE_SIZE,
+} from "@/constants";
+import { useSearchParamsState } from "react-use-search-params-state";
 
 type Categories = {
   anyMatch: boolean;
@@ -58,31 +47,29 @@ export default function Guild() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") as string) || 1,
-  );
 
   const [categories, setCategories] = useState<Categories>({
     anyMatch: true,
     selected: [],
   });
 
-  const [filter, setFilter] = useState<FilterType>({
-    "sort-by": "Difficulty",
-    "order-by": "Asc",
-    "difficulty-from": 0,
-    "difficulty-to": 0,
-    "duration-from": 0,
-    "duration-to": 0,
-    "bpm-from": 0,
-    "bpm-to": 0,
+  const [filter, setFilter] = useSearchParamsState({
+    page: { type: "number", default: 1 },
+    "sort-by": { type: "string", default: "Difficulty" },
+    "order-by": { type: "string", default: "Asc" },
+    "difficulty-from": { type: "number", default: 0 },
+    "difficulty-to": { type: "number", default: 0 },
+    "duration-from": { type: "number", default: 0 },
+    "duration-to": { type: "number", default: 0 },
+    "bpm-from": { type: "number", default: 0 },
+    "bpm-to": { type: "number", default: 0 },
   });
 
   const arcViewer = useArcViewer();
 
   const updateSearch = (term: string) => {
     setSearch(term);
-    setCurrentPage(1);
+    filter({ page: 1 });
     searchParams.set("page", "1");
     setSearchParams(searchParams);
   };
@@ -129,7 +116,7 @@ export default function Guild() {
       "guilds",
       guildID,
       "maps",
-      currentPage,
+      filter.page,
       filter,
       intermediateSearch,
       categories,
@@ -137,7 +124,7 @@ export default function Guild() {
     queryFn: () =>
       getMaps({
         guildID: parseInt(guildID),
-        page: currentPage,
+        page: filter.page,
         pageSize: MAP_PAGE_SIZE,
         include: GUILD_API_MAPS_DATA_INCLUDES,
         categories,
@@ -213,14 +200,12 @@ export default function Guild() {
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <Collapse
-            defaultvalue={GUILDS_FILTER_SORT_BY_VALUES[0].value}
+            defaultvalue={GUILD_FILTER_SORT_BY_VALUES[0].value}
             className="w-full sm:w-auto"
-            options={GUILDS_FILTER_SORT_BY_VALUES}
+            options={GUILD_FILTER_SORT_BY_VALUES}
             selectedOptions={[filter["sort-by"]]}
             multiple={false}
-            setSelectedOptions={(value) =>
-              setFilter({ ...filter, "sort-by": value[0] })
-            }
+            setSelectedOptions={(value) => setFilter({ "sort-by": value[0] })}
           />
           <div className="flex justify-center gap-2 sm:contents">
             <MultiRangeSlider
@@ -230,7 +215,6 @@ export default function Guild() {
               color="#FFA41C"
               onChange={({ min, max }) => {
                 setFilter({
-                  ...filter,
                   "difficulty-from": min,
                   "difficulty-to": max,
                 });
@@ -243,7 +227,6 @@ export default function Guild() {
               minutes
               onChange={({ min, max }) => {
                 setFilter({
-                  ...filter,
                   "duration-from": min,
                   "duration-to": max,
                 });
@@ -255,7 +238,6 @@ export default function Guild() {
               icon={faDrum}
               onChange={({ min, max }) => {
                 setFilter({
-                  ...filter,
                   "bpm-from": min,
                   "bpm-to": max,
                 });
@@ -270,11 +252,11 @@ export default function Guild() {
         {maps && !isMapsLoading && !isMapsError && (
           <List
             totalCount={maps.totalCount}
-            pageSize={GUILD_PAGE_SIZE}
+            pageSize={MAP_PAGE_SIZE}
             hasPreviousPage={maps.hasPreviousPage}
             hasNextPage={maps.hasNextPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
+            currentPage={filter.page}
+            setCurrentPage={(page) => setFilter({ page })}
             className="flex flex-col gap-4"
           >
             {maps?.data?.map((value, key: Key) => (
