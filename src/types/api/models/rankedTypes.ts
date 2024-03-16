@@ -1,6 +1,5 @@
 import { ECustomModifierRating as ECustomModRatingFlag } from "@/enums/api/models//customModifierRating";
 import { ERankingState } from "@/enums/api/models//rankingState";
-import { EState } from "@/enums/api/models/state";
 import { z } from "zod";
 import { PointSchema } from "./point";
 import { ScoreSchema } from "./score";
@@ -54,7 +53,7 @@ export const RankedScoreBaseSchema = z.object({
   pointID: z.number(),
   playerID: z.number(),
   point: z.optional(PointSchema),
-  state: z.nativeEnum(EState),
+  state: z.number(),
   effectiveScore: z.number(),
   rawPoints: z.number(),
   createdUnixTime: z.number(),
