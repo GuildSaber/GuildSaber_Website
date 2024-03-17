@@ -12,7 +12,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import CollapseImage from "@/components/Common/Collapse/CollapseImage";
+import ListBox from "@/components/Common/ListBox/ListBox";
 import Loader from "@/components/Common/Loader";
 import { PLAYER_API_SCORES_DATA_INCLUDES, PLAYER_PAGE_SIZE } from "@/constants";
 import { EIncludeFlags } from "@/enums/api";
@@ -266,12 +266,7 @@ export default function PlayerProfile() {
           <div className="flex justify-between gap-2">
             {((!!player && !!guildID) ||
               (!!player?.guilds && player.guilds.length !== 0)) && (
-              <CollapseImage
-                defaultvalue={
-                  player?.guilds.find((guild) => guildID === guild.id)?.name ||
-                  player?.guilds[0]?.name
-                }
-                className="w-full border border-gray-700 sm:w-auto"
+              <ListBox
                 options={player?.guilds
                   .filter((guild) => guild.simplePoints.length !== 0)
                   .reduce(
@@ -289,8 +284,8 @@ export default function PlayerProfile() {
                       ]),
                     [],
                   )}
-                selectedOption={guildID ?? player?.guilds[0]?.id}
-                setSelectedOption={(value) => selectGuild(value)}
+                value={guildID ?? player?.guilds[0]?.id}
+                onChange={(option) => selectGuild(option.value)}
               />
             )}
 

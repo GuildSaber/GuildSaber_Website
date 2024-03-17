@@ -1,6 +1,7 @@
 import { getGuilds } from "@/api/fetch/guilds";
-import Collapse from "@/components/Common/Collapse/Collapse";
 import List from "@/components/Common/List";
+import ListBox from "@/components/Common/ListBox/ListBox";
+import ListBoxMultiple from "@/components/Common/ListBox/ListBoxMultiple";
 import Loader from "@/components/Common/Loader";
 import SearchBar from "@/components/Common/SearchBar";
 import GuildCard from "@/components/Guild/GuildCard";
@@ -125,31 +126,31 @@ export default function Guilds() {
             setCurrentPage={(page) => setFilter({ page })}
           >
             <div className="flex flex-col gap-2 sm:flex-row">
-              <Collapse
-                defaultvalue={
-                  GUILDS_FILTER_SORT_BY_VALUES.find(
-                    ({ value }) => value === filter["sort-by"],
-                  )?.label
-                }
-                className="w-full sm:w-auto"
+              <ListBox
                 options={GUILDS_FILTER_SORT_BY_VALUES}
-                selectedOptions={[filter["sort-by"]]}
-                multiple={false}
-                setSelectedOptions={(value) =>
-                  setFilter({ "sort-by": value[0] })
-                }
+                value={filter["sort-by"]}
+                onChange={(option) => setFilter({ "sort-by": option.value })}
               />
-              <Collapse
+
+              <ListBoxMultiple
                 label="Guild Type"
-                className="w-full sm:w-auto"
-                multiple={true}
-                defaultvalue={GUILDS_FILTER_GUILD_TYPES[0].value}
                 options={GUILDS_FILTER_GUILD_TYPES}
-                selectedOptions={filter.guildTypes.split(",")}
-                setSelectedOptions={(value) =>
-                  setFilter({ guildTypes: value.toString() })
+                values={filter.guildTypes.split(",")}
+                onChange={(option) =>
+                  setFilter({
+                    guildTypes: option
+                      .reduce(
+                        (
+                          acc: string[],
+                          opt: { value: string; label: string },
+                        ) => [...acc, opt.value],
+                        [],
+                      )
+                      .join(","),
+                  })
                 }
               />
+
               <SearchBar
                 className="ml-auto w-full sm:w-auto"
                 onChange={(e) => updateSearch(e.target.value)}

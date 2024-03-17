@@ -1,4 +1,4 @@
-export enum EState {
+export enum EPassState {
   UnVerified = 0,
   Allowed = 1 << 0,
   Removed = 1 <<

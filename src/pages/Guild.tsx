@@ -1,5 +1,4 @@
 import ArcViewer from "@/components/Common/ArcViewer";
-import Collapse from "@/components/Common/Collapse/Collapse";
 import List from "@/components/Common/List";
 import Loader from "@/components/Common/Loader";
 import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
@@ -25,12 +24,15 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { getGuild } from "@/api/fetch/guilds";
 import { getMaps } from "@/api/fetch/rankedMaps";
 import Button from "@/components/Common/Button";
+import ListBox from "@/components/Common/ListBox/ListBox";
+import MapPassState from "@/components/Map/Listbox/MapPassState";
 import {
   GUILD_API_DATA_INCLUDES,
   GUILD_API_MAPS_DATA_INCLUDES,
   GUILD_FILTER_SORT_BY_VALUES,
   MAP_PAGE_SIZE,
 } from "@/constants";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useSearchParamsState } from "react-use-search-params-state";
 
 type Categories = {
@@ -44,6 +46,7 @@ export default function Guild() {
     return <p>Error</p>;
   }
 
+  const { session } = useAuthContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
@@ -63,6 +66,7 @@ export default function Guild() {
     "duration-to": { type: "number", default: 0 },
     "bpm-from": { type: "number", default: 0 },
     "bpm-to": { type: "number", default: 0 },
+    passState: { type: "number", default: 0 },
   });
 
   const arcViewer = useArcViewer();
@@ -199,14 +203,12 @@ export default function Guild() {
         </h3>
 
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Collapse
-            defaultvalue={GUILD_FILTER_SORT_BY_VALUES[0].value}
-            className="w-full sm:w-auto"
+          <ListBox
             options={GUILD_FILTER_SORT_BY_VALUES}
-            selectedOptions={[filter["sort-by"]]}
-            multiple={false}
-            setSelectedOptions={(value) => setFilter({ "sort-by": value[0] })}
+            value={filter["sort-by"]}
+            onChange={(sortBy) => setFilter({ "sort-by": sortBy.value })}
           />
+
           <div className="flex justify-center gap-2 sm:contents">
             <MultiRangeSlider
               min={guild.filters.minDifficulty}
@@ -243,6 +245,15 @@ export default function Guild() {
                 });
               }}
             />
+
+            {session && (
+              <MapPassState
+                value={filter["passState"]}
+                onChange={(passState) =>
+                  setFilter({ passState: passState.value })
+                }
+              />
+            )}
           </div>
           <SearchBar
             className="ml-auto w-full sm:w-auto"

@@ -33,7 +33,7 @@ export async function fetchAPI<T>({
         method: method,
         headers: {
           ...(localStorage.getItem("token") && authenticated
-            ? { Autorization: `Bearer ${localStorage.getItem("token")}` }
+            ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
             : {}),
         },
       },

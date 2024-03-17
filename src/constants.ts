@@ -4,6 +4,7 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { EIncludeFlags } from "./enums/api";
+import { EPassState } from "./enums/api/models/passState";
 import { EJoinState } from "./enums/guild";
 
 export const FOOTER_LINKS: {
@@ -33,6 +34,9 @@ export const GUILD_MENU_MAX_VISIBLE_GUILD_COUNT = 3;
 export const GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT = 5;
 
 export const GUILDS_PAGE_SIZE = 4;
+
+export const GUILD_PASS_STATE_COLOR = ["#e5484d"];
+
 export const GUILDS_FILTER_GUILD_TYPES = [
   { value: "1", label: "Unverified", icon: null },
   { value: "2", label: "Verified", icon: faCheckCircle },
@@ -54,6 +58,22 @@ export const GUILD_FILTER_SORT_BY_VALUES = [
   { value: "Time", label: "Time" },
   { value: "EditTime", label: "Edit Time" },
   { value: "Accuracy", label: "Accuracy" },
+];
+
+export const GUILD_FILTER_PASS_STATE = [
+  { value: EPassState.All, label: "All", color: "#fff" },
+  { value: EPassState.AllAllowed, label: "Allowed", color: "#53b365" },
+  {
+    value: EPassState.MinScoreRequirement,
+    label: "Invalid",
+    color: "#f76b15",
+  },
+  {
+    value: EPassState.AllDenied,
+    label: "Denied",
+    color: "#e5484d",
+  },
+  { value: EPassState.UnPassed, label: "UnPassed", color: "#000" },
 ];
 
 export const GUILD_API_DATA_INCLUDES =
