@@ -50,7 +50,7 @@ export interface JoinRequirements {
 export const AuthAPIResponseSchema = z
   .object({
     token: z.string().optional(),
-    selectedGuild: z.string().optional().nullable(),
+    selectedGuild: z.string().nullish(),
     isGuildSaberManager: z.boolean().optional(),
     user: z
       .object({

@@ -13,22 +13,22 @@ export const AddRankedMapApiStructSchema = z.object({
   guildID: z.number(),
   mapHash: z.string(),
   difficulty: z.nativeEnum(EDifficulty),
-  gameModeID: z.number().optional(),
-  gameMode: z.string().optional(),
+  gameModeID: z.number().nullish(),
+  gameMode: z.string().nullish(),
   usedModsModRatingFlag: z.nativeEnum(ECustomModifierRating),
-  forcedStarRating: z.number().optional(),
+  forcedStarRating: z.number().nullish(),
   rankingState: z.nativeEnum(ERankingState),
   requirements: RequirementStructSchema,
-  categoryID: z.number().optional(),
-  playlistID: z.number().optional(),
+  categoryID: z.number().nullish(),
+  playlistID: z.number().nullish(),
 });
 
 export type AddRankedMapApiStruct = z.infer<typeof AddRankedMapApiStructSchema>;
 
 export const EditRankedMapApiStructSchema = z.object({
   rankedMapID: z.number(),
-  rankingState: z.nativeEnum(ERankingState).optional(),
-  requirements: RequirementStructSchema.optional(),
+  rankingState: z.nativeEnum(ERankingState).nullish(),
+  requirements: RequirementStructSchema.nullish(),
 });
 
 export type EditRankedMapApiStruct = z.infer<
@@ -38,7 +38,7 @@ export type EditRankedMapApiStruct = z.infer<
 export const RankedMapResponseSchema = z.object({
   rankedMap: RankedMapSchema,
   rankedScore:
-    RankedScoreWithoutRankedMapNorSongDifficultySchema.nullable().optional(),
+    RankedScoreWithoutRankedMapNorSongDifficultySchema.nullish(),
   simplePoints: z.array(SimplePointSchema),
 });
 

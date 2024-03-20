@@ -8,7 +8,7 @@ export const PlayerSchema = z.object({
   platform: z.nativeEnum(EPlatform),
   hmd: z.nativeEnum(EHMD),
   country: z.string(),
-  user_AvatarUrl: z.string().nullable(),
+  user_AvatarUrl: z.string().nullish(),
 });
 
 export type Player = z.infer<typeof PlayerSchema>;

@@ -4,10 +4,10 @@ import { GuildBoostSchema } from "./guildBoost";
 
 export const UserSchema = z.object({
   ID: z.number(),
-  DiscordUserID: z.number().nullable(),
-  BeatLeaderID: z.number().nullable(),
+  DiscordUserID: z.number().nullish(),
+  BeatLeaderID: z.number().nullish(),
   SubscriptionTier: z.nativeEnum(ESubscriptionTier),
-  GuildBoosts: z.array(GuildBoostSchema).nullable(),
+  GuildBoosts: z.array(GuildBoostSchema).nullish(),
 });
 
 export type User = z.infer<typeof UserSchema>;

@@ -5,7 +5,7 @@ import { GameModeSchema } from "./gameMode";
 export const SongWithoutSongDifficultyBaseSchema = z.object({
   id: z.number(),
   hash: z.string(),
-  beatSaverKey: z.string().nullable().optional(),
+  beatSaverKey: z.string().nullish(),
   name: z.string(),
   songName: z.string(),
   songSubName: z.string(),
@@ -22,7 +22,7 @@ export const SongDifficultyBaseSchema = z.object({
   id: z.number(),
   gameMode: GameModeSchema,
   difficulty: z.nativeEnum(EDifficulty),
-  blid: z.optional(z.string()),
+  blid: z.nullable(z.string()),
 });
 
 export const SongDifficultyStatsBaseSchema = z.object({
@@ -41,8 +41,8 @@ export const RankedMapVersionBaseSchema = z.object({
 });
 
 export const SongDifficultySchema = SongDifficultyBaseSchema.extend({
-  song: z.optional(SongWithoutSongDifficultyBaseSchema),
-  songDifficultyStats: z.optional(SongDifficultyStatsBaseSchema),
+  song: z.nullable(SongWithoutSongDifficultyBaseSchema),
+  songDifficultyStats: z.nullable(SongDifficultyStatsBaseSchema),
 });
 
 export const SongSchema = SongWithoutSongDifficultyBaseSchema.extend({
@@ -50,7 +50,7 @@ export const SongSchema = SongWithoutSongDifficultyBaseSchema.extend({
 });
 
 export const RankedMapVersionSchema = RankedMapVersionBaseSchema.extend({
-  songDifficulty: SongDifficultySchema.nullable().optional(),
+  songDifficulty: SongDifficultySchema.nullish(),
 });
 
 export type RankedMapVersion = z.infer<typeof RankedMapVersionSchema>;
@@ -59,26 +59,26 @@ export type Song = z.infer<typeof SongSchema>;
 
 export const SongDifficultyBaseWithoutSongSchema =
   SongDifficultyBaseSchema.extend({
-    songDifficultyStats: z.optional(SongDifficultyStatsBaseSchema),
+    songDifficultyStats: z.nullable(SongDifficultyStatsBaseSchema),
   });
 
 export const SongDifficultyBaseWithoutSongDifficultyStatsSchema =
   SongDifficultyBaseSchema.extend({
-    songDifficultyStats: z.optional(SongDifficultyStatsBaseSchema),
-    song: z.optional(SongWithoutSongDifficultyBaseSchema),
-    rankedMapVersions: z.optional(z.array(RankedMapVersionBaseSchema)),
+    songDifficultyStats: z.nullable(SongDifficultyStatsBaseSchema),
+    song: z.nullable(SongWithoutSongDifficultyBaseSchema),
+    rankedMapVersions: z.nullable(z.array(RankedMapVersionBaseSchema)),
   });
 
 export const SongDifficultyBaseWithoutRankedMapVersionsSchema =
   SongDifficultyBaseSchema.extend({
-    songDifficultyStats: z.optional(SongDifficultyStatsBaseSchema),
-    song: z.optional(SongWithoutSongDifficultyBaseSchema),
+    songDifficultyStats: z.nullable(SongDifficultyStatsBaseSchema),
+    song: z.nullable(SongWithoutSongDifficultyBaseSchema),
   });
 
 export type SongDifficulty = z.infer<typeof SongDifficultySchema>;
 
 export const SongDifficultyStatsSchema = SongDifficultyStatsBaseSchema.extend({
-  songDifficulties: z.optional(
+  songDifficulties: z.nullable(
     z.array(SongDifficultyBaseWithoutSongDifficultyStatsSchema),
   ),
 });

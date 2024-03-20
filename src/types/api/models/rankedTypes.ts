@@ -6,8 +6,8 @@ import { ScoreSchema } from "./score";
 import { RankedMapVersionSchema, SongDifficultySchema } from "./songTypes";
 
 export const StarsSchema = z.object({
-  difficulty: z.number().nullable(),
-  acc: z.number().nullable(),
+  difficulty: z.number().nullish(),
+  acc: z.number().nullish(),
 });
 
 export const InRatingSchema = z.object({
@@ -15,9 +15,9 @@ export const InRatingSchema = z.object({
 });
 
 export const ModifiersRatingSchema = z.object({
-  slowerSong: InRatingSchema.nullable(),
-  fasterSong: InRatingSchema.nullable(),
-  superFastSong: InRatingSchema.nullable(),
+  slowerSong: InRatingSchema.nullish(),
+  fasterSong: InRatingSchema.nullish(),
+  superFastSong: InRatingSchema.nullish(),
 });
 
 export const RankedMapDifficultyRatingSchema = z.object({
@@ -49,10 +49,10 @@ export type RankedMap = z.infer<typeof RankedMapSchema>;
 
 export const RankedScoreBaseSchema = z.object({
   id: z.number(),
-  prevScoreID: z.optional(z.number()),
+  prevScoreID: z.number().nullish(),
   pointID: z.number(),
   playerID: z.number(),
-  point: z.optional(PointSchema),
+  point: PointSchema.nullish(),
   state: z.number(),
   effectiveScore: z.number(),
   rawPoints: z.number(),
@@ -64,29 +64,29 @@ export const RankedScoreBaseSchema = z.object({
 });
 
 export const RankedScoreWithoutScoreSchema = RankedScoreBaseSchema.extend({
-  rankedMap: z.optional(RankedMapSchema),
-  point: z.optional(PointSchema),
-  songDifficulty: z.optional(SongDifficultySchema),
+  rankedMap: RankedMapSchema.nullish(),
+  point: PointSchema.nullish(),
+  songDifficulty: SongDifficultySchema.nullish(),
 });
 
 export const RankedScoreWithoutSongDifficultySchema =
   RankedScoreBaseSchema.extend({
-    score: z.optional(ScoreSchema),
-    rankedMap: z.optional(RankedMapSchema),
-    point: z.optional(PointSchema),
+    score: ScoreSchema.nullish(),
+    rankedMap: RankedMapSchema.nullish(),
+    point: PointSchema.nullish(),
   });
 
 export const RankedScoreWithoutRankedMapNorSongDifficultySchema =
   RankedScoreBaseSchema.extend({
-    score: ScoreSchema.nullable().optional(),
-    point: PointSchema.nullable().optional(),
+    score: ScoreSchema.nullish(),
+    point: PointSchema.nullish(),
   });
 
 export const RankedScoreSchema = RankedScoreBaseSchema.extend({
-  score: ScoreSchema.nullable().optional(),
-  rankedMap: RankedMapSchema.nullable().optional(),
-  point: PointSchema.nullable().optional(),
-  songDifficulty: SongDifficultySchema.nullable().optional(),
+  score: ScoreSchema.nullish(),
+  rankedMap: RankedMapSchema.nullish(),
+  point: PointSchema.nullish(),
+  songDifficulty: SongDifficultySchema.nullish(),
 });
 
 export type RankedScore = z.infer<typeof RankedScoreSchema>;

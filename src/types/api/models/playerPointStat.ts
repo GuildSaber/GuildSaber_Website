@@ -6,8 +6,8 @@ export const PlayerPointStatSchema = z.object({
   playerID: z.number(),
   pointID: z.number(),
   value: z.number(),
-  player: z.optional(PlayerSchema),
-  point: z.optional(PointSchema),
+  player: z.nullable(PlayerSchema),
+  point: z.nullable(PointSchema),
 });
 
 export type PlayerPointStat = z.infer<typeof PlayerPointStatSchema>;

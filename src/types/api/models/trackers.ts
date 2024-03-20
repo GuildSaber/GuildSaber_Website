@@ -11,7 +11,7 @@ export type AveragePosition = z.infer<typeof AveragePositionSchema>;
 export const HitTrackerSchema = z.object({
   scoreID: z.number(),
   maxCombo: z.number(),
-  maxStreak: z.optional(z.number()),
+  maxStreak: z.number().nullish(),
   leftTiming: z.number(),
   rightTiming: z.number(),
   leftMiss: z.number(),
@@ -32,7 +32,7 @@ export const WinTrackerSchema = z.object({
   totalPauseDuration: z.number(),
   jumpDistance: z.number(),
   averageHeight: z.number(),
-  averageHeadPosition: z.optional(AveragePositionSchema),
+  averageHeadPosition: AveragePositionSchema.nullish(),
   totalScore: z.number(),
   maxScore: z.number(),
 });

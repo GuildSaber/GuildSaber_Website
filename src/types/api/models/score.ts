@@ -15,7 +15,7 @@ export const ScoreSchema = z.object({
   baseScore: z.number(),
   modifiers: z.number(),
   unixTimeSet: z.number(),
-  bL_ScoreID: z.number().nullable(),
+  bL_ScoreID: z.number().nullish(),
   maxCombo: z.number(),
   fullCombo: z.boolean(),
   missedNotes: z.number(),
@@ -23,10 +23,10 @@ export const ScoreSchema = z.object({
   hmd: z.nativeEnum(EHMD),
   controller: z.nativeEnum(EController),
   hasTrackers: z.boolean(),
-  hitTracker: z.optional(HitTrackerSchema).nullable(),
-  winTracker: z.optional(WinTrackerSchema).nullable(),
-  accuracyTracker: z.optional(AccuracyTrackerSchema).nullable(),
-  graphTracker: z.optional(ScoreGraphTrackerSchema).nullable(),
+  hitTracker: HitTrackerSchema.nullish(),
+  winTracker: WinTrackerSchema.nullish(),
+  accuracyTracker: AccuracyTrackerSchema.nullish(),
+  graphTracker: ScoreGraphTrackerSchema.nullish(),
 });
 
 export type Score = z.infer<typeof ScoreSchema>;

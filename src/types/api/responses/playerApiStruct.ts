@@ -27,7 +27,7 @@ export type PlayerPointStatsStruct = z.infer<
 
 export const PlayerResponseStructSchema = z.object({
   player: PlayerSchema,
-  guilds: z.array(GuildSchema).optional(),
+  guilds: z.array(GuildSchema).nullish(),
 });
 
 export type PlayerResponseStruct = z.infer<typeof PlayerResponseStructSchema>;

@@ -8,9 +8,9 @@ export const PlayerCategoryPointStatSchema = z.object({
   pointID: z.number(),
   categoryID: z.number(),
   value: z.number(),
-  player: z.optional(PlayerSchema),
-  point: z.optional(PointSchema),
-  category: z.optional(CategorySchema),
+  player: z.nullable(PlayerSchema),
+  point: z.nullable(PointSchema),
+  category: z.nullable(CategorySchema),
 });
 
 export type PlayerCategoryPointStat = z.infer<

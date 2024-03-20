@@ -27,7 +27,7 @@ export const GuildSchema = z.object({
         categoryLevels: z.null(),
       }),
     )
-    .nullable(),
+    .nullish(),
   filters: z.object({
     minDifficulty: z.number(),
     maxDifficulty: z.number(),
@@ -40,9 +40,9 @@ export const GuildSchema = z.object({
     durationStep: z.number(),
   }),
   unixCreationTime: z.number(),
-  inviteCode: z.string().nullable(),
-  rankedMapCount: z.number().optional(),
-  memberCount: z.number().optional(),
+  inviteCode: z.string().nullish(),
+  rankedMapCount: z.number().nullish(),
+  memberCount: z.number().nullish(),
 });
 
 export type Guild = z.infer<typeof GuildSchema>;
