@@ -1,6 +1,5 @@
 import { EController } from "@/enums/api/models/controller";
 import { EHMD } from "@/enums/api/models/hmd";
-import { EModifiers } from "@/enums/api/models/modifiers";
 import { z } from "zod";
 import {
   AccuracyTrackerSchema,
@@ -14,7 +13,7 @@ export const ScoreSchema = z.object({
   playerID: z.number(),
   songDifficultyID: z.number(),
   baseScore: z.number(),
-  modifiers: z.nativeEnum(EModifiers),
+  modifiers: z.number(),
   unixTimeSet: z.number(),
   bL_ScoreID: z.number().nullable(),
   maxCombo: z.number(),
