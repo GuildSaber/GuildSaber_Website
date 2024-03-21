@@ -1,4 +1,4 @@
-import { FOOTER_LINKS } from "@/constants";
+import { FOOTER_LINKS } from "@/utils/constants";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 

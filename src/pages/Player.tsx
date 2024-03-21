@@ -1,7 +1,7 @@
-import ArcViewer from "@/components/Common/ArcViewer";
-import Button from "@/components/Common/Button";
-import List from "@/components/Common/List";
+import ArcViewer from "@/components/ArcViewer";
+import Button from "@/components/Button";
 import BeatSaver from "@/components/Icons/BeatSaver";
+import List from "@/components/List";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -12,9 +12,12 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import ListBox from "@/components/Common/ListBox/ListBox";
-import Loader from "@/components/Common/Loader";
-import { PLAYER_API_SCORES_DATA_INCLUDES, PLAYER_PAGE_SIZE } from "@/constants";
+import ListBox from "@/components/ListBox/ListBox";
+import Loader from "@/components/Loader";
+import {
+  PLAYER_API_SCORES_DATA_INCLUDES,
+  PLAYER_PAGE_SIZE,
+} from "@/utils/constants";
 import { EIncludeFlags } from "@/enums/api";
 import useArcViewer from "@/hooks/useArcViewer";
 import {

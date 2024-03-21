@@ -1,17 +1,21 @@
-import { useRef, useState } from "react";
-import clsx from "clsx";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
-import { faBars, faPlus } from "@fortawesome/free-solid-svg-icons";
-import useClickAway from "@/hooks/useClickAway";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { GuildAPIResponse } from "@/types/api/guild";
 import {
   GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT,
   GUILD_MENU_MAX_GUILD_NAME_LENGTH,
   GUILD_MENU_MAX_VISIBLE_GUILD_COUNT,
-} from "@/constants";
+} from "@/features/guild/utils/constants";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import useClickAway from "@/hooks/useClickAway";
+import { GuildAPIResponse } from "@/types/api/guild";
+import {
+  faBars,
+  faChevronDown,
+  faChevronUp,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
   const [isOpen, setIsOpen] = useState(false);

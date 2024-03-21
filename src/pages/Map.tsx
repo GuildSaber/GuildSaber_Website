@@ -1,16 +1,15 @@
-import ArcViewer from "@/components/Common/ArcViewer";
-import Loader from "@/components/Common/Loader";
-import MapHeader from "@/components/Map/MapHeader";
-import MapRequirements from "@/components/Map/MapRequirements";
-import { MAP_API_DATA_INCLUDES, MAP_PAGE_SIZE } from "@/constants";
+import ArcViewer from "@/components/ArcViewer";
+import Loader from "@/components/Loader";
 import useArcViewer from "@/hooks/useArcViewer";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-import { getMap } from "@/api/fetch/rankedMaps";
-import MapLeaderboard from "@/components/Map/MapLeaderboard";
+import MapHeader from "@/features/map/components/MapHeader";
+import MapLeaderboard from "@/features/map/components/MapLeaderboard";
+import MapRequirements from "@/features/map/components/MapRequirements";
+import { useMap } from "@/features/map/hooks/useMap";
+import { MAP_PAGE_SIZE } from "@/features/map/utils/constants";
 
 export default function Map() {
   const { mapID } = useParams();
@@ -21,15 +20,7 @@ export default function Map() {
 
   const arcViewer = useArcViewer();
 
-  const {
-    data: map,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["maps", mapID],
-    queryFn: () => getMap(parseInt(mapID, 10), MAP_API_DATA_INCLUDES),
-    enabled: !!mapID,
-  });
+  const { data: map, isLoading, isError } = useMap(mapID);
 
   if (isLoading) {
     return <Loader />;

@@ -51,16 +51,20 @@ export const getGuilds = async ({
 };
 
 export const getGuild = async ({ id, include, userID }: getGuildType) => {
-  //remove all object key with 0 value in filters
-
   return fetchAPI<Guild>({
     path: `/guild/by-id/${id}`,
     queryParams: {
       ...(userID && { userID }),
-      //...(!!filters && filters.reduce((acc, v) => acc + +v, 0).toString()),
       include: include,
     },
     authenticated: false,
     schema: GuildSchema,
   });
 };
+
+export const joinGuild = (guildID: number) =>
+  fetchAPI({
+    method: "POST",
+    path: `/members/join-guild/${guildID}`,
+    authenticated: true,
+  });

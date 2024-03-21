@@ -1,5 +1,5 @@
+import Button from "@/components/Button";
 import { PropsWithChildren } from "react";
-import Button from "../Common/Button";
 
 type SigninProviderProps = {
   provider: string;

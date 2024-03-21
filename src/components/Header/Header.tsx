@@ -1,10 +1,10 @@
-import GuildMenu from "./GuildMenu";
-import { Link } from "react-router-dom";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import GuildMenu from "./GuildMenu";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);

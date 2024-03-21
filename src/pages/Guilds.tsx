@@ -1,19 +1,18 @@
-import { getGuilds } from "@/api/fetch/guilds";
-import List from "@/components/Common/List";
-import ListBox from "@/components/Common/ListBox/ListBox";
-import ListBoxMultiple from "@/components/Common/ListBox/ListBoxMultiple";
-import Loader from "@/components/Common/Loader";
-import SearchBar from "@/components/Common/SearchBar";
-import GuildCard from "@/components/Guild/GuildCard";
+import List from "@/components/List";
+import ListBox from "@/components/ListBox/ListBox";
+import ListBoxMultiple from "@/components/ListBox/ListBoxMultiple";
+import Loader from "@/components/Loader";
+import SearchBar from "@/components/SearchBar";
+import { EJoinState } from "@/enums/guild";
+import GuildCard from "@/features/guild/components/GuildCard";
+import { useGuilds } from "@/features/guild/hooks/useGuilds";
 import {
   GUILDS_FILTER_GUILD_TYPES,
   GUILDS_FILTER_SORT_BY_VALUES,
   GUILDS_PAGE_SIZE,
-} from "@/constants";
-import { EIncludeFlags } from "@/enums/api";
-import { EJoinState } from "@/enums/guild";
+} from "@/features/guild/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSearchParamsState } from "react-use-search-params-state";
@@ -93,17 +92,7 @@ export default function Guilds() {
     data: guilds,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ["guilds", filter, intermediateSearch],
-    queryFn: () =>
-      getGuilds({
-        page: filter.page,
-        pageSize: GUILDS_PAGE_SIZE,
-        include: EIncludeFlags.RankedMaps | EIncludeFlags.Members,
-        search: intermediateSearch,
-        filters: filter,
-      }),
-  });
+  } = useGuilds(filter, intermediateSearch);
 
   if (isLoading) {
     return <Loader />;

@@ -1,10 +1,13 @@
-import { GUILDS_FILTER_GUILD_TYPES, GUILD_CARD_STATES } from "@/constants";
+import Button from "@/components/Button";
 import { Guild } from "@/types/api/models/guild";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import Button from "../Common/Button";
+import {
+  GUILDS_FILTER_GUILD_TYPES,
+  GUILD_CARD_STATES,
+} from "../utils/constants";
 
 type GuildCardProps = {
   guildData: Guild;

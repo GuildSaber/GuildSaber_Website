@@ -1,5 +1,8 @@
-import { getMapLeaderboard } from "@/api/fetch/rankedMaps";
-import { MAP_API_LEADERBOARD_DATA_INCLUDES } from "@/constants";
+import Avatar from "@/components/Avatar";
+import Button from "@/components/Button";
+import List from "@/components/List";
+import Loader from "@/components/Loader";
+import { getMapLeaderboard } from "@/features/map/utils/api";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { RankedMapResponse } from "@/types/api/responses/rankedMapApiStruct";
 import { formatAccuracy, formatHMD, formatModifiers } from "@/utils/format";
@@ -12,10 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { useSearchParamsState } from "react-use-search-params-state";
-import Avatar from "../Common/Avatar";
-import Button from "../Common/Button";
-import List from "../Common/List";
-import Loader from "../Common/Loader";
+import { MAP_API_LEADERBOARD_DATA_INCLUDES } from "../utils/constants";
 
 type MapLeaderboardProps = {
   mapData: RankedMapResponse;

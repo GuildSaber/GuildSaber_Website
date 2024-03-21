@@ -1,4 +1,4 @@
-import Pagination from "@/components/Common/Pagination";
+import Pagination from "@/components/Pagination";
 import clsx from "clsx";
 import { PropsWithChildren } from "react";
 

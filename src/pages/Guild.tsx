@@ -1,10 +1,8 @@
-import ArcViewer from "@/components/Common/ArcViewer";
-import List from "@/components/Common/List";
-import Loader from "@/components/Common/Loader";
-import MultiRangeSlider from "@/components/Common/MultiRangeSlider/MultiRangeSlider";
-import SearchBar from "@/components/Common/SearchBar";
-import GuildHeader from "@/components/Guild/GuildHeader";
-import MapHeader from "@/components/Map/MapHeader";
+import ArcViewer from "@/components/ArcViewer";
+import List from "@/components/List";
+import Loader from "@/components/Loader";
+import MultiRangeSlider from "@/components/MultiRangeSlider/MultiRangeSlider";
+import SearchBar from "@/components/SearchBar";
 import useArcViewer from "@/hooks/useArcViewer";
 import {
   faCheck,
@@ -16,23 +14,25 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Key, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
-import { getGuild } from "@/api/fetch/guilds";
-import { getMaps } from "@/api/fetch/rankedMaps";
-import Button from "@/components/Common/Button";
-import ListBox from "@/components/Common/ListBox/ListBox";
-import MapPassState from "@/components/Map/Listbox/MapPassState";
+import Button from "@/components/Button";
+import ListBox from "@/components/ListBox/ListBox";
+import { EPassState } from "@/enums/api/models/passState";
+import GuildHeader from "@/features/guild/components/GuildHeader";
+import { useGuild } from "@/features/guild/hooks/useGuild";
 import {
-  GUILD_API_DATA_INCLUDES,
-  GUILD_API_MAPS_DATA_INCLUDES,
+  GUILD_FILTER_PASS_STATE,
   GUILD_FILTER_SORT_BY_VALUES,
-  MAP_PAGE_SIZE,
-} from "@/constants";
+} from "@/features/guild/utils/constants";
+import MapPassState from "@/features/map/components/Listbox/MapPassState";
+import MapHeader from "@/features/map/components/MapHeader";
+import { useMapsGuild } from "@/features/map/hooks/useMapsGuild";
+import { MAP_PAGE_SIZE } from "@/features/map/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { formatAccuracy } from "@/utils/format";
 import { useSearchParamsState } from "react-use-search-params-state";
 
 type Categories = {
@@ -100,44 +100,13 @@ export default function Guild() {
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
 
-  const {
-    data: guild,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["guilds", guildID],
-    queryFn: () =>
-      getGuild({ id: parseInt(guildID), include: GUILD_API_DATA_INCLUDES }),
-    retry: 2,
-  });
+  const { data: guild, isLoading, isError } = useGuild(guildID);
 
   const {
     data: maps,
     isLoading: isMapsLoading,
     isError: isMapsError,
-  } = useQuery({
-    queryKey: [
-      "guilds",
-      guildID,
-      "maps",
-      filter.page,
-      filter,
-      intermediateSearch,
-      categories,
-    ],
-    queryFn: () =>
-      getMaps({
-        guildID: parseInt(guildID),
-        page: filter.page,
-        pageSize: MAP_PAGE_SIZE,
-        include: GUILD_API_MAPS_DATA_INCLUDES,
-        categories,
-        filters: filter,
-        search: intermediateSearch,
-      }),
-    enabled: !!guildID,
-    retry: 2,
-  });
+  } = useMapsGuild(guildID, filter, intermediateSearch, categories);
 
   if (isLoading) {
     return <Loader />;
@@ -270,8 +239,39 @@ export default function Guild() {
             setCurrentPage={(page) => setFilter({ page })}
             className="flex flex-col gap-4"
           >
-            {maps?.data?.map((value, key: Key) => (
-              <MapHeader key={key} mapData={value} arcViewer={arcViewer.open} />
+            {maps?.data?.map((map, key: Key) => (
+              <div key={key}>
+                <MapHeader
+                  mapData={map}
+                  arcViewer={arcViewer.open}
+                  className={clsx({ " rounded-b-none": map.rankedScore })}
+                />
+
+                {map.rankedScore && (
+                  <div
+                    className="flex items-center gap-2 rounded-b-md px-2 py-1"
+                    style={{
+                      backgroundColor: GUILD_FILTER_PASS_STATE.find(
+                        (passState) =>
+                          (passState.value & map.rankedScore!.state) !== 0 &&
+                          passState.value !== EPassState.All,
+                      )!.color,
+                    }}
+                  >
+                    <p className="text-btn">
+                      <span className="font-semibold">
+                        #{map.rankedScore.rank}
+                      </span>
+                      {" | "}
+                      {formatAccuracy(
+                        map.rankedScore.score?.baseScore,
+                        map.rankedMap.rankedMapVersions[0]?.songDifficulty
+                          ?.songDifficultyStats?.maxScore || 0,
+                      )}
+                    </p>
+                  </div>
+                )}
+              </div>
             ))}
           </List>
         )}

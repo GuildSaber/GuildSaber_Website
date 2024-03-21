@@ -1,5 +1,5 @@
-import { GUILD_FILTER_PASS_STATE } from "@/constants";
 import { EPassState } from "@/enums/api/models/passState";
+import { GUILD_FILTER_PASS_STATE } from "@/features/guild/utils/constants";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Listbox } from "@headlessui/react";
@@ -53,7 +53,7 @@ export default function MapPassState({
           </div>
 
           <FontAwesomeIcon
-            className="ui-open:rotate-180 transition-all"
+            className="transition-all ui-open:rotate-180"
             icon={faChevronDown}
             size="sm"
           />
