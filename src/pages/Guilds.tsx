@@ -114,7 +114,7 @@ export default function Guilds() {
             currentPage={filter.page}
             setCurrentPage={(page) => setFilter({ page })}
           >
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="flex flex-wrap gap-2">
               <ListBox
                 options={GUILDS_FILTER_SORT_BY_VALUES}
                 value={filter["sort-by"]}

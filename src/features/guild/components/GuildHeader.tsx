@@ -68,7 +68,7 @@ export default function GuildHeader({ guildData }: { guildData: Guild }) {
           </span>
         </div>
       </div>
-      <h1 className="mb-2 line-clamp-1 flex-1 text-h3 font-bold lg:hidden">
+      <h1 className="mb-2 line-clamp-2 flex-1 text-h3 font-bold lg:hidden">
         {guildData.name}
       </h1>
       <p>{guildData.description}</p>

@@ -19,7 +19,7 @@ type PaginationProps = {
 const Pagination = ({
   onPageChange,
   totalCount,
-  siblingCount = 1,
+  siblingCount = 0,
   currentPage,
   pageSize,
   hasPreviousPage,

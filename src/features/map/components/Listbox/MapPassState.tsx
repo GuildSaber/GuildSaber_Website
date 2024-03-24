@@ -3,7 +3,8 @@ import { GUILD_FILTER_PASS_STATE } from "@/features/guild/utils/constants";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Listbox } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAlingBounding } from "../../hooks/useAlingBounding";
 
 type MapPassStateProps = {
   selected?: {
@@ -23,6 +24,10 @@ export default function MapPassState({
   const [selectedOption, setSelectedOption] = useState(
     GUILD_FILTER_PASS_STATE[0],
   );
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useAlingBounding(menuRef, isOpen);
 
   useEffect(() => {
     let option = null;
@@ -41,7 +46,7 @@ export default function MapPassState({
   }, [value]);
 
   return (
-    <div className="relative">
+    <div className="relative" onClick={() => setIsOpen((prev) => !prev)}>
       <Listbox value={selectedOption} onChange={onChange}>
         <Listbox.Button className="btn inline-flex justify-between !gap-4 !bg-gray-800">
           <div className="flex items-center gap-2">
@@ -58,7 +63,10 @@ export default function MapPassState({
             size="sm"
           />
         </Listbox.Button>
-        <Listbox.Options className="absolute z-10 mt-2 w-full transform overflow-hidden rounded border border-gray-700 bg-gray-800 text-btn sm:w-auto">
+        <Listbox.Options
+          ref={menuRef}
+          className="absolute z-10 mt-2 min-w-full transform overflow-hidden rounded border border-gray-700 bg-gray-800 text-btn"
+        >
           {GUILD_FILTER_PASS_STATE.map((option) => (
             <Listbox.Option
               className="min-w-max cursor-pointer px-4 py-2 hover:bg-gray-700"

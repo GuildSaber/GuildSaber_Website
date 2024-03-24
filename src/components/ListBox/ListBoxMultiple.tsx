@@ -1,3 +1,4 @@
+import { useAlingBounding } from "@/features/map/hooks/useAlingBounding";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,
@@ -6,7 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Listbox } from "@headlessui/react";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ListBoxMultipleProps = {
   label: string;
@@ -32,6 +33,10 @@ export default function ListBoxMultiple({
   onChange,
 }: ListBoxMultipleProps) {
   const [selectedOption, setSelectedOption] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useAlingBounding(menuRef, isOpen);
 
   useEffect(() => {
     let option: any = null;
@@ -48,13 +53,13 @@ export default function ListBoxMultiple({
   }, [values]);
 
   return (
-    <div className="relative">
+    <div className="relative" onClick={() => setIsOpen((prev) => !prev)}>
       <Listbox value={selectedOption} onChange={onChange} multiple>
         <Listbox.Button className="btn inline-flex justify-between !gap-4 !bg-gray-800">
           <div className="flex items-center gap-2">{label}</div>
 
           <FontAwesomeIcon
-            className="ui-open:rotate-180 transition-all"
+            className="transition-all ui-open:rotate-180"
             icon={faChevronDown}
             size="sm"
           />

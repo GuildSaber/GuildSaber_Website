@@ -16,7 +16,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Key, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import Button from "@/components/Button";
 import ListBox from "@/components/ListBox/ListBox";
@@ -47,7 +47,6 @@ export default function Guild() {
   }
 
   const { session } = useAuthContext();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState("");
   const [intermediateSearch, setIntermediateSearch] = useState("");
 
@@ -71,11 +70,13 @@ export default function Guild() {
 
   const arcViewer = useArcViewer();
 
+  const updateFilter = (filter: { [key: string]: string | number }) => {
+    setFilter({ ...filter, page: 1 });
+  };
+
   const updateSearch = (term: string) => {
     setSearch(term);
-    filter({ page: 1 });
-    searchParams.set("page", "1");
-    setSearchParams(searchParams);
+    setFilter({ page: 1 });
   };
 
   const updateCategories = (categorie: Categories["selected"][0]) => {
@@ -171,61 +172,60 @@ export default function Guild() {
           Ranked Maps
         </h3>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex flex-wrap justify-center gap-2 sm:flex-row md:justify-start">
           <ListBox
             options={GUILD_FILTER_SORT_BY_VALUES}
             value={filter["sort-by"]}
-            onChange={(sortBy) => setFilter({ "sort-by": sortBy.value })}
+            onChange={(sortBy) => updateFilter({ "sort-by": sortBy.value })}
           />
 
-          <div className="flex justify-center gap-2 sm:contents">
-            <MultiRangeSlider
-              min={guild.filters.minDifficulty}
-              max={guild.filters.maxDifficulty}
-              icon={faStar}
-              color="#FFA41C"
-              onChange={({ min, max }) => {
-                setFilter({
-                  "difficulty-from": min,
-                  "difficulty-to": max,
-                });
-              }}
-            />
-            <MultiRangeSlider
-              min={guild.filters.minDuration}
-              max={guild.filters.maxDuration}
-              icon={faHourglassStart}
-              minutes
-              onChange={({ min, max }) => {
-                setFilter({
-                  "duration-from": min,
-                  "duration-to": max,
-                });
-              }}
-            />
-            <MultiRangeSlider
-              min={guild.filters.minBPM}
-              max={guild.filters.maxBPM}
-              icon={faDrum}
-              onChange={({ min, max }) => {
-                setFilter({
-                  "bpm-from": min,
-                  "bpm-to": max,
-                });
-              }}
-            />
+          <MultiRangeSlider
+            className="flex-1"
+            min={guild.filters.minDifficulty}
+            max={guild.filters.maxDifficulty}
+            icon={faStar}
+            color="#FFA41C"
+            onChange={({ min, max }) => {
+              updateFilter({
+                "difficulty-from": min,
+                "difficulty-to": max,
+              });
+            }}
+          />
+          <MultiRangeSlider
+            min={guild.filters.minDuration}
+            max={guild.filters.maxDuration}
+            icon={faHourglassStart}
+            minutes
+            onChange={({ min, max }) => {
+              updateFilter({
+                "duration-from": min,
+                "duration-to": max,
+              });
+            }}
+          />
+          <MultiRangeSlider
+            min={guild.filters.minBPM}
+            max={guild.filters.maxBPM}
+            icon={faDrum}
+            onChange={({ min, max }) => {
+              updateFilter({
+                "bpm-from": min,
+                "bpm-to": max,
+              });
+            }}
+          />
 
-            {session && (
-              <MapPassState
-                value={filter["passState"]}
-                onChange={(passState) =>
-                  setFilter({ passState: passState.value })
-                }
-              />
-            )}
-          </div>
+          {session && (
+            <MapPassState
+              value={filter["passState"]}
+              onChange={(passState) =>
+                updateFilter({ passState: passState.value })
+              }
+            />
+          )}
           <SearchBar
-            className="ml-auto w-full sm:w-auto"
+            className="ml-auto w-full lg:w-auto"
             onChange={(e) => updateSearch(e.target.value)}
           />
         </div>

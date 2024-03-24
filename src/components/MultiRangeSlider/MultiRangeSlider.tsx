@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import "./MultiRangeSilder.scss";
-import clsx from "clsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAlingBounding } from "@/features/map/hooks/useAlingBounding";
 import useClickAway from "@/hooks/useClickAway";
 import { formatMinSec } from "@/utils/format";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
+import { useCallback, useEffect, useRef, useState } from "react";
+import "./MultiRangeSilder.scss";
 
 type MultiRangeSliderProps = {
   min: number;
@@ -43,20 +44,7 @@ const MultiRangeSlider = ({
     [min, max],
   );
 
-  useEffect(() => {
-    const dropdownElement = dropdownRef.current;
-
-    if (dropdownElement) {
-      const dropdownRect = dropdownElement.getBoundingClientRect();
-      const spaceOnRight = window.innerWidth - dropdownRect.right;
-      const spaceOnLeft = dropdownRect.left;
-
-      if (spaceOnRight < 0 && spaceOnLeft >= 0) {
-        dropdownElement.style.left = "auto";
-        dropdownElement.style.right = "0";
-      }
-    }
-  }, [isOpen]);
+  useAlingBounding(dropdownRef, isOpen);
 
   useEffect(() => {
     if (maxValRef.current) {
@@ -90,7 +78,7 @@ const MultiRangeSlider = ({
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <p onClick={() => setIsOpen(!isOpen)}>
+        <p className="text-nowrap" onClick={() => setIsOpen(!isOpen)}>
           <FontAwesomeIcon className="icon mr-2" fill={color} icon={icon} />
           {minutes
             ? `${formatMinSec(minVal)} - ${formatMinSec(maxVal)}`
