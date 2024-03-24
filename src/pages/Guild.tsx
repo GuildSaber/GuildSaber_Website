@@ -55,7 +55,7 @@ export default function Guild() {
     selected: [],
   });
 
-  const [filter, setFilter] = useSearchParamsState({
+  const [filters, setFilters] = useSearchParamsState({
     page: { type: "number", default: 1 },
     "sort-by": { type: "string", default: "Difficulty" },
     "order-by": { type: "string", default: "Asc" },
@@ -70,13 +70,13 @@ export default function Guild() {
 
   const arcViewer = useArcViewer();
 
-  const updateFilter = (filter: { [key: string]: string | number }) => {
-    setFilter({ ...filter, page: 1 });
+  const updateFilter = (filters: { [key: string]: string | number }) => {
+    setFilters({ ...filters, page: 1 });
   };
 
   const updateSearch = (term: string) => {
     setSearch(term);
-    setFilter({ page: 1 });
+    setFilters({ page: 1 });
   };
 
   const updateCategories = (categorie: Categories["selected"][0]) => {
@@ -107,7 +107,7 @@ export default function Guild() {
     data: maps,
     isLoading: isMapsLoading,
     isError: isMapsError,
-  } = useMapsGuild(guildID, filter, intermediateSearch, categories);
+  } = useMapsGuild(guildID, filters, intermediateSearch, categories);
 
   if (isLoading) {
     return <Loader />;
@@ -175,7 +175,7 @@ export default function Guild() {
         <div className="flex flex-wrap justify-center gap-2 sm:flex-row md:justify-start">
           <ListBox
             options={GUILD_FILTER_SORT_BY_VALUES}
-            value={filter["sort-by"]}
+            value={filters["sort-by"]}
             onChange={(sortBy) => updateFilter({ "sort-by": sortBy.value })}
           />
 
@@ -218,7 +218,7 @@ export default function Guild() {
 
           {session && (
             <MapPassState
-              value={filter["passState"]}
+              value={filters["passState"]}
               onChange={(passState) =>
                 updateFilter({ passState: passState.value })
               }
@@ -235,44 +235,49 @@ export default function Guild() {
             pageSize={MAP_PAGE_SIZE}
             hasPreviousPage={maps.hasPreviousPage}
             hasNextPage={maps.hasNextPage}
-            currentPage={filter.page}
-            setCurrentPage={(page) => setFilter({ page })}
+            currentPage={filters.page}
+            setCurrentPage={(page) => setFilters({ page })}
             className="flex flex-col gap-4"
           >
-            {maps?.data?.map((map, key: Key) => (
-              <div key={key}>
-                <MapHeader
-                  mapData={map}
-                  arcViewer={arcViewer.open}
-                  className={clsx({ " rounded-b-none": map.rankedScore })}
-                />
+            {maps?.data?.map((map, key: Key) => {
+              const maxScore =
+                map.rankedMap.rankedMapVersions[0]?.songDifficulty
+                  ?.songDifficultyStats?.maxScore || 0;
 
-                {map.rankedScore && (
-                  <div
-                    className="flex items-center gap-2 rounded-b-md px-2 py-1"
-                    style={{
-                      backgroundColor: GUILD_FILTER_PASS_STATE.find(
-                        (passState) =>
-                          (passState.value & map.rankedScore!.state) !== 0 &&
-                          passState.value !== EPassState.All,
-                      )!.color,
-                    }}
-                  >
-                    <p className="text-btn">
-                      <span className="font-semibold">
-                        #{map.rankedScore.rank}
-                      </span>
-                      {" | "}
-                      {formatAccuracy(
-                        map.rankedScore.score?.baseScore,
-                        map.rankedMap.rankedMapVersions[0]?.songDifficulty
-                          ?.songDifficultyStats?.maxScore || 0,
-                      )}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+              return (
+                <div key={key}>
+                  <MapHeader
+                    mapData={map}
+                    arcViewer={arcViewer.open}
+                    className={clsx({ " rounded-b-none": map.rankedScore })}
+                  />
+
+                  {map.rankedScore && (
+                    <div
+                      className="flex items-center gap-2 rounded-b-md px-2 py-1"
+                      style={{
+                        backgroundColor: GUILD_FILTER_PASS_STATE.find(
+                          (passState) =>
+                            (passState.value & map.rankedScore!.state) !== 0 &&
+                            passState.value !== EPassState.All,
+                        )!.color,
+                      }}
+                    >
+                      <p className="text-btn">
+                        <span className="font-semibold">
+                          #{map.rankedScore.rank}
+                        </span>
+                        {" | "}
+                        {formatAccuracy(
+                          map.rankedScore.score?.baseScore,
+                          maxScore,
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </List>
         )}
       </div>

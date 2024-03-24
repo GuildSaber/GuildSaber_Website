@@ -18,7 +18,7 @@ import { toast } from "react-hot-toast";
 import { useSearchParamsState } from "react-use-search-params-state";
 
 export default function Guilds() {
-  const [filter, setFilter] = useSearchParamsState({
+  const [filters, setFilters] = useSearchParamsState({
     page: { type: "number", default: 1 },
     "sort-by": { type: "string", default: "Popularity" },
     "order-by": { type: "string", default: "Desc" },
@@ -34,7 +34,7 @@ export default function Guilds() {
 
   const updateSearch = (term: string) => {
     setSearch(term);
-    setFilter({ page: 1 });
+    setFilters({ page: 1 });
   };
 
   const joinGuild = (guildID: number) =>
@@ -63,7 +63,7 @@ export default function Guilds() {
 
       dispatch({ type: "GUILD_ADD", payload: data });
       queryClient.invalidateQueries({
-        queryKey: ["guilds", filter],
+        queryKey: ["guilds", filters],
       });
     },
     onError: () => {
@@ -92,7 +92,7 @@ export default function Guilds() {
     data: guilds,
     isLoading,
     isError,
-  } = useGuilds(filter, intermediateSearch);
+  } = useGuilds(filters, intermediateSearch);
 
   if (isLoading) {
     return <Loader />;
@@ -111,22 +111,22 @@ export default function Guilds() {
             pageSize={GUILDS_PAGE_SIZE}
             hasPreviousPage={guilds.hasPreviousPage}
             hasNextPage={guilds.hasNextPage}
-            currentPage={filter.page}
-            setCurrentPage={(page) => setFilter({ page })}
+            currentPage={filters.page}
+            setCurrentPage={(page) => setFilters({ page })}
           >
             <div className="flex flex-wrap gap-2">
               <ListBox
                 options={GUILDS_FILTER_SORT_BY_VALUES}
-                value={filter["sort-by"]}
-                onChange={(option) => setFilter({ "sort-by": option.value })}
+                value={filters["sort-by"]}
+                onChange={(option) => setFilters({ "sort-by": option.value })}
               />
 
               <ListBoxMultiple
                 label="Guild Type"
                 options={GUILDS_FILTER_GUILD_TYPES}
-                values={filter.guildTypes.split(",")}
+                values={filters.guildTypes.split(",")}
                 onChange={(option) =>
-                  setFilter({
+                  setFilters({
                     guildTypes: option
                       .reduce(
                         (

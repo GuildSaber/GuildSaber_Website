@@ -1,4 +1,4 @@
-import { useAlingBounding } from "@/features/map/hooks/useAlingBounding";
+import { useAlingBounding } from "@/hooks/useAlingBounding";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import {
   faChevronDown,

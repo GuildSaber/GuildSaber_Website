@@ -9,7 +9,6 @@ import MapHeader from "@/features/map/components/MapHeader";
 import MapLeaderboard from "@/features/map/components/MapLeaderboard";
 import MapRequirements from "@/features/map/components/MapRequirements";
 import { useMap } from "@/features/map/hooks/useMap";
-import { MAP_PAGE_SIZE } from "@/features/map/utils/constants";
 
 export default function Map() {
   const { mapID } = useParams();
@@ -42,7 +41,7 @@ export default function Map() {
 
         <MapRequirements />
         <div className="flex w-full justify-center">
-          <MapLeaderboard mapData={map} pageSize={MAP_PAGE_SIZE} />
+          <MapLeaderboard mapData={map} />
         </div>
       </>
       <ArcViewer settings={arcViewer} />

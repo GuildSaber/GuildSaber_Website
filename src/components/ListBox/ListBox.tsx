@@ -1,4 +1,4 @@
-import { useAlingBounding } from "@/features/map/hooks/useAlingBounding";
+import { useAlingBounding } from "@/hooks/useAlingBounding";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Listbox } from "@headlessui/react";

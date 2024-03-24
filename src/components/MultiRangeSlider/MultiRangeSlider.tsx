@@ -1,4 +1,4 @@
-import { useAlingBounding } from "@/features/map/hooks/useAlingBounding";
+import { useAlingBounding } from "@/hooks/useAlingBounding";
 import useClickAway from "@/hooks/useClickAway";
 import { formatMinSec } from "@/utils/format";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
