@@ -15,6 +15,7 @@ import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSearchParamsState } from "react-use-search-params-state";
 
@@ -40,6 +41,12 @@ export default function Leaderboard() {
       default: null,
     },
   });
+
+  useEffect(() => {
+    if (points) {
+      setFilters({ point: points[0].id });
+    }
+  }, []);
 
   const changePoint = (point: number) => () => setFilters({ point, page: 1 });
 
@@ -125,7 +132,7 @@ export default function Leaderboard() {
           <p>Headset</p>
         </div>
 
-        {(!leaderboard.data.length || !filters.point) && (
+        {!leaderboard.data.length && (
           <div className="w-full text-center">
             <FontAwesomeIcon
               icon={faCircleExclamation}
