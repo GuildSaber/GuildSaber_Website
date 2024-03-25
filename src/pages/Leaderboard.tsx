@@ -93,7 +93,6 @@ export default function Leaderboard() {
       hasNextPage={leaderboard.hasNextPage}
       currentPage={filters.page}
       setCurrentPage={(page) => setFilters({ page })}
-      className="overflow-y-auto"
     >
       <div className="flex justify-between">
         <div className="flex gap-2">
@@ -114,7 +113,7 @@ export default function Leaderboard() {
           options={GUILD_LEADERBOARD_PAGE_SIZE_OPTIONS}
           value={filters.pageSize}
           onChange={(size) => {
-            setFilters({ pageSize: size.value });
+            setFilters({ pageSize: size.value, page: 1 });
           }}
         />
       </div>
