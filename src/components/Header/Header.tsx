@@ -48,8 +48,11 @@ export default function Header() {
             <>
               {session.selectedGuild && (
                 <div className="hidden gap-4 sm:flex">
-                  <Link to="/leaderboards" className="btn text-p">
-                    Leaderboards
+                  <Link
+                    to={`/guild/${session.selectedGuild}/leaderboard`}
+                    className="btn text-p"
+                  >
+                    Leaderboard
                   </Link>
                   {session.memberList && session.memberList.length === 0 && (
                     <Link to="/guilds" className="btn text-p">
@@ -114,7 +117,9 @@ export default function Header() {
             <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
               {extended && session && session.selectedGuild && (
                 <>
-                  <Link to="/leaderboards">Leaderboards</Link>
+                  <Link to={`/guild/${session.selectedGuild}/leaderboard`}>
+                    Leaderboard
+                  </Link>
                   <Link to="/guilds">Guilds</Link>
                 </>
               )}

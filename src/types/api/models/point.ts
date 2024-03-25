@@ -43,3 +43,5 @@ export const SimplePointSchema = z.object({
 });
 
 export type Point = z.infer<typeof PointSchema>;
+
+export type SimplePoints = z.infer<typeof SimplePointSchema>;

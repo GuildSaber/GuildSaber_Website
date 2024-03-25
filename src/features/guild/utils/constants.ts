@@ -12,6 +12,14 @@ export const GUILD_MENU_MAX_VISIBLE_GUILD_COUNT = 3;
 export const GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT = 5;
 
 export const GUILDS_PAGE_SIZE = 4;
+export const GUILD_LEADERBOARD_PAGE_SIZE = 50;
+
+export const GUILD_LEADERBOARD_PAGE_SIZE_OPTIONS = [
+  { label: "50 pages", value: 50 },
+  { label: "30 pages", value: 30 },
+  { label: "20 pages", value: 20 },
+  { label: "10 pages", value: 10 },
+];
 
 export const GUILDS_FILTER_GUILD_TYPES = [
   { value: "1", label: "Unverified", icon: null },
