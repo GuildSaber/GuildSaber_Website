@@ -162,8 +162,8 @@ export const PlayerAPIResponseSchema = z.object({
 });
 
 export const PlayerStatsAPIResponseSchema = z.object({
-  playerID: z.number(),
   pointID: z.number(),
+  pointName: z.string(),
   rank: z.number(),
   validPassCount: z.number(),
   pointValue: z.number(),

@@ -140,7 +140,7 @@ export default function PlayerProfile() {
     queryKey: ["player", playerID, "stats", pointID],
     queryFn: () =>
       fetchAPI<PlayerStatsAPIResponse>({
-        path: `/player/${playerID}/stats/${pointID}`,
+        path: `/player/by-id/${playerID}/point-stats/${pointID}`,
         schema: PlayerStatsAPIResponseSchema,
       }),
     enabled: !!player && !!pointID && player.guilds.length !== 0,
