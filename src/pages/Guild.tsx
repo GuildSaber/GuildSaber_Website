@@ -34,6 +34,8 @@ import { MAP_PAGE_SIZE } from "@/features/map/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { formatAccuracy } from "@/utils/format";
 import { useSearchParamsState } from "react-use-search-params-state";
+import { EModifiers } from "@/enums/api/models/modifiers";
+import { getFlagStrings } from "@/utils/flag";
 
 type Categories = {
   anyMatch: boolean;
@@ -272,6 +274,19 @@ export default function Guild() {
                           map.rankedScore.score?.baseScore,
                           maxScore,
                         )}
+                        {(map.rankedScore.score?.modifiers as number) !== 0 &&
+                          " - " +
+                            getFlagStrings(
+                              map.rankedScore.score?.modifiers as number,
+                              EModifiers,
+                            )
+                              .map((modifier) =>
+                                modifier
+                                  .split("")
+                                  .filter((char) => char === char.toUpperCase())
+                                  .join(""),
+                              )
+                              .join(", ")}
                       </p>
                     </div>
                   )}

@@ -47,6 +47,7 @@ export const GUILD_FILTER_SORT_BY_VALUES = [
 export const GUILD_FILTER_PASS_STATE = [
   { value: EPassState.All, label: "All", color: "#fff" },
   { value: EPassState.AllAllowed, label: "Allowed", color: "#53b365" },
+  { value: EPassState.Pending, label: "Pending", color: "#f0ad4e" },
   {
     value: EPassState.MissingRequirements,
     label: "Invalid",
