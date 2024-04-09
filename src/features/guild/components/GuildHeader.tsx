@@ -62,7 +62,7 @@ export default function GuildHeader({ guildData }: { guildData: Guild }) {
           </div>
           <span
             className="hidden text-h2 font-bold md:block"
-            style={{ color: `#${decimalToHex(guildData.color)}` }}
+            style={{ color: decimalToHex(guildData.color) }}
           >
             {guildData.smallName}
           </span>

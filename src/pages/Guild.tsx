@@ -20,22 +20,16 @@ import { useParams } from "react-router-dom";
 
 import Button from "@/components/Button";
 import ListBox from "@/components/ListBox/ListBox";
-import { EPassState } from "@/enums/api/models/passState";
 import GuildHeader from "@/features/guild/components/GuildHeader";
 import { useGuild } from "@/features/guild/hooks/useGuild";
-import {
-  GUILD_FILTER_PASS_STATE,
-  GUILD_FILTER_SORT_BY_VALUES,
-} from "@/features/guild/utils/constants";
+import { GUILD_FILTER_SORT_BY_VALUES } from "@/features/guild/utils/constants";
 import MapPassState from "@/features/map/components/Listbox/MapPassState";
 import MapHeader from "@/features/map/components/MapHeader";
+import { MapPassStateBanner } from "@/features/map/components/MapPassStateBanner";
 import { useMapsGuild } from "@/features/map/hooks/useMapsGuild";
 import { MAP_PAGE_SIZE } from "@/features/map/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { formatAccuracy } from "@/utils/format";
 import { useSearchParamsState } from "react-use-search-params-state";
-import { EModifiers } from "@/enums/api/models/modifiers";
-import { getFlagStrings } from "@/utils/flag";
 
 type Categories = {
   anyMatch: boolean;
@@ -251,44 +245,14 @@ export default function Guild() {
                   <MapHeader
                     mapData={map}
                     arcViewer={arcViewer.open}
-                    className={clsx({ " rounded-b-none": map.rankedScore })}
+                    className={clsx({ "rounded-b-none": map.rankedScore })}
                   />
 
                   {map.rankedScore && (
-                    <div
-                      className="flex items-center gap-2 rounded-b-md px-2 py-1"
-                      style={{
-                        backgroundColor: GUILD_FILTER_PASS_STATE.find(
-                          (passState) =>
-                            (passState.value & map.rankedScore!.state) !== 0 &&
-                            passState.value !== EPassState.All,
-                        )!.color,
-                      }}
-                    >
-                      <p className="text-btn">
-                        <span className="font-semibold">
-                          #{map.rankedScore.rank}
-                        </span>
-                        {" | "}
-                        {formatAccuracy(
-                          map.rankedScore.score?.baseScore,
-                          maxScore,
-                        )}
-                        {(map.rankedScore.score?.modifiers as number) !== 0 &&
-                          " - " +
-                            getFlagStrings(
-                              map.rankedScore.score?.modifiers as number,
-                              EModifiers,
-                            )
-                              .map((modifier) =>
-                                modifier
-                                  .split("")
-                                  .filter((char) => char === char.toUpperCase())
-                                  .join(""),
-                              )
-                              .join(", ")}
-                      </p>
-                    </div>
+                    <MapPassStateBanner
+                      rankedScore={map.rankedScore}
+                      maxScore={maxScore}
+                    />
                   )}
                 </div>
               );
