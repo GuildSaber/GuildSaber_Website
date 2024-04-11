@@ -28,7 +28,7 @@ export default function Header() {
         },
       )}
     >
-      <div className="container mx-auto flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
+      <div className="container mx-auto flex items-stretch justify-between px-3 py-4 transition-all md:px-4 lg:px-8">
         <nav className="flex w-full items-center justify-between gap-4">
           <Link className="items-center gap-4 sm:flex sm:flex-1" to="/">
             <img src="/gsLogo.svg" alt="logo" width={32} height={32} />
