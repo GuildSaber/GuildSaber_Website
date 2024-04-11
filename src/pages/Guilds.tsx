@@ -91,6 +91,7 @@ export default function Guilds() {
   const {
     data: guilds,
     isLoading,
+    isFetching,
     isError,
   } = useGuilds(filters, intermediateSearch);
 
@@ -113,6 +114,7 @@ export default function Guilds() {
             hasNextPage={guilds.hasNextPage}
             currentPage={filters.page}
             setCurrentPage={(page) => setFilters({ page })}
+            isLoading={isFetching}
           >
             <div className="flex flex-wrap gap-2">
               <ListBox

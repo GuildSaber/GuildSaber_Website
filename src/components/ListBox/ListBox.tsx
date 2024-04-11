@@ -41,7 +41,7 @@ export default function ListBox({
   return (
     <div className="relative" onClick={() => setIsOpen((prev) => !prev)}>
       <Listbox value={selectedOption} onChange={onChange}>
-        <Listbox.Button className="btn inline-flex justify-between !gap-4 !bg-gray-800">
+        <Listbox.Button className="btn inline-flex h-full justify-between !gap-4 !bg-gray-800">
           <div className="flex items-center gap-2">
             {selectedOption?.image && (
               <img
@@ -50,7 +50,12 @@ export default function ListBox({
               />
             )}
 
-            {selectedOption?.label}
+            <span
+              className="line-clamp-1 text-left"
+              title={selectedOption?.label as string}
+            >
+              {selectedOption?.label}
+            </span>
           </div>
 
           <FontAwesomeIcon
@@ -61,7 +66,7 @@ export default function ListBox({
         </Listbox.Button>
         <Listbox.Options
           ref={menuRef}
-          className="absolute z-10 mt-2 min-w-full max-w-64 transform overflow-hidden rounded border border-gray-700 bg-gray-800 text-btn sm:w-auto"
+          className="absolute z-10 mt-2 max-h-72 min-w-full max-w-64 transform overflow-hidden overflow-y-auto rounded border border-gray-700 bg-gray-800 text-btn scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-700 sm:w-auto"
         >
           {options.map((option) => (
             <Listbox.Option

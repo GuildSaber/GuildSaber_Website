@@ -9,7 +9,6 @@ import Signin from "@/pages/Signin";
 import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import "./App.scss";
-import Leaderboard from "./pages/Leaderboard";
 
 function App() {
   return (
@@ -23,8 +22,11 @@ function App() {
           <Route path="/signin" element={<Signin />} />
 
           <Route path="/guilds" element={<Guilds />} />
-          <Route path="/guild/:guildID" element={<Guild />} />
-          <Route path="/guild/:guildID/leaderboard" element={<Leaderboard />} />
+          <Route path="/guild/:guildID" element={<Guild tab="rankedMaps" />} />
+          <Route
+            path="/guild/:guildID/leaderboard"
+            element={<Guild tab="leaderboard" />}
+          />
 
           <Route path="/map/:mapID/" element={<Map />} />
         </Routes>

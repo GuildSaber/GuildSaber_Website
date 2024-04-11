@@ -11,7 +11,7 @@ import {
 import { fetchAPI } from "@/utils/fetch";
 
 type getMapsType = {
-  guildID: number;
+  guildID: number | string;
   page: number;
   pageSize: number;
   include?: EIncludeFlags;

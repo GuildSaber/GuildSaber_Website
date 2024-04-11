@@ -1,11 +1,10 @@
 import {
-  GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT,
   GUILD_MENU_MAX_GUILD_NAME_LENGTH,
   GUILD_MENU_MAX_VISIBLE_GUILD_COUNT,
 } from "@/features/guild/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import useClickAway from "@/hooks/useClickAway";
-import { GuildAPIResponse } from "@/types/api/guild";
+import { Guild } from "@/types/api/models/guild";
 import {
   faBars,
   faChevronDown,
@@ -17,7 +16,7 @@ import clsx from "clsx";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
+export default function GuildMenu({ guilds }: { guilds: Guild[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const clickRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -34,6 +33,7 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
       payload: guildID.toString(),
     });
     localStorage.setItem("selectedGuild", guildID.toString());
+    navigate(`/guild/${guildID}`);
     setIsOpen(false);
   };
 
@@ -112,31 +112,33 @@ export default function GuildMenu({ guilds }: { guilds: GuildAPIResponse[] }) {
           { hidden: !isOpen },
         )}
       >
-        {guilds &&
-          guilds
-            .slice(
+        <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-700">
+          {guilds &&
+            guilds
+              /*.slice(
               GUILD_MENU_MAX_VISIBLE_GUILD_COUNT,
               GUILD_MENU_MAX_VISIBLE_GUILD_COUNT +
                 GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT,
-            )
-            .map((guild, key) => (
-              <li
-                key={key}
-                className="flex cursor-pointer items-center gap-4 px-3 py-2 hover:bg-gray-700"
-                onClick={handleGuildClick(guild.id)}
-              >
-                <img
-                  src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.jpg`}
-                  className="h-8 w-8 rounded opacity-80"
-                  alt="logo"
-                />
-                <span className="line-clamp-1">
-                  {guild.name.length <= GUILD_MENU_MAX_GUILD_NAME_LENGTH
-                    ? guild.name
-                    : guild.smallName}
-                </span>
-              </li>
-            ))}
+            )*/
+              .map((guild, key) => (
+                <li
+                  key={key}
+                  className="flex cursor-pointer items-center gap-4 px-3 py-2 hover:bg-gray-700"
+                  onClick={handleGuildClick(guild.id)}
+                >
+                  <img
+                    src={`https://cdn.guildsaber.com/Guild/${guild.id}/Logo.jpg`}
+                    className="h-8 w-8 rounded opacity-80"
+                    alt="logo"
+                  />
+                  <span className="line-clamp-1">
+                    {guild.name.length <= GUILD_MENU_MAX_GUILD_NAME_LENGTH
+                      ? guild.name
+                      : guild.smallName}
+                  </span>
+                </li>
+              ))}
+        </div>
 
         <li className="flex cursor-pointer items-center gap-4 px-3 py-2 text-muted hover:bg-gray-700">
           <div className="flex-center h-8 w-8 rounded opacity-80">

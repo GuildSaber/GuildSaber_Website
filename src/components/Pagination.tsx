@@ -45,7 +45,7 @@ const Pagination = ({
   };
 
   return (
-    <div className="sticky bottom-2 flex justify-center">
+    <div className="sticky bottom-4 flex justify-center md:bottom-2">
       <ul className="flex-center flex select-none gap-2 rounded-lg bg-gray-900 p-2">
         <li
           className={clsx(

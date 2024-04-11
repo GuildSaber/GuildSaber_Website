@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSearchParamsState } from "react-use-search-params-state";
 import { useMapLeaderboard } from "../hooks/useMapLeaderboard";
@@ -30,17 +31,17 @@ export default function MapLeaderboard({
     page: { type: "number", default: 1 },
     point: { type: "number", default: mapData.simplePoints[0].id },
   });
+  const [pageSense, setPageSense] = useState("next");
 
   const { page, point } = filters;
   const { rankedMap: map, simplePoints: points } = mapData;
-
-  const setCurrentPage = (page: number) => setFilters({ page });
 
   const changePoint = (point: number) => () => setFilters({ point, page: 1 });
 
   const {
     data: leaderboard,
     isLoading,
+    isFetching,
     isError,
     error,
   } = useMapLeaderboard({
@@ -70,7 +71,11 @@ export default function MapLeaderboard({
       hasPreviousPage={leaderboard.hasPreviousPage}
       hasNextPage={leaderboard.hasNextPage}
       currentPage={filters.page}
-      setCurrentPage={setCurrentPage}
+      setCurrentPage={(page, sense) => {
+        setFilters({ page });
+        setPageSense(sense);
+      }}
+      isLoading={isFetching}
     >
       <div className="rounded bg-gray-800 p-4 lg:p-8">
         <div className="flex gap-2">
@@ -108,17 +113,22 @@ export default function MapLeaderboard({
           </div>
         )}
 
-        <div className="grid w-full gap-1 font-medium">
+        <div className="grid w-full gap-1 overflow-x-hidden overflow-y-clip font-medium">
           {leaderboard?.data.map(({ player, rankedScore }, key) => {
             const maxScore =
-              map.rankedMapVersions[0]?.songDifficulty?.songDifficultyStats
+              map.rankedMapVersions![0]?.songDifficulty?.songDifficultyStats
                 ?.maxScore || 0;
 
             return (
               <div
-                key={key}
+                key={player.userID}
+                style={{
+                  animationDelay: `calc(40ms * ${key})`,
+                  animationName:
+                    pageSense === "next" ? "slide-in" : "slide-out",
+                }}
                 className={clsx(
-                  "grid w-full cursor-pointer grid-cols-[2.3fr_10fr_repeat(2,_4fr)] items-center gap-3 rounded px-2 py-1 text-btn transition-colors hover:bg-gray-900 md:grid-cols-[2fr_10fr_6fr_repeat(5,_4fr)]",
+                  "anim-slide grid w-full cursor-pointer grid-cols-[2.3fr_10fr_repeat(2,_4fr)] items-center gap-3 rounded px-2 py-1 text-btn transition-colors hover:bg-gray-900 md:grid-cols-[2fr_10fr_6fr_repeat(5,_4fr)]",
                   {
                     "outline outline-1 outline-secondary":
                       player.userID === session?.player?.userID,

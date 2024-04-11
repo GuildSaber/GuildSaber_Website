@@ -3,8 +3,7 @@ import { EPassState } from "@/enums/api/models/passState";
 import { GUILD_FILTER_PASS_STATE } from "@/features/guild/utils/constants";
 import { RankedScore } from "@/types/api/models/rankedTypes";
 import { hexToRGB } from "@/utils/color";
-import { getFlagStrings } from "@/utils/flag";
-import { formatAccuracy } from "@/utils/format";
+import { formatAccuracy, formatModifiers } from "@/utils/format";
 
 type MapPassStateBannerProps = {
   rankedScore: RankedScore;
@@ -35,16 +34,8 @@ export const MapPassStateBanner = ({
         <span className="font-semibold">#{rankedScore.rank}</span>
         {" | "}
         {formatAccuracy(rankedScore.score?.baseScore, maxScore)}
-        {(rankedScore.score?.modifiers as number) !== 0 &&
-          " - " +
-            getFlagStrings(rankedScore.score?.modifiers as number, EModifiers)
-              .map((modifier) =>
-                modifier
-                  .split("")
-                  .filter((char) => char === char.toUpperCase())
-                  .join(""),
-              )
-              .join(", ")}
+        {(rankedScore.score?.modifiers as EModifiers) !== EModifiers.None &&
+          " - " + formatModifiers(rankedScore.score?.modifiers!).toString()}
       </p>
     </div>
   );

@@ -42,7 +42,7 @@ export const RankedMapSchema = z.object({
   rating: RankedMapDifficultyRatingSchema,
   unixCreationTime: z.number(),
   unixEditTime: z.number(),
-  rankedMapVersions: z.array(RankedMapVersionSchema),
+  rankedMapVersions: z.array(RankedMapVersionSchema).nullish(),
 });
 
 export type RankedMap = z.infer<typeof RankedMapSchema>;

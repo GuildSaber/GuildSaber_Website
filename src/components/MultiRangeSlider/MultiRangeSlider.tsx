@@ -70,10 +70,13 @@ const MultiRangeSlider = ({
   }, [maxVal, getPercent, isOpen]);
 
   return (
-    <div ref={clickRef} className="MultiRangeSlider relative select-none">
+    <div
+      ref={clickRef}
+      className="MultiRangeSlider relative min-w-28 select-none md:w-auto"
+    >
       <button
         className={clsx(
-          "btn inline-flex justify-between !gap-4 !bg-gray-800",
+          "btn inline-flex w-full justify-between !gap-4 !bg-gray-800",
           className,
         )}
         onClick={() => setIsOpen(!isOpen)}

@@ -5,7 +5,11 @@ import Bpm from "@/components/Icons/Bpm";
 import Sparkles from "@/components/Icons/Sparkles";
 import { ArcViewerSettingsProps } from "@/hooks/useArcViewer";
 import { RankedMapResponse } from "@/types/api/responses/rankedMapApiStruct";
-import { formatDifficulty, formatMinSec } from "@/utils/format";
+import {
+  formatDifficulty,
+  formatDurationSince,
+  formatMinSec,
+} from "@/utils/format";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import {
   faCloudArrowDown,
@@ -34,7 +38,7 @@ export default function MapHeader({
     songDifficultyStats: difficulty,
     difficulty: levelDifficulty,
     gameMode,
-  } = mapData.rankedMap.rankedMapVersions[0]?.songDifficulty || {};
+  } = mapData.rankedMap.rankedMapVersions![0]?.songDifficulty || {};
 
   if (!song || !difficulty || !levelDifficulty || !gameMode) {
     return <></>;
@@ -64,29 +68,43 @@ export default function MapHeader({
           />
           <div className="absolute bottom-0 flex w-full flex-col items-center bg-gray-700/50 p-2 text-center md:hidden">
             <Link to={`/map/${mapData.rankedMap.id}`}>
-              <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
+              <h3
+                style={{ wordBreak: "break-word" }}
+                className="line-clamp-1 break-all text-h4 font-bold hover:underline"
+              >
                 {song.songName}
               </h3>
             </Link>
-            <p className="mb-2 text-p font-normal text-secondary">
+            <p className="text-p font-normal text-secondary">
               by {song.songAuthorName} [{song.mapperName}]
+            </p>
+            <p className="text-btn">
+              Last Edited {formatDurationSince(mapData.rankedMap.unixEditTime)}{" "}
+              ago
             </p>
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-4 p-8 text-center md:flex-row md:items-start md:p-0 md:text-start">
           <div className="hidden md:block">
             <Link to={`/map/${mapData.rankedMap.id}`}>
-              <h3 className="line-clamp-1 text-h4 font-bold hover:underline">
+              <h3
+                style={{ wordBreak: "break-word" }}
+                className="line-clamp-1 text-h4 font-bold hover:underline"
+              >
                 {song.songName}
               </h3>
             </Link>
-            <p className="mb-2 text-p font-normal text-secondary">
+            <p className="mb-1 line-clamp-2 text-p font-normal text-secondary">
               by {song.songAuthorName} [{song.mapperName}]
+            </p>
+            <p className="text-btn text-muted">
+              Last Edited {formatDurationSince(mapData.rankedMap.unixEditTime)}{" "}
+              ago
             </p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2 text-right md:items-end">
-            <div className="flex gap-2">
+            <div className="flex flex-wrap justify-center gap-2 md:flex-nowrap">
               <p className="badge">
                 {songDuration}
                 <FontAwesomeIcon icon={faHourglassStart} />
@@ -105,7 +123,7 @@ export default function MapHeader({
               </p>
             </div>
 
-            <div className="flex gap-2 md:mr-4">
+            <div className="flex flex-wrap justify-center gap-2 md:mr-4 md:flex-nowrap">
               <p className="badge">
                 {song.bpm}
                 <Bpm />

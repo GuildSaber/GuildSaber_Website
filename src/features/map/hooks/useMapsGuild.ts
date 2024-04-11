@@ -9,7 +9,7 @@ type Categories = {
 };
 
 export const useMapsGuild = (
-  guildID: string,
+  guildID: string | number,
   filters: any,
   search: string,
   categories: Categories,
@@ -26,7 +26,7 @@ export const useMapsGuild = (
     ],
     queryFn: () =>
       getMaps({
-        guildID: parseInt(guildID),
+        guildID: guildID,
         page: filters.page,
         pageSize: MAP_PAGE_SIZE,
         include: GUILD_API_MAPS_DATA_INCLUDES,

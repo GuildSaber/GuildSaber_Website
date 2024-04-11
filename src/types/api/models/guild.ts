@@ -1,5 +1,6 @@
 import { EGuildType } from "@/enums/api/models/guildType";
 import { z } from "zod";
+import { SimplePointSchema } from "./point";
 
 export const GuildSchema = z.object({
   id: z.number(),
@@ -8,6 +9,7 @@ export const GuildSchema = z.object({
   description: z.string(),
   color: z.number(),
   type: z.nativeEnum(EGuildType),
+  simplePoints: z.array(SimplePointSchema).nullish(),
   joinRequirements: z.object({
     requirements: z.number(),
     minRank: z.number(),

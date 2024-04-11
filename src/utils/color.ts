@@ -15,6 +15,10 @@ export function hexToRGB(hex: string) {
   ];
 }
 
-export function decimalToRGB(number: number) {
-  return hexToRGB(decimalToHex(number));
+export function decimalToRGB(number: number | undefined) {
+  if (!number) {
+    return [0, 0, 0];
+  }
+
+  return hexToRGB(decimalToHex(number).replace("#", ""));
 }

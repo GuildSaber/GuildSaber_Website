@@ -55,7 +55,7 @@ export default function ListBoxMultiple({
   return (
     <div className="relative" onClick={() => setIsOpen((prev) => !prev)}>
       <Listbox value={selectedOption} onChange={onChange} multiple>
-        <Listbox.Button className="btn inline-flex justify-between !gap-4 !bg-gray-800">
+        <Listbox.Button className="btn inline-flex h-full justify-between !gap-4 !bg-gray-800">
           <div className="flex items-center gap-2">{label}</div>
 
           <FontAwesomeIcon

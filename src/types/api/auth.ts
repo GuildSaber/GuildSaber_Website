@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GuildsAPIResponseSchema, GuildAPIResponse } from "./guild";
+import { Guild, GuildSchema } from "./models/guild";
 
 export interface AuthState {
   session: {
@@ -32,7 +32,7 @@ export interface MemberList {
   guildID: number;
   userID: number;
   state: number;
-  guild: GuildAPIResponse;
+  guild: Guild;
   permissions: number;
   priority: number;
   joinDateUnix: number;
@@ -75,7 +75,7 @@ export const AuthAPIResponseSchema = z
         z.object({
           guildID: z.number(),
           userID: z.number(),
-          guild: GuildsAPIResponseSchema,
+          guild: GuildSchema,
           permissions: z.number(),
           priority: z.number(),
           state: z.number(),

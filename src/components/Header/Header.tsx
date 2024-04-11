@@ -1,6 +1,5 @@
+import { EJoinState } from "@/enums/guild";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -9,7 +8,6 @@ import GuildMenu from "./GuildMenu";
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { session } = useAuthContext();
-  const [extended, setExtended] = useState(false);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -32,28 +30,17 @@ export default function Header() {
     >
       <div className="container mx-auto flex items-stretch justify-between px-2 py-4 transition-all md:px-4 lg:px-8">
         <nav className="flex w-full items-center justify-between gap-4">
-          <Link className="hidden flex-1 items-center gap-4 sm:flex" to="/">
+          <Link className="items-center gap-4 sm:flex sm:flex-1" to="/">
             <img src="/gsLogo.svg" alt="logo" width={32} height={32} />
-            <span className="hidden text-h5 font-bold md:inline">
+            <span className="hidden text-h5 font-bold sm:inline">
               GuildSaber
             </span>
           </Link>
-          <FontAwesomeIcon
-            className="cursor-pointer p-4 sm:hidden"
-            size="lg"
-            icon={extended ? faXmark : faBars}
-            onClick={() => setExtended(!extended)}
-          />
+
           {session && (
             <>
               {session.selectedGuild && (
                 <div className="hidden gap-4 sm:flex">
-                  <Link
-                    to={`/guild/${session.selectedGuild}/leaderboard`}
-                    className="btn text-p"
-                  >
-                    Leaderboard
-                  </Link>
                   {session.memberList && session.memberList.length === 0 && (
                     <Link to="/guilds" className="btn text-p">
                       Guilds
@@ -72,7 +59,8 @@ export default function Header() {
                   guilds={
                     session.memberList
                       ?.sort((a, b) => a.priority - b.priority)
-                      ?.map((memberList) => memberList.guild)
+                      .filter((member) => member.state === EJoinState.Joined)
+                      ?.map((member) => member.guild)
                       ?.flat() ?? []
                   }
                 />
@@ -102,30 +90,6 @@ export default function Header() {
             </div>
           )}
         </nav>
-        <div
-          className={clsx("fixed inset-0 min-h-screen bg-gray-900", {
-            hidden: !extended,
-          })}
-        >
-          <div className="px-2 py-4">
-            <FontAwesomeIcon
-              className="cursor-pointer p-4"
-              size="lg"
-              icon={faXmark}
-              onClick={() => setExtended(false)}
-            />
-            <div className="flex-center flex-col gap-8 text-h5 sm:hidden">
-              {extended && session && session.selectedGuild && (
-                <>
-                  <Link to={`/guild/${session.selectedGuild}/leaderboard`}>
-                    Leaderboard
-                  </Link>
-                  <Link to="/guilds">Guilds</Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
     </header>
   );

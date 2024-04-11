@@ -1,6 +1,7 @@
 import Pagination from "@/components/Pagination";
 import clsx from "clsx";
 import { PropsWithChildren } from "react";
+import Loader from "./Loader";
 
 type ListProps = {
   totalCount: number;
@@ -8,7 +9,8 @@ type ListProps = {
   hasPreviousPage: boolean;
   hasNextPage: boolean;
   currentPage: number;
-  setCurrentPage: (page: number) => void;
+  setCurrentPage: (page: number, sense: string) => void;
+  isLoading?: boolean;
   className?: string;
 };
 
@@ -19,15 +21,17 @@ export default function List({
   hasNextPage,
   currentPage,
   setCurrentPage,
+  isLoading,
   children,
   className,
 }: PropsWithChildren<ListProps>) {
-  const onPageChangeHandler = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
-    <div className={clsx("flex w-full flex-col gap-2", className)}>
+    <div className={clsx("relative flex w-full flex-col gap-2", className)}>
+      {isLoading && (
+        <div className="absolute z-20 flex h-full w-full items-center justify-center">
+          <Loader />
+        </div>
+      )}
       {children}
 
       <Pagination
@@ -36,7 +40,9 @@ export default function List({
         pageSize={pageSize}
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
-        onPageChange={(page) => onPageChangeHandler(page)}
+        onPageChange={(page) =>
+          setCurrentPage(page, currentPage - page > 0 ? "prev" : "next")
+        }
       />
     </div>
   );

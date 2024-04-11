@@ -39,6 +39,7 @@ type getGuildLeaderboardType = {
   pointID: string | number;
   page: number;
   pageSize?: number;
+  categoryID?: number;
 };
 
 export const getGuilds = async ({
@@ -99,12 +100,14 @@ export const getGuildLeaderboard = async ({
   pointID,
   page,
   pageSize,
+  categoryID,
 }: getGuildLeaderboardType) =>
   fetchAPI<PagedList<PlayerLeaderboardApiStruct>>({
     path: `/leaderboard/player/${pointID}`,
     queryParams: {
       page,
       pageSize,
+      ...(categoryID && { categoryID }),
     },
     schema: PagedListSchema(PlayerLeaderboardApiStructSchema),
   });

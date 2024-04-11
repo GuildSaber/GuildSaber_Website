@@ -65,7 +65,8 @@ export const GUILD_API_DATA_INCLUDES =
   EIncludeFlags.Categories |
   EIncludeFlags.Members |
   EIncludeFlags.RankedMaps |
-  EIncludeFlags.Scores;
+  EIncludeFlags.Scores |
+  EIncludeFlags.Points;
 
 export const GUILD_API_MAPS_DATA_INCLUDES =
   EIncludeFlags.RankedMapVersions |

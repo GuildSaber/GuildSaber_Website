@@ -1,8 +1,14 @@
+import { EModifiers } from "@/enums/api/models/modifiers";
+
 export function formatLargeNumber(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-export function formatDurationSince(start: number): string {
+export function formatDurationSince(start: number | undefined): string {
+  if (!start) {
+    return "N/A";
+  }
+
   const seconds = Math.floor((Date.now() - start * 1000) / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
@@ -95,29 +101,29 @@ export function formatHMD(hmd: number | undefined): string {
   );
 }
 
-export function formatModifiers(modifiers: number): ModifierShort[] {
+export function formatModifiers(modifiers: EModifiers): ModifierShort[] {
   const modList: ModifierShort[] = [];
-  if (modifiers & (1 << 0)) modList.push("NO");
-  if (modifiers & (1 << 1)) modList.push("NB");
-  if (modifiers & (1 << 2)) modList.push("NF");
-  if (modifiers & (1 << 3)) modList.push("SS");
-  if (modifiers & (1 << 4)) modList.push("BE");
-  if (modifiers & (1 << 5)) modList.push("IF");
-  if (modifiers & (1 << 6)) modList.push("SC");
-  if (modifiers & (1 << 7)) modList.push("PM");
-  if (modifiers & (1 << 8)) modList.push("FS");
-  if (modifiers & (1 << 9)) modList.push("SA");
-  if (modifiers & (1 << 10)) modList.push("DA");
-  if (modifiers & (1 << 11)) modList.push("GN");
-  if (modifiers & (1 << 12)) modList.push("NA");
-  if (modifiers & (1 << 13)) modList.push("SF");
-  if (modifiers & (1 << 14)) modList.push("OD");
-  if (modifiers & (1 << 15)) modList.push("OP");
-  if (modifiers & (1 << 30)) modList.push("UNK");
+  if (modifiers & EModifiers.NoObstacles) modList.push("NO");
+  if (modifiers & EModifiers.NoBombs) modList.push("NB");
+  if (modifiers & EModifiers.NoFail) modList.push("NF");
+  if (modifiers & EModifiers.SlowerSong) modList.push("SS");
+  if (modifiers & EModifiers.BatteryEnergy) modList.push("BE");
+  if (modifiers & EModifiers.InstaFail) modList.push("IF");
+  if (modifiers & EModifiers.SmallNotes) modList.push("SC");
+  if (modifiers & EModifiers.ProMode) modList.push("PM");
+  if (modifiers & EModifiers.FasterSong) modList.push("FS");
+  if (modifiers & EModifiers.StrictAngles) modList.push("SA");
+  if (modifiers & EModifiers.DisappearingArrows) modList.push("DA");
+  if (modifiers & EModifiers.GhostNotes) modList.push("GN");
+  if (modifiers & EModifiers.NoArrows) modList.push("NA");
+  if (modifiers & EModifiers.SuperFastSong) modList.push("SF");
+  if (modifiers & EModifiers.OldDots) modList.push("OD");
+  if (modifiers & EModifiers.OffPlatform) modList.push("OP");
+  if (modifiers & EModifiers.Unk) modList.push("UNK");
   return modList;
 }
 
-export function formatModifierShort(modifier: ModifierShort) {
+export function formatModifierShortToLong(modifier: ModifierShort) {
   return (
     {
       NO: "No Obstacles",

@@ -92,5 +92,5 @@ export default {
     },
   },
   // eslint-disable-next-line no-undef
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"), require("tailwind-scrollbar")],
 };
