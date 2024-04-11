@@ -110,7 +110,7 @@ export default function GuildLeaderboard({ guild }: { guild: Guild }) {
         </Button>
       </div>
 
-      <h3 className="my-4 flex items-center gap-3 text-center text-h6 font-bold md:text-left md:text-h4">
+      <h3 className="my-4 flex items-center justify-center gap-3 text-center text-h6 font-bold md:justify-start md:text-left md:text-h4">
         <FontAwesomeIcon icon={faTrophy} className="h-5" />
         Leaderboard
       </h3>
