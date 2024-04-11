@@ -61,6 +61,7 @@ export default function PlayerProfile() {
         player?.guilds?.find((guild) => guildID === guild.id)?.simplePoints![0]
           .id || null,
       page: 1,
+      categoryID: "",
     });
   };
 

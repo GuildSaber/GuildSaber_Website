@@ -115,11 +115,7 @@ export default function GuildMenu({ guilds }: { guilds: Guild[] }) {
         <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-700">
           {guilds &&
             guilds
-              /*.slice(
-              GUILD_MENU_MAX_VISIBLE_GUILD_COUNT,
-              GUILD_MENU_MAX_VISIBLE_GUILD_COUNT +
-                GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT,
-            )*/
+              .slice(GUILD_MENU_MAX_VISIBLE_GUILD_COUNT)
               .map((guild, key) => (
                 <li
                   key={key}
