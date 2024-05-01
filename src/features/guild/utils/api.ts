@@ -1,7 +1,9 @@
 import { EIncludeFlags } from "@/enums/api/fetch/include";
 import { EGuildType } from "@/enums/api/models/guildType";
 import { EPermission } from "@/enums/api/models/permission";
+import { EJoinState } from "@/enums/guild";
 import { Guild, GuildSchema } from "@/types/api/models/guild";
+import { Member, MemberSchema } from "@/types/api/models/member";
 import { SimplePointSchema, SimplePoints } from "@/types/api/models/point";
 import {
   PlayerLeaderboardApiStruct,
@@ -38,8 +40,17 @@ type getGuildSimplePointsType = {
 type getGuildLeaderboardType = {
   pointID: string | number;
   page: number;
-  pageSize?: number;
+  pageSize: number;
   categoryID?: number;
+};
+
+type getGuildMemberType = {
+  guildID: string | number;
+  page: number;
+  pageSize: number;
+  include?: EIncludeFlags;
+  search?: string;
+  state?: EJoinState;
 };
 
 export const getGuilds = async ({
@@ -110,4 +121,26 @@ export const getGuildLeaderboard = async ({
       ...(categoryID && { categoryID }),
     },
     schema: PagedListSchema(PlayerLeaderboardApiStructSchema),
+  });
+
+export const getGuildMember = async ({
+  guildID,
+  page,
+  pageSize,
+  include,
+  search,
+  state,
+}: getGuildMemberType) =>
+  fetchAPI<PagedList<Member>>({
+    path: `/members`,
+    queryParams: {
+      guildID,
+      page,
+      pageSize,
+      include,
+      search,
+      state,
+    },
+    authenticated: true,
+    schema: PagedListSchema(MemberSchema),
   });

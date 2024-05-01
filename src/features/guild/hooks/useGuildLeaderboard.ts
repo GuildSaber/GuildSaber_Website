@@ -26,6 +26,5 @@ export const useGuildLeaderboard = ({
         page,
         pageSize: pageSize || GUILD_LEADERBOARD_PAGE_SIZE,
       }),
-    retry: 2,
     enabled: Boolean(enabled),
   });

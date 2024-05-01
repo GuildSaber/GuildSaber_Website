@@ -1,12 +1,12 @@
-import { z } from "zod";
 import { EJoinState } from "@/enums/api/models/joinState";
-import { EPermission } from "@/enums/api/models//permission";
 import { ESubscriptionTier } from "@/enums/api/models/subscriptionTier";
+import { z } from "zod";
 
 export const MemberSchema = z.object({
   guildID: z.number(),
   userID: z.number(),
-  permissions: z.nativeEnum(EPermission),
+  username: z.string(),
+  permissions: z.number(),
   state: z.nativeEnum(EJoinState),
   priority: z.number(),
   unixTime: z.number(),

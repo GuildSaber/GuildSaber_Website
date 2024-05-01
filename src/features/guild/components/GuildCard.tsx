@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import {
   GUILDS_FILTER_GUILD_TYPES,
-  GUILD_CARD_STATES,
+  GUILD_JOIN_STATES,
 } from "../utils/constants";
 
 type GuildCardProps = {
@@ -86,7 +86,7 @@ export default function GuildCard({
             className={clsx("btn-primary md:mx-auto md:mr-8", {
               "btn-tritary pointer-events-none": guildState,
             })}
-            text={(guildState && GUILD_CARD_STATES[guildState]) || "Join"}
+            text={(guildState && GUILD_JOIN_STATES[guildState]) || "Join"}
             onClick={() => !guildState && onJoin()}
           />
         </div>

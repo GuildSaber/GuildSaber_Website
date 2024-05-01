@@ -1,12 +1,13 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header/Header";
+import Toaster from "@/components/Toaster";
 import Guild from "@/pages/Guild";
 import Guilds from "@/pages/Guilds";
 import Home from "@/pages/Home";
 import Map from "@/pages/Map";
+import Member from "@/pages/Member";
 import PlayerProfile from "@/pages/Player";
 import Signin from "@/pages/Signin";
-import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import "./App.scss";
 
@@ -27,20 +28,12 @@ function App() {
             path="/guild/:guildID/leaderboard"
             element={<Guild tab="leaderboard" />}
           />
+          <Route path="/guild/:guildID/member" element={<Member />} />
 
           <Route path="/map/:mapID/" element={<Map />} />
         </Routes>
       </div>
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: "#1A1C1E",
-            border: "1px solid #2E3136",
-            color: "white",
-          },
-        }}
-      />
+      <Toaster />
       <Footer />
     </div>
   );

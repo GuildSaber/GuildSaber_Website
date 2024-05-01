@@ -9,6 +9,7 @@ type Fetcher = {
   queryParams?: Record<string, any>;
   rawQueryParams?: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: any;
   authenticated?: boolean;
   schema?: ZodType;
 };
@@ -18,6 +19,7 @@ export async function fetchAPI<T>({
   queryParams,
   rawQueryParams,
   method,
+  body,
   authenticated,
   schema,
 }: Fetcher): Promise<T | null | undefined> {
@@ -36,6 +38,7 @@ export async function fetchAPI<T>({
             ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
             : {}),
         },
+        body: body ? JSON.stringify(body) : undefined,
       },
     );
 

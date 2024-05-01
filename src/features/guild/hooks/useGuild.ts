@@ -7,5 +7,4 @@ export const useGuild = (guildID: string) =>
     queryKey: ["guilds", guildID],
     queryFn: () =>
       getGuild({ id: parseInt(guildID), include: GUILD_API_DATA_INCLUDES }),
-    retry: 2,
   });

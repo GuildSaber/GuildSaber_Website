@@ -13,9 +13,9 @@ import {
 } from "@/features/guild/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSearchParamsState } from "react-use-search-params-state";
+import { useDebounceValue } from "usehooks-ts";
 
 export default function Guilds() {
   const [filters, setFilters] = useSearchParamsState({
@@ -25,9 +25,7 @@ export default function Guilds() {
     guildTypes: { type: "string", default: "0,1,2,4" },
   });
 
-  const [search, setSearch] = useState("");
-  const [intermediateSearch, setIntermediateSearch] = useState("");
-
+  const [search, setSearch] = useDebounceValue("", 500);
   const { session, dispatch } = useAuthContext();
 
   const queryClient = useQueryClient();
@@ -80,20 +78,12 @@ export default function Guilds() {
     mutation.mutate(guildID);
   };
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setIntermediateSearch(search);
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [search]);
-
   const {
     data: guilds,
     isLoading,
     isFetching,
     isError,
-  } = useGuilds(filters, intermediateSearch);
+  } = useGuilds(filters, search);
 
   if (isLoading) {
     return <Loader />;

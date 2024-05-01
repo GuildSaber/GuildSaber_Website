@@ -1,4 +1,11 @@
-export function getFlagStrings<T>(values: number, enumType: T): string[] {
+export function getFlagStrings<T>(
+  values: number | undefined,
+  enumType: T,
+): string[] {
+  if (!values) {
+    return [];
+  }
+
   let result: string[] = [];
 
   for (let enumMember in enumType) {
@@ -9,4 +16,12 @@ export function getFlagStrings<T>(values: number, enumType: T): string[] {
   }
 
   return result;
+}
+
+export function hasAnyFlag<T>(values: number | undefined, flags: T): boolean {
+  return ((values ?? 0) & Number(flags)) != 0;
+}
+
+export function hasAllFlags<T>(values: number | undefined, flags: T): boolean {
+  return ((values ?? 0) & Number(flags)) == Number(flags);
 }

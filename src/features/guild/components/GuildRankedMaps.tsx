@@ -21,8 +21,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { Key, useEffect, useState } from "react";
+import { Key, useState } from "react";
 import { useSearchParamsState } from "react-use-search-params-state";
+import { useDebounceValue } from "usehooks-ts";
 import { GUILD_FILTER_SORT_BY_VALUES } from "../utils/constants";
 
 type GuildRankedMapsProps = {
@@ -36,8 +37,7 @@ type Categories = {
 
 export const GuildRankedMaps = ({ guild }: GuildRankedMapsProps) => {
   const { session } = useAuthContext();
-  const [search, setSearch] = useState("");
-  const [intermediateSearch, setIntermediateSearch] = useState("");
+  const [search, setSearch] = useDebounceValue("", 500);
 
   const [filters, setFilters] = useSearchParamsState({
     page: { type: "number", default: 1 },
@@ -89,15 +89,7 @@ export const GuildRankedMaps = ({ guild }: GuildRankedMapsProps) => {
     isLoading: isMapsLoading,
     isFetching: isMapsFetching,
     isError: isMapsError,
-  } = useMapsGuild(guild.id, filters, intermediateSearch, categories);
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setIntermediateSearch(search);
-    }, 700);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [search]);
+  } = useMapsGuild(guild.id, filters, search, categories);
 
   return (
     <>

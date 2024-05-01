@@ -13,6 +13,7 @@ export const GUILD_MENU_MAX_COLLAPSED_GUILD_COUNT = 5;
 
 export const GUILDS_PAGE_SIZE = 4;
 export const GUILD_LEADERBOARD_PAGE_SIZE = 50;
+export const GUILD_MEMBER_PAGE_SIZE = 20;
 
 export const GUILD_LEADERBOARD_PAGE_SIZE_OPTIONS = [
   { label: "50 pages", value: 50 },
@@ -77,10 +78,18 @@ export const GUILD_API_MAPS_DATA_INCLUDES =
   EIncludeFlags.RankedScores |
   EIncludeFlags.Scores;
 
-export const GUILD_CARD_STATES: { [key: string]: string } = {
+export const GUILD_JOIN_STATES: { [key: string]: string } = {
   [EJoinState.None]: "None",
   [EJoinState.Requested]: "Requested",
   [EJoinState.Joined]: "Joined",
   [EJoinState.Refused]: "Refused",
   [EJoinState.Banned]: "Banned",
 };
+
+export const GUILD_SORT_BY_JOIN_STATES = [
+  { label: "None", value: EJoinState.None },
+  { label: "Requested", value: EJoinState.Requested },
+  { label: "Joined", value: EJoinState.Joined },
+  { label: "Refused", value: EJoinState.Refused },
+  { label: "Banned", value: EJoinState.Banned },
+];

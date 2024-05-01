@@ -19,38 +19,6 @@ export default {
         lg: "1140px",
       },
     },
-    colors: {
-      primary: {
-        DEFAULT: "#0060D6",
-        dark: {
-          DEFAULT: "#005BBD",
-          25: "#005BBD40",
-        },
-      },
-      secondary: {
-        DEFAULT: "#FFA41C",
-        dark: {
-          DEFAULT: "#FF9900",
-          25: "#FF990040",
-        },
-      },
-      muted: "#7E8691",
-      error: "#EA4C66",
-      success: "#34D399",
-      discord: "#5865f2",
-      white: "#FFFFFF",
-      "expert-plus": "#8f48db",
-      expert: "#bf2a42",
-      hard: "#ee5e44",
-      normal: "#59b0f4",
-      easy: "#3cb371",
-      gray: {
-        900: "#111213",
-        800: "#1A1C1E",
-        700: "#2E3136",
-      },
-      transparent: "transparent",
-    },
     fontSize: {
       h1: "2.986rem",
       h2: "2.488rem",
@@ -67,6 +35,38 @@ export default {
       lg: "1140px",
     },
     extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#0060D6",
+          dark: {
+            DEFAULT: "#005BBD",
+            25: "#005BBD40",
+          },
+        },
+        secondary: {
+          DEFAULT: "#FFA41C",
+          dark: {
+            DEFAULT: "#FF9900",
+            25: "#FF990040",
+          },
+        },
+        muted: "#7E8691",
+        error: "#EA4C66",
+        success: "#34D399",
+        discord: "#5865f2",
+        white: "#FFFFFF",
+        "expert-plus": "#8f48db",
+        expert: "#bf2a42",
+        hard: "#ee5e44",
+        normal: "#59b0f4",
+        easy: "#3cb371",
+        gray: {
+          900: "#111213",
+          800: "#1A1C1E",
+          700: "#2E3136",
+        },
+        transparent: "transparent",
+      },
       lineHeight: {
         none: "1",
         DEFAULT: "1.8",
