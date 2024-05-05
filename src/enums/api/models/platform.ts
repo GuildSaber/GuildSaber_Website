@@ -1,5 +1,6 @@
 export enum EPlatform {
   Unk = 0,
   Steam = 1,
-  Oculus = 2,
+  OculusNative = 2,
+  OculusPC = 3,
 }
