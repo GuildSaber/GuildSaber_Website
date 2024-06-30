@@ -19,7 +19,7 @@ export default function Map() {
 
   const arcViewer = useArcViewer();
 
-  const { data: map, isLoading, isError } = useMap(mapID);
+  const { data: map, isLoading, isError, error } = useMap(mapID);
 
   if (isLoading) {
     return <Loader />;
@@ -29,7 +29,7 @@ export default function Map() {
     return (
       <div className="text-center">
         <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
-        <h3 className="text-h3">Map not found</h3>
+        <h3 className="text-h3">{error?.message ?? "Map not found"}</h3>
       </div>
     );
   }

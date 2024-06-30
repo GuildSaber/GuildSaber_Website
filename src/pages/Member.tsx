@@ -49,7 +49,6 @@ export default function Member() {
   const {
     data: members,
     isLoading,
-    isError,
     isFetching,
   } = useGuildMember({
     guildID: parseInt(guildID, 10),

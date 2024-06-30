@@ -18,13 +18,22 @@ export default function Guild({ tab }: { tab?: string }) {
     return <p>Error</p>;
   }
 
-  const { data: guild, isLoading, isError } = useGuild(guildID);
+  const { data: guild, isLoading, isError, error } = useGuild(guildID);
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (isError || guild == null) {
+  if (isError) {
+    return (
+      <div className="text-center">
+        <FontAwesomeIcon icon={faCircleExclamation} className="text-h1" />
+        <h3 className="text-h3">{error.message}</h3>
+      </div>
+    );
+  }
+
+  if (guild == null) {
     return (
       <div className="text-center">
         <FontAwesomeIcon icon={faCircleExclamation} className="text-h1" />

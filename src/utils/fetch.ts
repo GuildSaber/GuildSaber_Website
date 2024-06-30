@@ -1,60 +1,70 @@
 import { ZodType } from "zod";
 
-interface FetcherResponse<T> extends Response {
-  parsedBody?: T;
-}
-
-type Fetcher = {
+type Fetcher<T> = {
   path: string;
   queryParams?: Record<string, any>;
   rawQueryParams?: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: any;
   authenticated?: boolean;
-  schema?: ZodType;
+  schema?: ZodType<T>;
 };
 
 export async function fetchAPI<T>({
   path,
   queryParams,
   rawQueryParams,
-  method,
+  method = "GET",
   body,
-  authenticated,
+  authenticated = false,
   schema,
-}: Fetcher): Promise<T | null | undefined> {
+}: Fetcher<T>): Promise<T | null> {
   try {
-    const URLParams = new URLSearchParams(queryParams).toString();
+    const url = new URL(`${import.meta.env.VITE_API_BASE_URL}${path}`);
 
-    const response: FetcherResponse<T> = await fetch(
-      `
-      ${import.meta.env.VITE_API_BASE_URL}${path}${
-        URLParams && "?" + URLParams
-      }${rawQueryParams ? (URLParams ? "&" : "?") + rawQueryParams : ""}`,
-      {
-        method: method,
-        headers: {
-          ...(localStorage.getItem("token") && authenticated
-            ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
-            : {}),
-        },
-        body: body ? JSON.stringify(body) : undefined,
-      },
-    );
+    if (queryParams) {
+      Object.entries(queryParams).forEach(([key, value]) =>
+        url.searchParams.append(key, value),
+      );
+    }
+
+    if (rawQueryParams) {
+      url.search += (url.search ? "&" : "") + rawQueryParams;
+    }
+
+    const headers: Record<string, string> = {};
+    if (authenticated && localStorage.getItem("token")) {
+      headers["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+    }
+
+    const response = await fetch(url.toString(), {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    const parsedBody = await response.json();
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+      if (!parsedBody.title) {
+        throw Error("Something went wrong");
+      }
 
-    response.parsedBody = await response.json();
+      throw Error(parsedBody.title);
+    }
 
     if (schema) {
-      await schema.parse(response.parsedBody);
+      const validation = schema.safeParse(parsedBody);
+
+      if (!validation.success) {
+        console.error("Schema validation error:", validation.error);
+        throw Error("Schema validation error");
+      }
     }
 
-    return response.parsedBody;
-  } catch (error) {
+    return parsedBody;
+  } catch (error: any) {
     console.error("An error occurred while making the request:", error);
-    return null;
+    throw error;
   }
 }

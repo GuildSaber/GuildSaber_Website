@@ -23,7 +23,7 @@ export const GuildSchema = z.object({
       z.object({
         id: z.number(),
         name: z.string(),
-        description: z.string(),
+        description: z.string().nullish(),
         guildID: z.number(),
         rankedMaps: z.null(),
         categoryLevels: z.null(),

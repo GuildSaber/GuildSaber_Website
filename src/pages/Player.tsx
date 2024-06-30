@@ -69,7 +69,11 @@ export default function PlayerProfile() {
     setParams({ point: pointID, page: 1 });
   };
 
-  const { data: player, isError: isPlayerError } = usePlayer({
+  const {
+    data: player,
+    isError: isPlayerError,
+    error: playerError,
+  } = usePlayer({
     playerID,
     enabled: !!playerID,
   });
@@ -112,7 +116,7 @@ export default function PlayerProfile() {
     return (
       <div className="text-center">
         <FontAwesomeIcon icon={faCircleExclamation} className="mb-4 text-h1" />
-        <h3 className="text-h3">Player not found</h3>
+        <h3 className="text-h3">{playerError.message}</h3>
       </div>
     );
   }
