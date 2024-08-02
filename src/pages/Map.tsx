@@ -39,7 +39,7 @@ export default function Map() {
       <>
         <MapHeader mapData={map} arcViewer={arcViewer.open} />
 
-        <MapRequirements />
+        <MapRequirements requirements={map.rankedMap.requirements} />
         <div className="flex w-full justify-center">
           <MapLeaderboard mapData={map} />
         </div>

@@ -1,13 +1,13 @@
 import { ZodType } from "zod";
 
-type Fetcher<T> = {
+type Fetcher = {
   path: string;
   queryParams?: Record<string, any>;
   rawQueryParams?: string;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: any;
   authenticated?: boolean;
-  schema?: ZodType<T>;
+  schema?: ZodType;
 };
 
 export async function fetchAPI<T>({
@@ -18,7 +18,7 @@ export async function fetchAPI<T>({
   body,
   authenticated = false,
   schema,
-}: Fetcher<T>): Promise<T | null> {
+}: Fetcher): Promise<T | null> {
   try {
     const url = new URL(`${import.meta.env.VITE_API_BASE_URL}${path}`);
 
