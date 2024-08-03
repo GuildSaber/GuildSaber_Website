@@ -45,8 +45,8 @@ const Pagination = ({
   };
 
   return (
-    <div className="sticky bottom-4 flex justify-center md:bottom-2">
-      <ul className="flex-center flex select-none gap-2 rounded-lg bg-gray-900 p-2">
+    <div className="pointer-events-none sticky bottom-4 flex justify-center md:bottom-2">
+      <ul className="flex-center pointer-events-auto flex select-none gap-2 rounded-lg bg-gray-900 p-2">
         <li
           className={clsx(
             "btn bg-gray-700/50 px-4 py-1.5 hover:bg-gray-700/30 hover:opacity-80",

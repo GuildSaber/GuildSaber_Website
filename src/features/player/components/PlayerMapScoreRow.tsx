@@ -1,7 +1,7 @@
-import ArcViewer from "@/components/ArcViewer";
+import BLReplayViewer from "@/components/BLReplayViewer";
 import Button from "@/components/Button";
 import BeatSaver from "@/components/Icons/BeatSaver";
-import useArcViewer from "@/hooks/useArcViewer";
+import useBLReplayViewer from "@/hooks/useBLReplayViewer";
 import { PlayerScoresApiStruct } from "@/types/api/responses/playerScoresApiStruct";
 import {
   formatAccuracy,
@@ -13,7 +13,7 @@ import {
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
 import {
   faCheck,
-  faChevronUp,
+  faChevronDown,
   faPlay,
   faSkull,
   faXmark,
@@ -51,14 +51,16 @@ export const PlayerMapScoreRow = ({
   animDelay,
   animSense,
 }: PlayerMapScoreRowProps) => {
-  const arcViewer = useArcViewer();
+  const blReplay = useBLReplayViewer();
 
-  const onPlayClick = (score: PlayerScoresApiStruct["data"][0]) => {
-    arcViewer.open({
-      bsrCode: score.songDifficulty.song?.beatSaverKey as string,
-      difficulty: score.songDifficulty.difficulty,
-      mode: score.songDifficulty.gameMode.name,
-    });
+  const blReplayId = score.score.bL_ScoreID;
+
+  const onPlayClick = () => {
+    if (!blReplayId) {
+      return;
+    }
+
+    blReplay.open(blReplayId);
   };
 
   return (
@@ -67,7 +69,7 @@ export const PlayerMapScoreRow = ({
         animationDelay: `calc(40ms * ${animDelay})`,
         animationName: animSense === "next" ? "slide-in" : "slide-out",
       }}
-      className="anim-slide group grid items-center gap-y-2 rounded bg-gray-800 px-2 py-3 transition-colors md:grid-cols-[5rem_1fr_14rem_6rem] md:gap-2 md:hover:bg-gray-700"
+      className="anim-slide group grid items-center gap-y-2 rounded bg-gray-800 px-2 py-3 transition-colors md:grid-cols-[5rem_1fr_14rem_6rem] md:gap-2 md:hover:brightness-110"
     >
       <div className="flex justify-between md:flex-col md:justify-center md:text-center">
         <p className="md:text-h7 text-p font-bold">#{score.rank}</p>
@@ -106,36 +108,44 @@ export const PlayerMapScoreRow = ({
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-2 md:justify-end">
-        <span className="badge badge-secondary">
-          {Math.round(100 * score.rawPoints * score.weight) / 100}{" "}
-        </span>
-        <span
-          className={clsx("badge", {
-            "badge-error": getTotalMisses(score) > 0,
-            "badge-success": getTotalMisses(score) === 0,
-          })}
-        >
-          {getTotalMisses(score) || "FC"}{" "}
-          <span>
-            <FontAwesomeIcon
-              icon={getTotalMisses(score) > 0 ? faXmark : faCheck}
-            />
-          </span>
-        </span>
-        {score.score.modifiers > 0 && (
+        <div className="contents gap-2 md:flex">
           <span className="badge">
-            {formatModifiers(score.score.modifiers).join(" | ")}
+            {formatAccuracy(
+              score.score.baseScore,
+              score.songDifficulty.songDifficultyStats?.maxScore,
+            )}
           </span>
-        )}
-        <span className="badge">
-          {formatAccuracy(
-            score.score.baseScore,
-            score.songDifficulty.songDifficultyStats?.maxScore,
+          {score.weight > 0 && (
+            <span className="badge badge-secondary">
+              {Math.round(100 * score.rawPoints * score.weight) / 100}{" "}
+            </span>
           )}
-        </span>
-        <span className="badge">{formatLargeNumber(score.effectiveScore)}</span>
+          {score.score.modifiers > 0 && (
+            <span className="badge border-sky-500 text-sky-500">
+              {formatModifiers(score.score.modifiers).join(" | ")}
+            </span>
+          )}
+        </div>
+        <div className="contents gap-2 md:flex">
+          <span className="badge">
+            {formatLargeNumber(score.effectiveScore)}
+          </span>
+          <span
+            className={clsx("badge", {
+              "badge-error": getTotalMisses(score) > 0,
+              "badge-success": getTotalMisses(score) === 0,
+            })}
+          >
+            {getTotalMisses(score) || "FC"}{" "}
+            <span>
+              <FontAwesomeIcon
+                icon={getTotalMisses(score) > 0 ? faXmark : faCheck}
+              />
+            </span>
+          </span>
+        </div>
       </div>
-      <div>
+      <div className="h-full">
         <div className="flex flex-wrap justify-center gap-2 md:justify-end">
           <Button
             className="btn btn-tritary"
@@ -149,23 +159,24 @@ export const PlayerMapScoreRow = ({
           <Link
             to={`https://beatsaver.com/maps/${score.songDifficulty.song?.beatSaverKey}`}
             target="_blank"
+            className="btn btn-tritary"
           >
-            <Button className="btn-tritary">
-              <BeatSaver />
-            </Button>
+            <BeatSaver />
           </Link>
           <Button
-            className="btn btn-tritary"
+            className={clsx("btn btn-tritary", {
+              "pointer-events-none opacity-50": !blReplayId,
+            })}
             icon={faPlay}
-            onClick={() => onPlayClick(score)}
-          ></Button>
+            onClick={onPlayClick}
+          />
           <Button
             className="btn btn-tritary hidden"
-            icon={faChevronUp}
+            icon={faChevronDown}
           ></Button>
         </div>
       </div>
-      <ArcViewer settings={arcViewer} />
+      <BLReplayViewer settings={blReplay} />
     </div>
   );
 };

@@ -141,18 +141,41 @@ export default function PlayerProfile() {
       : playerStats?.playerLevelStat.level?.color,
   );
 
+  const hasCategoryID = filters.categoryID;
+  const categoryLevel = playerCategoryLevelStats?.level;
+  const playerLevel = playerStats?.playerLevelStat.level;
+
+  let levelDisplay;
+  let levelNumber;
+
+  if (hasCategoryID && categoryLevel) {
+    if (categoryLevel.canUseNumberOverride) {
+      levelDisplay = `Lvl ${categoryLevel.numberOverride}`;
+      levelNumber = categoryLevel.numberOverride;
+    } else {
+      levelDisplay = categoryLevel.nameOverride;
+    }
+  } else if (playerLevel) {
+    if (playerLevel.canUseNumber) {
+      levelDisplay = `Lvl ${playerLevel.number}`;
+      levelNumber = playerLevel.number;
+    } else {
+      levelDisplay = playerLevel.name;
+    }
+  }
+
   return (
-    <>
-      <div className="flow-content-2">
-        <section className="card md:flex md:gap-4 md:p-4">
-          <img
-            src={player?.player?.user_AvatarUrl as string}
-            className="h-24 w-full object-cover md:h-32 md:w-32 md:rounded"
-          />
-          <div className="flex flex-col gap-2">
-            <div className="flex-center flex flex-wrap gap-4 md:!justify-start">
-              <Flag className="h-6 rounded-sm" code={player?.player.country} />
-              <h1 className="text-h5 font-bold">{player?.player?.name}</h1>
+    <div className="flow-content-2">
+      <section className="card relative overflow-visible md:flex md:gap-4 md:p-4">
+        <img
+          src={player?.player?.user_AvatarUrl as string}
+          className="h-24 w-full object-cover md:h-32 md:w-32 md:rounded"
+        />
+        <div className="flex flex-col gap-2">
+          <div className="flex-center flex flex-wrap gap-4 md:!justify-start">
+            <Flag className="h-6 rounded-sm" code={player?.player.country} />
+            <h1 className="text-h5 font-bold">{player?.player?.name}</h1>
+            {levelDisplay && (
               <p
                 style={{
                   backgroundColor: `rgba(${levelColor.toString()}, 0.70)`,
@@ -160,147 +183,158 @@ export default function PlayerProfile() {
                 }}
                 className="rounded-sm border-2 px-1 font-bold"
               >
-                {filters.categoryID
-                  ? playerCategoryLevelStats?.level?.canUseNumberOverride
-                    ? `Lvl ${playerCategoryLevelStats?.level?.numberOverride}`
-                    : playerCategoryLevelStats?.level?.nameOverride
-                  : playerStats?.playerLevelStat.level?.canUseNumber
-                    ? `Lvl ${playerStats?.playerLevelStat.level.number}`
-                    : playerStats?.playerLevelStat.level?.name}
+                {levelDisplay}
               </p>
+            )}
+          </div>
+          <div className="mb-4 flex flex-col flex-wrap items-center gap-2 md:items-start md:!justify-start">
+            <div className="flex flex-wrap justify-center gap-2">
+              <span className="badge badge-secondary">
+                <span>
+                  <FontAwesomeIcon icon={faRankingStar} />
+                </span>
+                #
+                {catogryPointStats
+                  ? catogryPointStats.rank
+                  : (pointStats?.rank ?? 0)}
+              </span>
+              <span className="badge badge-secondary">
+                <span className="font-bold tracking-tighter">CPP</span>
+                {catogryPointStats
+                  ? catogryPointStats.pointValue
+                  : (pointStats?.pointValue ?? 0)}
+              </span>
             </div>
-            <div className="mb-4 flex flex-col flex-wrap items-center gap-2 md:items-start md:!justify-start">
-              <div className="flex flex-wrap justify-center gap-2">
-                <span className="badge badge-secondary">
-                  <span>
-                    <FontAwesomeIcon icon={faRankingStar} />
-                  </span>
-                  #
+            <div className="flex flex-wrap justify-center gap-2">
+              <span className="badge badge-split">
+                <span>Avg Acc</span>
+                <span>0%</span>
+              </span>
+              <span className="badge badge-split">
+                <span>HMD</span>
+                <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
+              </span>
+              <span className="badge badge-split">
+                <span>Total Passes</span>
+                <span>
                   {catogryPointStats
-                    ? catogryPointStats.rank
-                    : pointStats?.rank ?? 0}
+                    ? catogryPointStats.validPassCount
+                    : (pointStats?.validPassCount ?? 0)}
                 </span>
-                <span className="badge badge-secondary">
-                  <span className="font-bold tracking-tighter">CPP</span>
-                  {catogryPointStats
-                    ? catogryPointStats.pointValue
-                    : pointStats?.pointValue ?? 0}
-                </span>
-              </div>
-              <div className="flex flex-wrap justify-center gap-2">
-                <span className="badge badge-split">
-                  <span>Avg Acc</span>
-                  <span>0%</span>
-                </span>
-                <span className="badge badge-split">
-                  <span>HMD</span>
-                  <span>{formatHMD(session?.player?.hmd ?? 0)}</span>
-                </span>
-                <span className="badge badge-split">
-                  <span>Total Passes</span>
-                  <span>
-                    {catogryPointStats
-                      ? catogryPointStats.validPassCount
-                      : pointStats?.validPassCount ?? 0}
-                  </span>
-                </span>
-              </div>
+              </span>
             </div>
           </div>
-        </section>
+        </div>
+        {levelNumber && (
+          <div
+            className="absolute -top-2 right-0 hidden h-40 w-32 rotate-[20deg] items-center justify-center rounded md:flex"
+            style={{
+              backgroundColor: `rgba(${levelColor.toString()}, 1)`,
+              backgroundImage: `linear-gradient(200deg, rgba(0,0,0,0.6) 20%, transparent 100%)`,
+            }}
+          >
+            <h3 className="text-6xl z-20 rotate-[-20deg] font-semibold text-white">
+              {levelNumber}
+            </h3>
+            <img
+              className="pointer-events-none absolute p-4 opacity-20 grayscale"
+              src="/gsLogo.svg"
+            />
+          </div>
+        )}
+      </section>
 
-        <section className="flex flex-col gap-4 overflow-x-clip overflow-y-visible py-4">
-          <div className="flex flex-wrap items-stretch justify-center gap-2 md:justify-between">
-            <div className="flex flex-wrap justify-center gap-2">
-              {!!player && player.guilds[0] && (
-                <PlayerGuildsListBox
-                  guilds={player?.guilds}
-                  guildID={guildID}
-                  onChange={selectGuild}
-                />
-              )}
-
-              {categories && (
-                <ListBox
-                  options={categories}
-                  value={filters.categoryID}
-                  onChange={(category) =>
-                    setFilters({ categoryID: category.value, page: 1 })
-                  }
-                />
-              )}
-
-              <ListBox
-                options={PLAYER_FILTER_SORT_BY_VALUES}
-                value={filters["sort-by"]}
-                onChange={(sortBy) => updateFilter({ "sort-by": sortBy.value })}
+      <section className="flex flex-col gap-4 overflow-x-clip overflow-y-visible py-4">
+        <div className="flex flex-wrap items-stretch justify-center gap-2 md:justify-between">
+          <div className="flex flex-wrap justify-center gap-2">
+            {!!player && player.guilds[0] && (
+              <PlayerGuildsListBox
+                guilds={player?.guilds}
+                guildID={guildID}
+                onChange={selectGuild}
               />
+            )}
 
+            {categories && (
               <ListBox
-                options={PLAYER_FILTER_ORDER_VALUES}
-                value={filters["order-by"]}
-                onChange={(orderBy) =>
-                  updateFilter({ "order-by": orderBy.value })
+                options={categories}
+                value={filters.categoryID}
+                onChange={(category) =>
+                  setFilters({ categoryID: category.value, page: 1 })
                 }
               />
-            </div>
+            )}
 
-            <div className="flex flex-wrap gap-2">
-              {player?.guilds &&
-                player.guilds
-                  .find((guild) => guildID === guild.id)
-                  ?.simplePoints!.map((point) => (
-                    <Button
-                      key={point.id}
-                      className={clsx("badge", {
-                        "border-primary": pointID === point.id,
-                      })}
-                      text={point.name}
-                      onClick={() => {
-                        selectPoint(point.id);
-                      }}
-                    ></Button>
-                  ))}
-            </div>
+            <ListBox
+              options={PLAYER_FILTER_SORT_BY_VALUES}
+              value={filters["sort-by"]}
+              onChange={(sortBy) => updateFilter({ "sort-by": sortBy.value })}
+            />
+
+            <ListBox
+              options={PLAYER_FILTER_ORDER_VALUES}
+              value={filters["order-by"]}
+              onChange={(orderBy) =>
+                updateFilter({ "order-by": orderBy.value })
+              }
+            />
           </div>
 
-          {isScoresLoading && <Loader />}
+          <div className="flex flex-wrap gap-2">
+            {player?.guilds &&
+              player.guilds
+                .find((guild) => guildID === guild.id)
+                ?.simplePoints!.map((point) => (
+                  <Button
+                    key={point.id}
+                    className={clsx("badge", {
+                      "border-primary": pointID === point.id,
+                    })}
+                    text={point.name}
+                    onClick={() => {
+                      selectPoint(point.id);
+                    }}
+                  ></Button>
+                ))}
+          </div>
+        </div>
 
-          {isScoresError && (
-            <div className="text-center">
-              <FontAwesomeIcon
-                icon={faCircleExclamation}
-                className="mb-4 text-h1"
+        {isScoresLoading && <Loader />}
+
+        {isScoresError && (
+          <div className="text-center">
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              className="mb-4 text-h1"
+            />
+            <h3 className="text-h3">No Scores found</h3>
+          </div>
+        )}
+
+        {scores && (
+          <List
+            totalCount={scores.totalCount}
+            pageSize={scores.pageSize}
+            hasPreviousPage={scores.hasPreviousPage}
+            hasNextPage={scores.hasNextPage}
+            currentPage={params.page}
+            setCurrentPage={(page, sense) => {
+              setParams({ page });
+              setPageSense(sense);
+            }}
+            isLoading={isScoresFetching}
+          >
+            {scores?.data.map((score, delay) => (
+              <PlayerMapScoreRow
+                key={score.id}
+                animDelay={delay}
+                animSense={pageSense}
+                score={score}
               />
-              <h3 className="text-h3">No Scores found</h3>
-            </div>
-          )}
-
-          {scores && (
-            <List
-              totalCount={scores.totalCount}
-              pageSize={scores.pageSize}
-              hasPreviousPage={scores.hasPreviousPage}
-              hasNextPage={scores.hasNextPage}
-              currentPage={params.page}
-              setCurrentPage={(page, sense) => {
-                setParams({ page });
-                setPageSense(sense);
-              }}
-              isLoading={isScoresFetching}
-            >
-              {scores?.data.map((score, delay) => (
-                <PlayerMapScoreRow
-                  key={score.id}
-                  animDelay={delay}
-                  animSense={pageSense}
-                  score={score}
-                />
-              ))}
-            </List>
-          )}
-        </section>
-      </div>
-    </>
+            ))}
+          </List>
+        )}
+      </section>
+    </div>
   );
 }
