@@ -57,8 +57,9 @@ export default function MapHeader({
       >
         <div
           className={clsx(
-            "relative block h-64 w-full overflow-hidden border-b-8 border-primary md:absolute md:right-0 md:top-0 md:h-[340px] md:w-[340px] md:-translate-y-[75px] md:translate-x-[150px] md:rotate-[20deg] md:transform md:overflow-hidden md:border-8 md:border-transparent md:outline md:outline-8",
+            "relative block h-64 w-full overflow-hidden border-b-8 md:absolute md:right-0 md:top-0 md:h-[340px] md:w-[340px] md:-translate-y-[75px] md:translate-x-[150px] md:rotate-[20deg] md:transform md:overflow-hidden md:border-8 md:border-transparent md:outline md:outline-8",
             "outline-" + formatDifficulty[levelDifficulty],
+            "border-" + formatDifficulty[levelDifficulty],
             "lg:translate-x-[150px]",
           )}
         >
