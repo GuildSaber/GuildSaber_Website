@@ -5,9 +5,9 @@ import useBLReplayViewer from "@/hooks/useBLReplayViewer";
 import { PlayerScoresApiStruct } from "@/types/api/responses/playerScoresApiStruct";
 import {
   formatAccuracy,
+  formatCommasNumber,
   formatDifficulty,
   formatDurationSince,
-  formatLargeNumber,
   formatModifiers,
 } from "@/utils/format";
 import { faTwitch } from "@fortawesome/free-brands-svg-icons";
@@ -117,7 +117,9 @@ export const PlayerMapScoreRow = ({
           </span>
           {score.weight > 0 && (
             <span className="badge badge-secondary">
-              {Math.round(100 * score.rawPoints * score.weight) / 100}{" "}
+              {formatCommasNumber(
+                Math.round(100 * score.rawPoints * score.weight) / 100,
+              )}{" "}
             </span>
           )}
           {score.score.modifiers > 0 && (
@@ -128,7 +130,7 @@ export const PlayerMapScoreRow = ({
         </div>
         <div className="contents gap-2 md:flex">
           <span className="badge">
-            {formatLargeNumber(score.effectiveScore)}
+            {formatCommasNumber(score.effectiveScore)}
           </span>
           <span
             className={clsx("badge", {

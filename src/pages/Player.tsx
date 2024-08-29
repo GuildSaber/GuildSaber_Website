@@ -17,7 +17,7 @@ import {
 } from "@/features/player/utils/constants";
 import { Category } from "@/types/api/models/category";
 import { decimalToRGB } from "@/utils/color";
-import { formatHMD } from "@/utils/format";
+import { formatCommasNumber, formatHMD } from "@/utils/format";
 import {
   faCircleExclamation,
   faRankingStar,
@@ -194,15 +194,23 @@ export default function PlayerProfile() {
                   <FontAwesomeIcon icon={faRankingStar} />
                 </span>
                 #
-                {catogryPointStats
-                  ? catogryPointStats.rank
-                  : (pointStats?.rank ?? 0)}
+                {formatCommasNumber(
+                  catogryPointStats
+                    ? catogryPointStats.rank
+                    : pointStats?.rank ?? 0,
+                )}
               </span>
               <span className="badge badge-secondary">
-                <span className="font-bold tracking-tighter">CPP</span>
-                {catogryPointStats
-                  ? catogryPointStats.pointValue
-                  : (pointStats?.pointValue ?? 0)}
+                <span className="font-bold tracking-tighter">
+                  {catogryPointStats
+                    ? catogryPointStats.pointName
+                    : pointStats?.pointName ?? ""}
+                </span>
+                {formatCommasNumber(
+                  catogryPointStats
+                    ? catogryPointStats.pointValue
+                    : pointStats?.pointValue ?? 0,
+                )}
               </span>
             </div>
             <div className="flex flex-wrap justify-center gap-2">
@@ -217,9 +225,11 @@ export default function PlayerProfile() {
               <span className="badge badge-split">
                 <span>Total Passes</span>
                 <span>
-                  {catogryPointStats
-                    ? catogryPointStats.validPassCount
-                    : (pointStats?.validPassCount ?? 0)}
+                  {formatCommasNumber(
+                    catogryPointStats
+                      ? catogryPointStats.validPassCount
+                      : pointStats?.validPassCount ?? 0,
+                  )}
                 </span>
               </span>
             </div>
@@ -233,7 +243,7 @@ export default function PlayerProfile() {
               backgroundImage: `linear-gradient(200deg, rgba(0,0,0,0.6) 20%, transparent 100%)`,
             }}
           >
-            <h3 className="text-6xl z-20 rotate-[-20deg] font-semibold text-white">
+            <h3 className="z-20 rotate-[-20deg] text-6xl font-semibold text-white">
               {levelNumber}
             </h3>
             <img

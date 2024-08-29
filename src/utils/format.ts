@@ -1,7 +1,7 @@
 import { EModifiers } from "@/enums/api/models/modifiers";
 
-export function formatLargeNumber(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+export function formatCommasNumber(num: number) {
+  return new Intl.NumberFormat("en").format(num);
 }
 
 export function formatDurationSince(start: number | undefined): string {
