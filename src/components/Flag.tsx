@@ -1,12 +1,11 @@
 import clsx from "clsx";
 
-export const Flag = ({
-  code,
-  className,
-}: {
+type FlagProps = {
   code: string | undefined;
-  className: string;
-}) => {
+  className?: string;
+};
+
+const Flag = ({ code, className }: FlagProps) => {
   if (!code) return null;
 
   return (
@@ -22,3 +21,5 @@ export const Flag = ({
     />
   );
 };
+
+export default Flag;

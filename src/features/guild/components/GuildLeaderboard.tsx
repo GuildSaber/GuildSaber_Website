@@ -17,7 +17,11 @@ import {
 } from "../utils/constants";
 import GuildLeaderboardRow from "./GuildLeaderboardRow";
 
-export default function GuildLeaderboard({ guild }: { guild: Guild }) {
+type GuildLeaderboardProps = {
+  guild: Guild;
+};
+
+const GuildLeaderboard = ({ guild }: GuildLeaderboardProps) => {
   if (!guild) {
     return;
   }
@@ -186,4 +190,6 @@ export default function GuildLeaderboard({ guild }: { guild: Guild }) {
       </List>
     </>
   );
-}
+};
+
+export default GuildLeaderboard;

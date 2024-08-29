@@ -16,7 +16,11 @@ import clsx from "clsx";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function GuildMenu({ guilds }: { guilds: Guild[] }) {
+type GuildMenuProps = {
+  guilds: Guild[];
+};
+
+const GuildMenu = ({ guilds }: GuildMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const clickRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -157,4 +161,6 @@ export default function GuildMenu({ guilds }: { guilds: Guild[] }) {
       </ul>
     </div>
   );
-}
+};
+
+export default GuildMenu;

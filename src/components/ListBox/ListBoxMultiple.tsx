@@ -25,13 +25,13 @@ type ListBoxMultipleProps = {
   onChange: (value: any) => void;
 };
 
-export default function ListBoxMultiple({
+const ListBoxMultiple = ({
   label,
   options,
   selected,
   values,
   onChange,
-}: ListBoxMultipleProps) {
+}: ListBoxMultipleProps) => {
   const [selectedOption, setSelectedOption] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -88,4 +88,6 @@ export default function ListBoxMultiple({
       </Listbox>
     </div>
   );
-}
+};
+
+export default ListBoxMultiple;

@@ -1,5 +1,5 @@
-import { ReactNode, createContext, useEffect, useReducer } from "react";
 import { AuthState, MemberList } from "@/types/api/auth";
+import { ReactNode, createContext, useEffect, useReducer } from "react";
 
 type AuthAction =
   | { type: "LOGIN"; payload: AuthState["session"] }
@@ -15,7 +15,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
 
-export function authReducer(state: AuthState, action: AuthAction) {
+export const authReducer = (state: AuthState, action: AuthAction) => {
   switch (action.type) {
     case "LOGIN":
       return { session: action.payload };
@@ -40,12 +40,12 @@ export function authReducer(state: AuthState, action: AuthAction) {
     default:
       return state;
   }
-}
+};
 
 interface AuthContextProviderProps {
   children: ReactNode;
 }
-export function AuthContextProvider({ children }: AuthContextProviderProps) {
+export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, {
     session: null,
   });
@@ -95,4 +95,4 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       {children}
     </AuthContext.Provider>
   );
-}
+};

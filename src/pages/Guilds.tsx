@@ -17,7 +17,7 @@ import { toast } from "react-hot-toast";
 import { useSearchParamsState } from "react-use-search-params-state";
 import { useDebounceValue } from "usehooks-ts";
 
-export default function Guilds() {
+const Guilds = () => {
   const [filters, setFilters] = useSearchParamsState({
     page: { type: "number", default: 1 },
     "sort-by": { type: "string", default: "Popularity" },
@@ -154,4 +154,6 @@ export default function Guilds() {
       )}
     </>
   );
-}
+};
+
+export default Guilds;

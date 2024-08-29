@@ -1,12 +1,12 @@
-import * as ReactDOMClient from "react-dom/client";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "@/context/AuthContext";
 import {
   QueryClient,
   QueryClientProvider,
   keepPreviousData,
 } from "@tanstack/react-query";
+import * as ReactDOMClient from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 
 const root = ReactDOMClient.createRoot(document.getElementById("root")!);
 const queryClient = new QueryClient({

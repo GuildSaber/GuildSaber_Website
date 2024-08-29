@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import GuildMenu from "./GuildMenu";
 
-export default function Header() {
+const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { session } = useAuthContext();
 
@@ -93,4 +93,6 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

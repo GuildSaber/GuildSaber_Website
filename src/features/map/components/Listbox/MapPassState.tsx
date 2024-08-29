@@ -16,11 +16,7 @@ type MapPassStateProps = {
   onChange: (value: any) => void;
 };
 
-export default function MapPassState({
-  selected,
-  value,
-  onChange,
-}: MapPassStateProps) {
+const MapPassState = ({ selected, value, onChange }: MapPassStateProps) => {
   const [selectedOption, setSelectedOption] = useState(
     GUILD_FILTER_PASS_STATE[0],
   );
@@ -86,4 +82,6 @@ export default function MapPassState({
       </Listbox>
     </div>
   );
-}
+};
+
+export default MapPassState;

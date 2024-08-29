@@ -6,7 +6,7 @@ type AvatarProps = {
   className: string;
 };
 
-function Avatar({ src, name, className, ...otherProps }: AvatarProps) {
+const Avatar = ({ src, name, className, ...otherProps }: AvatarProps) => {
   return (
     <div
       {...otherProps}
@@ -24,6 +24,6 @@ function Avatar({ src, name, className, ...otherProps }: AvatarProps) {
       )}
     </div>
   );
-}
+};
 
 export default Avatar;

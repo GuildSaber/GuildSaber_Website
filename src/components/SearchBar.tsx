@@ -1,15 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 
-export default function SearchBar({
-  className,
-  onChange,
-  ...otherProps
-}: {
+type SearchBarProps = {
   className?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+};
+
+const SearchBar = ({ className, onChange, ...otherProps }: SearchBarProps) => {
   return (
     <div
       className={clsx(["flex-center rounded bg-gray-800", className])}
@@ -24,4 +22,6 @@ export default function SearchBar({
       <FontAwesomeIcon className="pr-3" icon={faMagnifyingGlass} />
     </div>
   );
-}
+};
+
+export default SearchBar;

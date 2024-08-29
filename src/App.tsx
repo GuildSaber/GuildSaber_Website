@@ -6,19 +6,19 @@ import Guilds from "@/pages/Guilds";
 import Home from "@/pages/Home";
 import Map from "@/pages/Map";
 import Member from "@/pages/Member";
-import PlayerProfile from "@/pages/Player";
+import Player from "@/pages/Player";
 import Signin from "@/pages/Signin";
 import { Route, Routes } from "react-router-dom";
 import "./App.scss";
 
-function App() {
+const App = () => {
   return (
     <div className="flex min-h-screen flex-col justify-between text-white">
       <Header />
       <div className="container mb-auto flex-grow px-2 text-white md:px-4 lg:px-8">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/player/:playerID" element={<PlayerProfile />} />
+          <Route path="/player/:playerID" element={<Player />} />
 
           <Route path="/signin" element={<Signin />} />
 
@@ -37,6 +37,6 @@ function App() {
       <Footer />
     </div>
   );
-}
+};
 
 export default App;

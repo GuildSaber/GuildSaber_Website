@@ -10,11 +10,7 @@ type BLReplayViewerType = {
   close: () => void;
 };
 
-export default function BLReplayViewer({
-  settings,
-}: {
-  settings: BLReplayViewerType;
-}) {
+const BLReplayViewer = ({ settings }: { settings: BLReplayViewerType }) => {
   const [iframeSrc, setIframeSrc] = useState("");
   const clickRef = useRef(null);
 
@@ -39,4 +35,6 @@ export default function BLReplayViewer({
     </div>,
     document.body,
   );
-}
+};
+
+export default BLReplayViewer;

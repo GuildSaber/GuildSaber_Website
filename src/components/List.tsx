@@ -14,7 +14,7 @@ type ListProps = {
   className?: string;
 };
 
-export default function List({
+const List = ({
   totalCount,
   pageSize,
   hasPreviousPage,
@@ -24,7 +24,7 @@ export default function List({
   isLoading,
   children,
   className,
-}: PropsWithChildren<ListProps>) {
+}: PropsWithChildren<ListProps>) => {
   return (
     <div className={clsx("relative flex w-full flex-col gap-2", className)}>
       {isLoading && (
@@ -46,4 +46,6 @@ export default function List({
       />
     </div>
   );
-}
+};
+
+export default List;

@@ -12,12 +12,7 @@ type ListBoxProps = {
   onChange: (value: any) => void;
 };
 
-export default function ListBox({
-  options,
-  selected,
-  value,
-  onChange,
-}: ListBoxProps) {
+const ListBox = ({ options, selected, value, onChange }: ListBoxProps) => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -89,4 +84,6 @@ export default function ListBox({
       </Listbox>
     </div>
   );
-}
+};
+
+export default ListBox;

@@ -8,13 +8,13 @@ type SigninProviderProps = {
   token?: string;
 };
 
-export default function SigninProvider({
+const SigninProvider = ({
   provider,
   returnURL = window.location.href,
   children,
   logo,
   token,
-}: PropsWithChildren<SigninProviderProps>) {
+}: PropsWithChildren<SigninProviderProps>) => {
   return (
     <form
       className={`provider ${provider}`}
@@ -32,4 +32,6 @@ export default function SigninProvider({
       </Button>
     </form>
   );
-}
+};
+
+export default SigninProvider;

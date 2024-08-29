@@ -23,7 +23,6 @@ type MapLeaderboardRowProps = {
   rankedScore: RankedScore;
   pageSense: string;
   animKey: number;
-  key: number;
 };
 
 const MapLeaderboardRow = ({
@@ -32,7 +31,6 @@ const MapLeaderboardRow = ({
   rankedScore,
   pageSense,
   animKey,
-  key,
 }: MapLeaderboardRowProps) => {
   const { session } = useAuthContext();
   const blReplay = useBLReplayViewer();
@@ -51,7 +49,6 @@ const MapLeaderboardRow = ({
 
   return (
     <tr
-      key={key}
       style={{
         animationDelay: `calc(40ms * ${animKey})`,
         animationName: pageSense === "next" ? "slide-in" : "slide-out",

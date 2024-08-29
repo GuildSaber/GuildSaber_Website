@@ -10,7 +10,7 @@ import MapLeaderboard from "@/features/map/components/MapLeaderboard";
 import MapRequirements from "@/features/map/components/MapRequirements";
 import { useMap } from "@/features/map/hooks/useMap";
 
-export default function Map() {
+const Map = () => {
   const { mapID } = useParams();
 
   if (!mapID) {
@@ -47,4 +47,6 @@ export default function Map() {
       <ArcViewer settings={arcViewer} />
     </div>
   );
-}
+};
+
+export default Map;

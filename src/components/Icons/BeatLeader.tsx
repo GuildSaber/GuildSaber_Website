@@ -1,4 +1,4 @@
-export default function BeatLeader() {
+const BeatLeader = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,4 +19,6 @@ export default function BeatLeader() {
       />
     </svg>
   );
-}
+};
+
+export default BeatLeader;

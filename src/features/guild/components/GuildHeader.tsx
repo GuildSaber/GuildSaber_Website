@@ -6,7 +6,11 @@ import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-export default function GuildHeader({ guildData }: { guildData: Guild }) {
+type GuildHeaderProps = {
+  guildData: Guild;
+};
+
+const GuildHeader = ({ guildData }: GuildHeaderProps) => {
   return (
     <div className="relative mb-8 overflow-hidden rounded bg-gray-800 p-8 text-center md:text-left">
       <object
@@ -83,4 +87,6 @@ export default function GuildHeader({ guildData }: { guildData: Guild }) {
       )}
     </div>
   );
-}
+};
+
+export default GuildHeader;

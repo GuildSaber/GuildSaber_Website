@@ -1,4 +1,4 @@
-export default function Bpm() {
+const Bpm = () => {
   return (
     <svg
       width="14"
@@ -14,4 +14,6 @@ export default function Bpm() {
       />
     </svg>
   );
-}
+};
+
+export default Bpm;

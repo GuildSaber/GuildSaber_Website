@@ -10,7 +10,7 @@ type Fetcher = {
   schema?: ZodType;
 };
 
-export async function fetchAPI<T>({
+export const fetchAPI = async <T>({
   path,
   queryParams,
   rawQueryParams,
@@ -18,7 +18,7 @@ export async function fetchAPI<T>({
   body,
   authenticated = false,
   schema,
-}: Fetcher): Promise<T | null> {
+}: Fetcher): Promise<T | null> => {
   try {
     const url = new URL(`${import.meta.env.VITE_API_BASE_URL}${path}`);
 
@@ -67,4 +67,4 @@ export async function fetchAPI<T>({
     console.error("An error occurred while making the request:", error);
     throw error;
   }
-}
+};

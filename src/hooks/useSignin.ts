@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useSignin() {
+export const useSignin = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -25,4 +25,4 @@ export function useSignin() {
   };
 
   return { signin, loading, error };
-}
+};

@@ -1,4 +1,4 @@
-export default function BeatSaver() {
+const BeatSaver = () => {
   return (
     <svg
       width="16"
@@ -44,4 +44,6 @@ export default function BeatSaver() {
       </defs>
     </svg>
   );
-}
+};
+
+export default BeatSaver;

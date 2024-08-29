@@ -28,7 +28,7 @@ type PlayerMapScoreRowProps = {
   animSense?: string;
 };
 
-function getDiffShort(score: PlayerScoresApiStruct["data"][0]) {
+const getDiffShort = (score: PlayerScoresApiStruct["data"][0]) => {
   if (score.songDifficulty.gameMode.name === "Standard") {
     return {
       1: "E",
@@ -40,13 +40,13 @@ function getDiffShort(score: PlayerScoresApiStruct["data"][0]) {
   } else {
     return <FontAwesomeIcon icon={faSkull} />;
   }
-}
+};
 
-function getTotalMisses(score: PlayerScoresApiStruct["data"][0]) {
+const getTotalMisses = (score: PlayerScoresApiStruct["data"][0]) => {
   return score.score.missedNotes + score.score.badCuts;
-}
+};
 
-export const PlayerMapScoreRow = ({
+const PlayerMapScoreRow = ({
   score,
   animDelay,
   animSense,
@@ -182,3 +182,5 @@ export const PlayerMapScoreRow = ({
     </div>
   );
 };
+
+export default PlayerMapScoreRow;

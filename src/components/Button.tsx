@@ -10,7 +10,7 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-export default function Button({
+const Button = ({
   className,
   text,
   icon,
@@ -18,7 +18,7 @@ export default function Button({
   children,
   onClick,
   ...otherProps
-}: PropsWithChildren<ButtonProps>) {
+}: PropsWithChildren<ButtonProps>) => {
   return (
     <button
       type={type || "button"}
@@ -31,4 +31,6 @@ export default function Button({
       {text}
     </button>
   );
-}
+};
+
+export default Button;

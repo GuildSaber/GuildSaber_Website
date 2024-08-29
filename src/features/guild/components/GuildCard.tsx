@@ -16,11 +16,7 @@ type GuildCardProps = {
   onJoin: () => void;
 };
 
-export default function GuildCard({
-  guildData,
-  guildState,
-  onJoin,
-}: GuildCardProps) {
+const GuildCard = ({ guildData, guildState, onJoin }: GuildCardProps) => {
   const { id, name, description, memberCount, rankedMapCount } = guildData;
   const guildType = GUILDS_FILTER_GUILD_TYPES.find(
     (g) => parseInt(g.value, 10) === guildData.type && guildData.type !== 1,
@@ -93,4 +89,6 @@ export default function GuildCard({
       </div>
     </div>
   );
-}
+};
+
+export default GuildCard;

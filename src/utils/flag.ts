@@ -1,7 +1,7 @@
-export function getFlagStrings<T>(
+export const getFlagStrings = <T>(
   values: number | undefined,
   enumType: T,
-): string[] {
+): string[] => {
   if (!values) {
     return [];
   }
@@ -16,12 +16,18 @@ export function getFlagStrings<T>(
   }
 
   return result;
-}
+};
 
-export function hasAnyFlag<T>(values: number | undefined, flags: T): boolean {
+export const hasAnyFlag = <T>(
+  values: number | undefined,
+  flags: T,
+): boolean => {
   return ((values ?? 0) & Number(flags)) != 0;
-}
+};
 
-export function hasAllFlags<T>(values: number | undefined, flags: T): boolean {
+export const hasAllFlags = <T>(
+  values: number | undefined,
+  flags: T,
+): boolean => {
   return ((values ?? 0) & Number(flags)) == Number(flags);
-}
+};

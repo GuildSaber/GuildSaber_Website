@@ -28,11 +28,7 @@ type MapHeaderProps = {
   className?: string;
 };
 
-export default function MapHeader({
-  mapData,
-  arcViewer,
-  className,
-}: MapHeaderProps) {
+const MapHeader = ({ mapData, arcViewer, className }: MapHeaderProps) => {
   const {
     song,
     songDifficultyStats: difficulty,
@@ -181,4 +177,6 @@ export default function MapHeader({
       </div>
     </>
   );
-}
+};
+
+export default MapHeader;

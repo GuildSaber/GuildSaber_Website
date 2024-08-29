@@ -1,4 +1,4 @@
-export default function Sparkles() {
+const Sparkles = () => {
   return (
     <svg
       width="17"
@@ -26,4 +26,6 @@ export default function Sparkles() {
       </defs>
     </svg>
   );
-}
+};
+
+export default Sparkles;

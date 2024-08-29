@@ -1,11 +1,11 @@
 import { RankedMap } from "@/types/api/models/rankedTypes";
 import { formatMapRequirements } from "../utils/format";
 
-export default function MapRequirements({
-  requirements,
-}: {
+type MapRequirementsProps = {
   requirements: RankedMap["requirements"];
-}) {
+};
+
+const MapRequirements = ({ requirements }: MapRequirementsProps) => {
   const parsedRequirements = formatMapRequirements(requirements);
 
   return (
@@ -24,4 +24,6 @@ export default function MapRequirements({
       </div>
     </div>
   );
-}
+};
+
+export default MapRequirements;

@@ -12,7 +12,7 @@ import { GuildRankedMaps } from "@/features/guild/components/GuildRankedMaps";
 import { useGuild } from "@/features/guild/hooks/useGuild";
 import clsx from "clsx";
 
-export default function Guild({ tab }: { tab?: string }) {
+const Guild = ({ tab }: { tab?: string }) => {
   const { guildID } = useParams();
   if (!guildID) {
     return <p>Error</p>;
@@ -77,20 +77,6 @@ export default function Guild({ tab }: { tab?: string }) {
       {!tab || (tab === "rankedMaps" && <GuildRankedMaps guild={guild} />)}
     </div>
   );
-}
+};
 
-/*
-<div className="mb-2 inline-flex self-center overflow-hidden rounded bg-gray-800">
-        {tabsComponent.map((tab, index) => (
-          <Link
-            className={clsx("px-4 py-2 hover:bg-gray-700", {
-              "bg-primary hover:bg-primary/80": tabID === index,
-            })}
-            to={tab.path}
-            key={index}
-          >
-            {tab.label}
-          </Link>
-        ))}
-      </div>
-*/
+export default Guild;

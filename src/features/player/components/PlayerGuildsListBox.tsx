@@ -7,7 +7,7 @@ type PlayerGuildsListBoxProps = {
   onChange: (guildID: number) => void;
 };
 
-export const PlayerGuildsListBox = ({
+const PlayerGuildsListBox = ({
   guilds,
   guildID,
   onChange,
@@ -36,3 +36,5 @@ export const PlayerGuildsListBox = ({
     </div>
   );
 };
+
+export default PlayerGuildsListBox;

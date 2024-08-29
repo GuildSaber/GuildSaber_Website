@@ -2,7 +2,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import Guilds from "@/pages/Guilds";
 import Signin from "@/pages/Signin";
 
-export default function Home() {
+const Home = () => {
   const { session } = useAuthContext();
   return (
     <>
@@ -10,4 +10,6 @@ export default function Home() {
       {session && <Guilds />}
     </>
   );
-}
+};
+
+export default Home;

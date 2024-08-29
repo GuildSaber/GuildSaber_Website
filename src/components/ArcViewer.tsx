@@ -6,13 +6,15 @@ import useClickAway from "@/hooks/useClickAway";
 import { formatDifficulty } from "@/utils/format";
 
 type ArcViewerProps = {
-  isOpen: boolean;
-  data: ArcViewerSettingsProps;
-  open: (settings: ArcViewerSettingsProps) => void;
-  close: () => void;
+  settings: {
+    isOpen: boolean;
+    data: ArcViewerSettingsProps;
+    open: (settings: ArcViewerSettingsProps) => void;
+    close: () => void;
+  };
 };
 
-export default function ArcViewer({ settings }: { settings: ArcViewerProps }) {
+const ArcViewer = ({ settings }: ArcViewerProps) => {
   const [iframeSrc, setIframeSrc] = useState("");
   const clickRef = useRef(null);
 
@@ -43,4 +45,6 @@ export default function ArcViewer({ settings }: { settings: ArcViewerProps }) {
     </div>,
     document.body,
   );
-}
+};
+
+export default ArcViewer;

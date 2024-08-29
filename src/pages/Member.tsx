@@ -30,7 +30,7 @@ import { useSearchParamsState } from "react-use-search-params-state";
 import { Fragment } from "react/jsx-runtime";
 import { useDebounceValue } from "usehooks-ts";
 
-export default function Member() {
+const Member = () => {
   const { session } = useAuthContext();
   const { guildID } = useParams();
   const queryClient = useQueryClient();
@@ -176,7 +176,7 @@ export default function Member() {
                       <div>
                         <Menu.Item>
                           <button
-                            className="text-sm hover:blac group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 hover:bg-primary"
+                            className="hover:blac group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-primary"
                             onClick={() =>
                               updateState({
                                 userID: member.userID,
@@ -190,7 +190,7 @@ export default function Member() {
                         </Menu.Item>
                         <Menu.Item>
                           <button
-                            className="text-sm group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 hover:bg-red-600"
+                            className="group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-red-600"
                             onClick={() =>
                               updateState({
                                 userID: member.userID,
@@ -207,7 +207,7 @@ export default function Member() {
                     <div>
                       <Menu.Item>
                         <button
-                          className="text-sm group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 hover:bg-red-600"
+                          className="group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-red-600"
                           onClick={() =>
                             updateState({
                               userID: member.userID,
@@ -225,7 +225,7 @@ export default function Member() {
                       {member.state !== EJoinState.Requested && (
                         <Menu.Item>
                           <button
-                            className="text-sm group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 hover:bg-red-600"
+                            className="group my-1 flex w-full items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-red-600"
                             onClick={() =>
                               updateState({
                                 userID: member.userID,
@@ -248,4 +248,6 @@ export default function Member() {
       </div>
     </List>
   );
-}
+};
+
+export default Member;

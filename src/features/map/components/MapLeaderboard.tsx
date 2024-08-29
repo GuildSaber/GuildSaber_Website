@@ -16,10 +16,10 @@ type MapLeaderboardProps = {
   pageSize?: number;
 };
 
-export default function MapLeaderboard({
+const MapLeaderboard = ({
   mapData,
   pageSize = MAP_PAGE_SIZE,
-}: MapLeaderboardProps) {
+}: MapLeaderboardProps) => {
   const [filters, setFilters] = useSearchParamsState({
     page: { type: "number", default: 1 },
     point: { type: "number", default: mapData.simplePoints[0].id },
@@ -129,4 +129,6 @@ export default function MapLeaderboard({
       </div>
     </List>
   );
-}
+};
+
+export default MapLeaderboard;

@@ -1,6 +1,6 @@
 import { Toaster as ToasterSpawner } from "react-hot-toast";
 
-export default function Toaster() {
+const Toaster = () => {
   return (
     <ToasterSpawner
       position="bottom-right"
@@ -13,4 +13,6 @@ export default function Toaster() {
       }}
     />
   );
-}
+};
+
+export default Toaster;

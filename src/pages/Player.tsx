@@ -2,12 +2,12 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { useParams } from "react-router-dom";
 
 import Button from "@/components/Button";
-import { Flag } from "@/components/Flag";
+import Flag from "@/components/Flag";
 import List from "@/components/List";
 import ListBox from "@/components/ListBox/ListBox";
 import Loader from "@/components/Loader";
-import { PlayerGuildsListBox } from "@/features/player/components/PlayerGuildsListBox";
-import { PlayerMapScoreRow } from "@/features/player/components/PlayerMapScoreRow";
+import PlayerGuildsListBox from "@/features/player/components/PlayerGuildsListBox";
+import PlayerMapScoreRow from "@/features/player/components/PlayerMapScoreRow";
 import { usePlayer } from "@/features/player/hooks/usePlayer";
 import { usePlayerScores } from "@/features/player/hooks/usePlayerScores";
 import { usePlayerGuildStats } from "@/features/player/hooks/usePlayerStats";
@@ -27,7 +27,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useSearchParamsState } from "react-use-search-params-state";
 
-export default function PlayerProfile() {
+const Player = () => {
   const { playerID } = useParams();
 
   if (!playerID) {
@@ -347,4 +347,6 @@ export default function PlayerProfile() {
       </section>
     </div>
   );
-}
+};
+
+export default Player;

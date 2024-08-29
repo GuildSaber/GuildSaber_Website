@@ -1,10 +1,10 @@
 import { EModifiers } from "@/enums/api/models/modifiers";
 
-export function formatCommasNumber(num: number) {
+export const formatCommasNumber = (num: number) => {
   return new Intl.NumberFormat("en").format(num);
-}
+};
 
-export function formatDurationSince(start: number | undefined): string {
+export const formatDurationSince = (start: number | undefined): string => {
   if (!start) {
     return "N/A";
   }
@@ -29,26 +29,26 @@ export function formatDurationSince(start: number | undefined): string {
   } else {
     return `${seconds} second${seconds > 1 ? "s" : ""}`;
   }
-}
+};
 
-export function formatMinSec(seconds: number) {
+export const formatMinSec = (seconds: number) => {
   return (
     (seconds - (seconds %= 60)) / 60 + (9 < seconds ? ":" : ":0") + seconds
   );
-}
+};
 
-export function formatAccuracy(
+export const formatAccuracy = (
   baseScore: number | undefined,
   maxScore: number | undefined,
-) {
+) => {
   if (!baseScore || !maxScore) {
     return "N/A";
   }
 
   return ((baseScore / maxScore) * 100).toFixed(2) + "%";
-}
+};
 
-export function formatHMD(hmd: number | undefined): string {
+export const formatHMD = (hmd: number | undefined): string => {
   if (!hmd) {
     return "Unknown";
   }
@@ -99,9 +99,9 @@ export function formatHMD(hmd: number | undefined): string {
       65: "Controllable",
     }[hmd] ?? "Unknown"
   );
-}
+};
 
-export function formatModifiers(modifiers: EModifiers): ModifierShort[] {
+export const formatModifiers = (modifiers: EModifiers): ModifierShort[] => {
   const modList: ModifierShort[] = [];
   if (modifiers & EModifiers.NoObstacles) modList.push("NO");
   if (modifiers & EModifiers.NoBombs) modList.push("NB");
@@ -121,9 +121,9 @@ export function formatModifiers(modifiers: EModifiers): ModifierShort[] {
   if (modifiers & EModifiers.OffPlatform) modList.push("OP");
   if (modifiers & EModifiers.Unk) modList.push("UNK");
   return modList;
-}
+};
 
-export function formatModifierShortToLong(modifier: ModifierShort) {
+export const formatModifierShortToLong = (modifier: ModifierShort) => {
   return (
     {
       NO: "No Obstacles",
@@ -145,7 +145,7 @@ export function formatModifierShortToLong(modifier: ModifierShort) {
       UNK: "Unknown",
     }[modifier] ?? "Unknown"
   );
-}
+};
 
 export type ModifierShort =
   | "NO"

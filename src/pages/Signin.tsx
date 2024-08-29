@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-export default function Signin() {
+const Signin = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { signin, error } = useSignin();
   const { session } = useAuthContext();
@@ -57,4 +57,6 @@ export default function Signin() {
       </div>
     </>
   );
-}
+};
+
+export default Signin;
