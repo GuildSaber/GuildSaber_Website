@@ -119,7 +119,7 @@ const PlayerMapScoreRow = ({
             <span className="badge badge-secondary">
               {formatCommasNumber(
                 Math.round(100 * score.rawPoints * score.weight) / 100,
-              )}{" "}
+              )}
             </span>
           )}
           {score.score.modifiers > 0 && (
@@ -138,7 +138,7 @@ const PlayerMapScoreRow = ({
               "badge-success": getTotalMisses(score) === 0,
             })}
           >
-            {getTotalMisses(score) || "FC"}{" "}
+            {getTotalMisses(score) || "FC"}
             <span>
               <FontAwesomeIcon
                 icon={getTotalMisses(score) > 0 ? faXmark : faCheck}
@@ -147,7 +147,7 @@ const PlayerMapScoreRow = ({
           </span>
         </div>
       </div>
-      <div className="h-full">
+      <div>
         <div className="flex flex-wrap justify-center gap-2 md:justify-end">
           <Button
             className="btn btn-tritary"
