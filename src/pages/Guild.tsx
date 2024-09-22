@@ -44,7 +44,7 @@ const Guild = ({ tab }: { tab?: string }) => {
 
   return (
     <div className="mx-auto flex max-w-screen-lg flex-col">
-      <GuildHeader guildData={guild} />
+      <GuildHeader guild={guild} />
 
       <div className="flex flex-col-reverse items-center justify-center md:flex-row md:justify-between">
         <h3 className="my-4 flex items-center gap-3 text-center text-h6 font-bold md:text-left md:text-h4">

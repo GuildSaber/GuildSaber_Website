@@ -33,6 +33,10 @@
     @apply bg-gray-900 hover:bg-gray-900 hover:opacity-80 focus:outline-none focus:ring-4 focus:ring-gray-700;
   }
 
+  .btn-discord {
+    @apply hover:bg-discord-dark focus:ring-discord-dark-25 bg-discord focus:outline-none focus:ring-4;
+  }
+
   .badge-secondary {
     @apply border-secondary text-secondary;
   }

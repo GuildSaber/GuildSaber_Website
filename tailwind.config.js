@@ -53,7 +53,13 @@ export default {
         muted: "#7E8691",
         error: "#EA4C66",
         success: "#34D399",
-        discord: "#5865f2",
+        discord: {
+          DEFAULT: "#5865F2",
+          dark: {
+            DEFAULT: "#4550c8",
+            25: "#5865F240",
+          },
+        },
         white: "#FFFFFF",
         "expert-plus": "#8f48db",
         expert: "#bf2a42",

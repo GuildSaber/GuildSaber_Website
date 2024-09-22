@@ -2,6 +2,7 @@ import { EIncludeFlags } from "@/enums/api/fetch/include";
 import { EGuildType } from "@/enums/api/models/guildType";
 import { EPermission } from "@/enums/api/models/permission";
 import { EJoinState } from "@/enums/guild";
+import { MemberList } from "@/types/api/auth";
 import { Guild, GuildSchema } from "@/types/api/models/guild";
 import { Member, MemberSchema } from "@/types/api/models/member";
 import { SimplePointSchema, SimplePoints } from "@/types/api/models/point";
@@ -90,7 +91,7 @@ export const getGuild = async ({ id, include, userID }: getGuildType) =>
   });
 
 export const joinGuild = (guildID: number) =>
-  fetchAPI({
+  fetchAPI<MemberList>({
     method: "POST",
     path: `/members/join-guild/${guildID}`,
     authenticated: true,

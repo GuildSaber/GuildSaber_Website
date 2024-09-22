@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { Guild } from "@/types/api/models/guild";
 import { faLayerGroup, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,16 +11,18 @@ import {
 } from "../utils/constants";
 
 type GuildCardProps = {
-  guildData: Guild;
-  guildState: number | undefined;
-  guildType?: number;
+  guild: Guild;
   onJoin: () => void;
 };
 
-const GuildCard = ({ guildData, guildState, onJoin }: GuildCardProps) => {
-  const { id, name, description, memberCount, rankedMapCount } = guildData;
+const GuildCard = ({ guild, onJoin }: GuildCardProps) => {
+  const { session } = useAuthContext();
+  const { id, name, description, memberCount, rankedMapCount } = guild;
+  const joinState = session?.memberList?.find(
+    (g) => guild.id === g.guildID,
+  )?.state;
   const guildType = GUILDS_FILTER_GUILD_TYPES.find(
-    (g) => parseInt(g.value, 10) === guildData.type && guildData.type !== 1,
+    (g) => parseInt(g.value, 10) === guild.type && guild.type !== 1,
   );
 
   return (
@@ -80,10 +83,10 @@ const GuildCard = ({ guildData, guildState, onJoin }: GuildCardProps) => {
           </div>
           <Button
             className={clsx("btn-primary md:mx-auto md:mr-8", {
-              "btn-tritary pointer-events-none": guildState,
+              "btn-tritary pointer-events-none": joinState,
             })}
-            text={(guildState && GUILD_JOIN_STATES[guildState]) || "Join"}
-            onClick={() => !guildState && onJoin()}
+            text={(joinState && GUILD_JOIN_STATES[joinState]) || "Join"}
+            onClick={() => !joinState && onJoin()}
           />
         </div>
       </div>

@@ -3,16 +3,15 @@ import ListBox from "@/components/ListBox/ListBox";
 import ListBoxMultiple from "@/components/ListBox/ListBoxMultiple";
 import Loader from "@/components/Loader";
 import SearchBar from "@/components/SearchBar";
-import { EJoinState } from "@/enums/guild";
 import GuildCard from "@/features/guild/components/GuildCard";
 import { useGuilds } from "@/features/guild/hooks/useGuilds";
+import useJoinGuild from "@/features/guild/hooks/useJoinGuild";
 import {
   GUILDS_FILTER_GUILD_TYPES,
   GUILDS_FILTER_SORT_BY_VALUES,
   GUILDS_PAGE_SIZE,
 } from "@/features/guild/utils/constants";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { useSearchParamsState } from "react-use-search-params-state";
 import { useDebounceValue } from "usehooks-ts";
@@ -26,56 +25,21 @@ const Guilds = () => {
   });
 
   const [search, setSearch] = useDebounceValue("", 500);
-  const { session, dispatch } = useAuthContext();
-
-  const queryClient = useQueryClient();
+  const { session } = useAuthContext();
 
   const updateSearch = (term: string) => {
     setSearch(term);
     setFilters({ page: 1 });
   };
 
-  const joinGuild = (guildID: number) =>
-    fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/members/join-guild/${guildID}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session?.token}`,
-        },
-      },
-    ).then((res) => res.json());
-
-  const mutation = useMutation({
-    mutationFn: (guildID: number) => joinGuild(guildID),
-    onSuccess: (data) => {
-      switch (data.state) {
-        case EJoinState.Joined:
-          toast.success("Successfully joined");
-          break;
-
-        case EJoinState.Requested:
-          toast.success("Successfully requested");
-          break;
-      }
-
-      dispatch({ type: "GUILD_ADD", payload: data });
-      queryClient.invalidateQueries({
-        queryKey: ["guilds", filters],
-      });
-    },
-    onError: () => {
-      toast.error("Failed to join guild");
-    },
-  });
-
+  const { mutate: joinGuild } = useJoinGuild(["guilds", filters]);
   const tryJoin = async (guildID: number) => {
     if (!session?.token) {
       toast.error("You need to be logged in to join");
       return;
     }
 
-    mutation.mutate(guildID);
+    joinGuild(guildID, filters);
   };
 
   const {
@@ -141,11 +105,7 @@ const Guilds = () => {
             {guilds?.data.map((guild, key) => (
               <GuildCard
                 key={key}
-                guildData={guild}
-                guildState={
-                  session?.memberList?.find((g) => guild.id === g.guildID)
-                    ?.state
-                }
+                guild={guild}
                 onJoin={() => tryJoin(guild.id)}
               />
             ))}
