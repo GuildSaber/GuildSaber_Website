@@ -7,8 +7,6 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
     port: 3000,
-  },
-  preview: {
-    allowedHosts: "dev.guildsaber.com"
+    allowedHosts: ["dev.guildsaber.com"]
   }
 });
