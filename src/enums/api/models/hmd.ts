@@ -10,6 +10,7 @@ export enum EHMD {
   ViveCosmos = 128,
   Quest2 = 256,
   Quest3 = 512,
+  quest3s = 513,
 
   PicoNeo3 = 33,
   PicoNeo2 = 34,
@@ -46,5 +47,8 @@ export enum EHMD {
   BigScreenBeyond = 66,
   Nolosonic = 67,
   Hypereal = 68,
-  Varjoaero = 69,
+  VarjoAero = 69,
+  PSVR2 = 70,
+  Megane1 = 71,
+  VarjoXR3 = 72,
 }
