@@ -60,6 +60,7 @@ export const formatHMD = (hmd: number | undefined): string => {
       32: "Quest 1",
       256: "Quest 2",
       512: "Quest 3",
+      513: "Quest 3S",
       2: "Vive",
       4: "Vive Pro",
       128: "Vive Cosmos",
@@ -97,6 +98,13 @@ export const formatHMD = (hmd: number | undefined): string => {
       63: "E4",
       64: "Valve Index",
       65: "Controllable",
+      66: "Big Screen Beyond",
+      67: "Nolo Sonic",
+      68: "Hypereal",
+      69: "Varjo Aero",
+      70: "PSVR 2",
+      71: "Megane 1",
+      72: "Varjo XR-3",
     }[hmd] ?? "Unknown"
   );
 };

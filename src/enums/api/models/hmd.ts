@@ -10,7 +10,7 @@ export enum EHMD {
   ViveCosmos = 128,
   Quest2 = 256,
   Quest3 = 512,
-  quest3s = 513,
+  quest3S = 513,
 
   PicoNeo3 = 33,
   PicoNeo2 = 34,
